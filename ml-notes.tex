@@ -1,0 +1,74 @@
+%        File: ml-notes.tex
+%     Created: Mon Jan 14 08:00 PM 2019 E
+% Last Change: Mon Jan 14 08:00 PM 2019
+
+% Documentclass
+\documentclass[12pt]{article}
+% margin
+\setlength{\topmargin}{0mm} \setlength{\oddsidemargin}{0mm}
+\setlength{\textwidth}{160mm} \setlength{\textheight}{220mm}
+\font\bbc=msbm10 scaled 1200
+
+% amsmath:\text{} inside math mode; amssymb:\lesssim, amsthm:\newtheorem; amsfonts:\mathbb{}
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+%to use color
+\usepackage{color}
+\usepackage{hyperref}
+
+
+
+% User defined fun
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\br}[1]{\color{red} (#1) \color{black}}
+\newcommand{\bb}[1]{\color{blue} (#1) \color{black}}
+\newcommand{\what}{\bb{??}}
+\newcommand{\half}{\frac{1}{2}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\jap}[1]{\left\langle #1 \right\rangle}
+\newcommand{\inn}[1]{\left\langle #1 \right\rangle}
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{cor}{Corollary}
+\newtheorem{defn}{Definition}
+\newtheorem{rem}{Remark}
+\newtheorem{result}{Result}
+\newtheorem*{notation}{Notation}
+\newtheorem{prob}{Problem}
+\newtheorem{propn}{Proposition}
+% newtheorem{proof}{Proof} is not needed, already available with \begin{proof} .. \end{proof} with nice italic fonts
+
+
+\begin{document}
+\title{Notes on Machine learning}
+\author{Debdeep Bhattacharya}
+\maketitle 
+
+\section{Documentaion}
+\begin{itemize}
+  \item \href{https://scikit-learn.org/stable/tutorial/statistical_inference/supervised_learning.html}{scikit-learn tutorial}
+\end{itemize}
+
+\section{numpy matrix operations}
+import numpy as np
+Create a new vector with np.array([1, 2, 3])
+Create a new matrix with np.c\_[1, 2, 3]
+Transpose with .T
+Create a random matrix with entries from a normal distribution with size 2x1 using np.random.normal(size = (2,1))
+
+\section{p}<++>
+
+\section{k-Nearest Neighbor (k-NN)}
+If the number of features (dependent variables) is $p$ and the maximum distance of any two points in a cluster is less than $d$, then the required data points (sample size) need to be $n \sim \frac{1}{d^p}$.
+
+\section{Python}
+Install scikit-learn on linux using pip3 (not pip) and run with python3, not python.
+
+
+\end{document}
+
+
