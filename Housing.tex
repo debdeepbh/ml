@@ -1,0 +1,1683 @@
+
+% Default to the notebook output style
+
+    
+
+
+% Inherit from the specified cell style.
+
+
+
+
+    
+\documentclass[11pt]{article}
+
+    
+    
+    \usepackage[T1]{fontenc}
+    % Nicer default font (+ math font) than Computer Modern for most use cases
+    \usepackage{mathpazo}
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % We will generate all images so they have a width \maxwidth. This means
+    % that they will get their normal width if they fit onto the page, but
+    % are scaled down if they would overflow the margins.
+    \makeatletter
+    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+    \else\Gin@nat@width\fi}
+    \makeatother
+    \let\Oldincludegraphics\includegraphics
+    % Set max figure width to be 80% of text width, for now hardcoded.
+    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionLabelFormat{nolabel}{}
+    \captionsetup{labelformat=nolabel}
+
+    \usepackage{adjustbox} % Used to constrain images to a maximum size 
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range 
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{Housing}
+    
+    
+    
+    
+    
+
+    % Pygments definitions
+    
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+    \begin{document}
+    
+    
+    \maketitle
+    
+    
+
+    
+    \hypertarget{workspace-setup}{%
+\subsection{Workspace setup}\label{workspace-setup}}
+
+Installing Jupyter Lab using \texttt{pip3\ install\ jupyterlab}. Vim
+keybinding for JupyterLab is from
+\href{https://github.com/jwkvam/jupyterlab-vim}{here}. There are
+requirements for this extansion.
+\texttt{sudo\ apt-get\ install\ jodejs\ npm}. Install the extension with
+\texttt{jupyter\ labextension\ install\ jupyterlab\_vim}.
+
+Use \texttt{;} at the end of the plotting line to supress text
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}25}]:} \PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+         \PY{k}{def} \PY{n+nf}{load\PYZus{}data}\PY{p}{(}\PY{n}{datasetCsv}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{housing.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{:}
+             \PY{k}{return} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{datasets/}\PY{l+s+s1}{\PYZsq{}}\PY{o}{+}\PY{n}{datasetCsv}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}26}]:} \PY{n}{housing} \PY{o}{=} \PY{n}{load\PYZus{}data}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}27}]:} \PY{n}{housing}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}27}]:}    longitude  latitude  housing\_median\_age  total\_rooms  total\_bedrooms  \textbackslash{}
+         0    -122.23     37.88                41.0        880.0           129.0   
+         1    -122.22     37.86                21.0       7099.0          1106.0   
+         2    -122.24     37.85                52.0       1467.0           190.0   
+         3    -122.25     37.85                52.0       1274.0           235.0   
+         4    -122.25     37.85                52.0       1627.0           280.0   
+         
+            population  households  median\_income  median\_house\_value ocean\_proximity  
+         0       322.0       126.0         8.3252            452600.0        NEAR BAY  
+         1      2401.0      1138.0         8.3014            358500.0        NEAR BAY  
+         2       496.0       177.0         7.2574            352100.0        NEAR BAY  
+         3       558.0       219.0         5.6431            341300.0        NEAR BAY  
+         4       565.0       259.0         3.8462            342200.0        NEAR BAY  
+\end{Verbatim}
+            
+    How many \textbf{different} types of values are possible?
+
+Answer is \texttt{value\_counts()}.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}28}]:} \PY{n}{housing}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ocean\PYZus{}proximity}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}28}]:} <1H OCEAN     9136
+         INLAND        6551
+         NEAR OCEAN    2658
+         NEAR BAY      2290
+         ISLAND           5
+         Name: ocean\_proximity, dtype: int64
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}7}]:} \PY{n}{housing}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}7}]:}           longitude      latitude  housing\_median\_age   total\_rooms  \textbackslash{}
+        count  20640.000000  20640.000000        20640.000000  20640.000000   
+        mean    -119.569704     35.631861           28.639486   2635.763081   
+        std        2.003532      2.135952           12.585558   2181.615252   
+        min     -124.350000     32.540000            1.000000      2.000000   
+        25\%     -121.800000     33.930000           18.000000   1447.750000   
+        50\%     -118.490000     34.260000           29.000000   2127.000000   
+        75\%     -118.010000     37.710000           37.000000   3148.000000   
+        max     -114.310000     41.950000           52.000000  39320.000000   
+        
+               total\_bedrooms    population    households  median\_income  \textbackslash{}
+        count    20433.000000  20640.000000  20640.000000   20640.000000   
+        mean       537.870553   1425.476744    499.539680       3.870671   
+        std        421.385070   1132.462122    382.329753       1.899822   
+        min          1.000000      3.000000      1.000000       0.499900   
+        25\%        296.000000    787.000000    280.000000       2.563400   
+        50\%        435.000000   1166.000000    409.000000       3.534800   
+        75\%        647.000000   1725.000000    605.000000       4.743250   
+        max       6445.000000  35682.000000   6082.000000      15.000100   
+        
+               median\_house\_value  
+        count        20640.000000  
+        mean        206855.816909  
+        std         115395.615874  
+        min          14999.000000  
+        25\%         119600.000000  
+        50\%         179700.000000  
+        75\%         264725.000000  
+        max         500001.000000  
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}29}]:} \PY{n+nb}{len}\PY{p}{(}\PY{n}{housing}\PY{p}{)}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}29}]:} 20640
+\end{Verbatim}
+            
+    \hypertarget{plotting}{%
+\subparagraph{Plotting}\label{plotting}}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}30}]:} \PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+         \PY{n}{housing}\PY{o}{.}\PY{n}{hist}\PY{p}{(}\PY{n}{bins}\PY{o}{=}\PY{l+m+mi}{50}\PY{p}{,} \PY{n}{figsize} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{20}\PY{p}{,} \PY{l+m+mi}{20}\PY{p}{)}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Housing_files/Housing_10_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Apprantly, tail-heavy distributions are harder for machine learning
+algorithms to detect patterns. (Citations needed) So, there are some
+attempts to apply some transformations to make them more bell-shaped.
+
+    \hypertarget{splitting-data-for-train-and-test}{%
+\subsection{Splitting data for train and
+test}\label{splitting-data-for-train-and-test}}
+
+To avoid \emph{data snooping bias}, need to set aside the test dataset
+at this point.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}6}]:} \PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+        \PY{k}{def} \PY{n+nf}{split\PYZus{}train\PYZus{}test}\PY{p}{(}\PY{n}{data}\PY{p}{,} \PY{n}{test\PYZus{}ratio}\PY{p}{)}\PY{p}{:}
+            \PY{c+c1}{\PYZsh{} create randomly permute 0:len(data)}
+            \PY{n}{shuffled\PYZus{}indices} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{permutation}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{data}\PY{p}{)}\PY{p}{)}
+            \PY{c+c1}{\PYZsh{} instead of floor, using int to get an integer}
+            \PY{n}{test\PYZus{}set\PYZus{}size} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(} \PY{n+nb}{len}\PY{p}{(}\PY{n}{data}\PY{p}{)}\PY{o}{*} \PY{n}{test\PYZus{}ratio} \PY{p}{)}
+            \PY{c+c1}{\PYZsh{} test\PYZus{}indices are the first few; [:b] = [0:b\PYZhy{}1]}
+            \PY{n}{test\PYZus{}indices} \PY{o}{=} \PY{n}{shuffled\PYZus{}indices}\PY{p}{[}\PY{p}{:}\PY{n}{test\PYZus{}set\PYZus{}size}\PY{p}{]}
+            \PY{c+c1}{\PYZsh{} train data are the remaining last ones}
+            \PY{n}{train\PYZus{}indices} \PY{o}{=} \PY{n}{shuffled\PYZus{}indices}\PY{p}{[}\PY{n}{test\PYZus{}set\PYZus{}size}\PY{p}{:}\PY{p}{]}
+            \PY{n+nb}{print}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{train\PYZus{}indices}\PY{p}{)}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{train + }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n+nb}{len}\PY{p}{(}\PY{n}{test\PYZus{}indices}\PY{p}{)}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{test}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            \PY{k}{return} \PY{n}{data}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{train\PYZus{}indices}\PY{p}{]}\PY{p}{,} \PY{n}{data}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{test\PYZus{}indices}\PY{p}{]}
+            
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}7}]:} \PY{c+c1}{\PYZsh{} usually 20\PYZpc{} of the original data is saved for testing}
+        \PY{n}{housing\PYZus{}train}\PY{p}{,} \PY{n}{housing\PYZus{}test} \PY{o}{=} \PY{n}{split\PYZus{}train\PYZus{}test}\PY{p}{(}\PY{n}{housing}\PY{p}{,} \PY{l+m+mf}{0.2}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+16512 train +  4128 test
+
+    \end{Verbatim}
+
+    \hypertarget{caution-note-about-matlab-style-index}{%
+\paragraph{Caution: Note about Matlab-style
+index}\label{caution-note-about-matlab-style-index}}
+
+Python indices start with 0 but the ending index is one less than what
+it is usually \#\#\#\#\# \texttt{{[}a:b{]}} = {[}a, \ldots{} , b-1{]}
+Also, \texttt{{[}:5{]}\ =\ {[}0:5{]}} and \texttt{{[}-5:{]}\ =} last
+five elements.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}8}]:} \PY{n}{a} \PY{o}{=} \PY{n}{housing}\PY{o}{.}\PY{n}{values}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{4}\PY{p}{]}
+        \PY{n+nb}{print}\PY{p}{(}\PY{n}{a}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[-122.23 37.88 41.0 880.0 129.0 322.0 126.0 8.3252 452600.0 'NEAR BAY']
+ [-122.22 37.86 21.0 7099.0 1106.0 2401.0 1138.0 8.3014 358500.0
+  'NEAR BAY']
+ [-122.24 37.85 52.0 1467.0 190.0 496.0 177.0 7.2574 352100.0 'NEAR BAY']
+ [-122.25 37.85 52.0 1274.0 235.0 558.0 219.0 5.6431 341300.0 'NEAR BAY']]
+
+    \end{Verbatim}
+
+    \hypertarget{subest-of-the-data}{%
+\subparagraph{Subest of the data}\label{subest-of-the-data}}
+
+\begin{itemize}
+\tightlist
+\item
+  While selecting a few columns, don't forget the double brackets
+\item
+  \texttt{iloc} (integer location) with one-dimensional argument referes
+  to the row numbers. e.g. \texttt{data.iloc{[}2{]}}= 3rd row
+\item
+  While selecting columns using \texttt{iloc}, don't forget to use
+  two-dimensional arguments
+\item
+  Ending index while using \texttt{:} is actually one less
+\end{itemize}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}9}]:} \PY{n}{housing}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{households}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{median\PYZus{}income}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}
+        \PY{c+c1}{\PYZsh{} 7th and 8th column}
+        \PY{n}{housing}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{,}\PY{l+m+mi}{7}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}9}]:}    households  median\_income
+        0       126.0         8.3252
+        1      1138.0         8.3014
+        2       177.0         7.2574
+        3       219.0         5.6431
+        4       259.0         3.8462
+\end{Verbatim}
+            
+    The purpose is to make the splitting process consistent after the main
+dataset has been modified. I.e., after adding new data, the test set has
+to be a strict superset of the previous test data.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}10}]:} \PY{c+c1}{\PYZsh{} some strange hash function}
+         \PY{k+kn}{import} \PY{n+nn}{hashlib}
+         \PY{k}{def} \PY{n+nf}{test\PYZus{}set\PYZus{}check}\PY{p}{(}\PY{n}{identifier}\PY{p}{,} \PY{n}{test\PYZus{}ratio}\PY{p}{,} \PY{n+nb}{hash}\PY{p}{)}\PY{p}{:}
+             \PY{n}{hashval} \PY{o}{=} \PY{n+nb}{hash}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{int64}\PY{p}{(}\PY{n}{identifier}\PY{p}{)}\PY{p}{)}
+             \PY{k}{return} \PY{n}{hashval}\PY{o}{.}\PY{n}{digest}\PY{p}{(}\PY{p}{)}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{\PYZlt{}} \PY{l+m+mi}{256} \PY{o}{*}\PY{n}{test\PYZus{}ratio}
+         
+         \PY{k}{def} \PY{n+nf}{split\PYZus{}train\PYZus{}test\PYZus{}by\PYZus{}id}\PY{p}{(}\PY{n}{data}\PY{p}{,} \PY{n}{test\PYZus{}ratio}\PY{p}{,} \PY{n}{id\PYZus{}column}\PY{p}{,} \PY{n+nb}{hash}\PY{o}{=}\PY{n}{hashlib}\PY{o}{.}\PY{n}{md5}\PY{p}{)}\PY{p}{:}
+             \PY{n}{ids} \PY{o}{=} \PY{n}{data}\PY{p}{[}\PY{n}{id\PYZus{}column}\PY{p}{]}
+             \PY{n}{in\PYZus{}test\PYZus{}set} \PY{o}{=} \PY{n}{ids}\PY{o}{.}\PY{n}{apply}\PY{p}{(}\PY{k}{lambda} \PY{n}{id\PYZus{}}\PY{p}{:}\PY{n}{test\PYZus{}set\PYZus{}check}\PY{p}{(}\PY{n}{id\PYZus{}}\PY{p}{,} \PY{n}{test\PYZus{}ratio}\PY{p}{,} \PY{n+nb}{hash}\PY{p}{)}\PY{p}{)}
+             \PY{k}{return} \PY{n}{data}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{o}{\PYZti{}}\PY{n}{in\PYZus{}test\PYZus{}set}\PY{p}{]}\PY{p}{,} \PY{n}{data}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{in\PYZus{}test\PYZus{}set}\PY{p}{]}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}11}]:} \PY{n}{housing\PYZus{}with\PYZus{}id} \PY{o}{=} \PY{n}{housing}\PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{p}{)} \PY{c+c1}{\PYZsh{} adds index col}
+         \PY{n}{train\PYZus{}set}\PY{p}{,} \PY{n}{test\PYZus{}set}  \PY{o}{=} \PY{n}{split\PYZus{}train\PYZus{}test\PYZus{}by\PYZus{}id}\PY{p}{(}\PY{n}{housing\PYZus{}with\PYZus{}id}\PY{p}{,} \PY{l+m+mf}{0.2}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{index}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}12}]:} \PY{n}{housing\PYZus{}with\PYZus{}id}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{id}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{housing}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{longitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{*} \PY{l+m+mi}{1000} \PY{o}{+} \PY{n}{housing}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{latitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+         \PY{n}{train\PYZus{}set}\PY{p}{,} \PY{n}{test\PYZus{}set}  \PY{o}{=} \PY{n}{split\PYZus{}train\PYZus{}test\PYZus{}by\PYZus{}id}\PY{p}{(}\PY{n}{housing\PYZus{}with\PYZus{}id}\PY{p}{,} \PY{l+m+mf}{0.2}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{id}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+    Note: It seems that the last byte of the hash function has a lot of
+non-uniqueness. So I'm not if that is usable.
+
+    \hypertarget{splitting-data-done-with-sklearns-train_test_split}{%
+\subsubsection{Splitting data done with sklearn's
+train\_test\_split}\label{splitting-data-done-with-sklearns-train_test_split}}
+
+They allow you to random seed using \texttt{random\_state}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}13}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k}{import} \PY{n}{train\PYZus{}test\PYZus{}split}
+         \PY{n}{train\PYZus{}set}\PY{p}{,} \PY{n}{test\PYZus{}set} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}\PY{n}{housing}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.2}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{23}\PY{p}{)}
+\end{Verbatim}
+
+    Note: Instead of purely random sampling, the splitting should be done
+while making sure samples from all groups (\emph{strata}) are done
+uniformly to avoid bias in sampling.
+
+    \hypertarget{creating-fake-categories-within-an-attribute}{%
+\subsection{Creating fake categories within an
+attribute}\label{creating-fake-categories-within-an-attribute}}
+
+To ensure uniform sampling from all representative categories of an
+important feature (e.g. \texttt{median\_income} here), we create
+categories of median\_income
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}14}]:} \PY{n}{housing}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{income\PYZus{}cat}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{ceil}\PY{p}{(}\PY{n}{housing}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median\PYZus{}income}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{/} \PY{l+m+mf}{1.5}\PY{p}{)}
+         \PY{n}{housing}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{income\PYZus{}cat}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{housing}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{income\PYZus{}cat}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{\PYZlt{}} \PY{l+m+mi}{5}\PY{p}{,} \PY{l+m+mf}{5.0}\PY{p}{,} \PY{n}{inplace}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{housing}\PY{p}{[}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{income\PYZus{}cat}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median\PYZus{}income}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+   income\_cat  median\_income
+0         5.0         8.3252
+1         5.0         8.3014
+2         5.0         7.2574
+3         4.0         5.6431
+4         3.0         3.8462
+
+    \end{Verbatim}
+
+    \hypertarget{notes-on-where}{%
+\subsubsection{\texorpdfstring{Notes on
+\texttt{where()}}{Notes on where()}}\label{notes-on-where}}
+
+\texttt{np.where()} is quite different from \texttt{df.where()} where
+\texttt{df} is a Numpy dataframe. First, \texttt{np.where(condition)}
+returns the \emph{indices} of a dataframe satisfying a condition. But
+\texttt{df.where(condition\_to\_keep\_intact,\ value\_to\_set\_if\_condition\_is\_false,\ inplace=True/False)}
+See
+\href{https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.where.html}{here}
+for further explantions. \texttt{df1.where()} works only for dataframes.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}15}]:} \PY{n}{this} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{l+m+mi}{25}\PY{p}{)}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{)} \PY{c+c1}{\PYZsh{} arange(10) (not arrange) is Matlab 1:10, reshape for matrix dimension}
+         \PY{n}{np}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{p}{(}\PY{l+m+mi}{5}\PY{o}{\PYZlt{}} \PY{n}{this}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{this} \PY{o}{\PYZlt{}} \PY{l+m+mi}{10}\PY{p}{)}\PY{p}{)} \PY{c+c1}{\PYZsh{} prints the row and column indices of matching entries}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}15}]:} (array([1, 1, 1, 1]), array([1, 2, 3, 4]))
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}16}]:} \PY{n}{this} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{Series}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{this}\PY{p}{)}
+         \PY{n}{this}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{this} \PY{o}{\PYZgt{}} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{7}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+0    0
+1    1
+2    2
+3    3
+4    4
+dtype: int64
+
+    \end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}16}]:} 0    7
+         1    7
+         2    7
+         3    3
+         4    4
+         dtype: int64
+\end{Verbatim}
+            
+    \hypertarget{sklearns-stratified-shuffle-split}{%
+\subsubsection{Sklearn's Stratified Shuffle
+Split}\label{sklearns-stratified-shuffle-split}}
+
+Not sure why there is a \texttt{for} loop needed, but let's accept it
+witout questions
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}17}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k}{import} \PY{n}{StratifiedShuffleSplit}
+         \PY{c+c1}{\PYZsh{} Setting up the splitter}
+         \PY{n}{splitter} \PY{o}{=} \PY{n}{StratifiedShuffleSplit}\PY{p}{(}\PY{n}{n\PYZus{}splits}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.2}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{43}\PY{p}{)}
+         
+         \PY{k}{for} \PY{n}{train\PYZus{}index}\PY{p}{,} \PY{n}{test\PYZus{}index} \PY{o+ow}{in} \PY{n}{splitter}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{n}{housing}\PY{p}{,} \PY{n}{housing}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{income\PYZus{}cat}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{p}{:}
+             \PY{n}{strat\PYZus{}train\PYZus{}set} \PY{o}{=} \PY{n}{housing}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{train\PYZus{}index}\PY{p}{]}
+             \PY{n}{strat\PYZus{}test\PYZus{}set} \PY{o}{=} \PY{n}{housing}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{test\PYZus{}index}\PY{p}{]}
+\end{Verbatim}
+
+    First, we look at the proportions of different income\_categories. Next,
+we check if the stratified train data has similar distribution. Same
+goes for the test data, if everything goes well.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}18}]:} \PY{n}{housing}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{income\PYZus{}cat}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}\PY{o}{/} \PY{n+nb}{len}\PY{p}{(}\PY{n}{housing}\PY{p}{)}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}18}]:} 3.0    0.350581
+         2.0    0.318847
+         4.0    0.176308
+         5.0    0.114438
+         1.0    0.039826
+         Name: income\_cat, dtype: float64
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}19}]:} \PY{n}{strat\PYZus{}train\PYZus{}set}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{income\PYZus{}cat}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}\PY{o}{/} \PY{n+nb}{len}\PY{p}{(}\PY{n}{strat\PYZus{}train\PYZus{}set}\PY{p}{)}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}19}]:} 3.0    0.350594
+         2.0    0.318859
+         4.0    0.176296
+         5.0    0.114402
+         1.0    0.039850
+         Name: income\_cat, dtype: float64
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}20}]:} \PY{n}{strat\PYZus{}test\PYZus{}set}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{income\PYZus{}cat}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}\PY{o}{/} \PY{n+nb}{len}\PY{p}{(}\PY{n}{strat\PYZus{}test\PYZus{}set}\PY{p}{)}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}20}]:} 3.0    0.350533
+         2.0    0.318798
+         4.0    0.176357
+         5.0    0.114583
+         1.0    0.039729
+         Name: income\_cat, dtype: float64
+\end{Verbatim}
+            
+    So, we have the done the stratified sampling right. Now, we remove the
+attribute \texttt{income\_cat} from all the data. The argument
+\texttt{axis=1} implies that it is a column name.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}21}]:} \PY{c+c1}{\PYZsh{} runs only once, since the column is deleted after that}
+         \PY{n}{strat\PYZus{}train\PYZus{}set}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{income\PYZus{}cat}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{inplace}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+         \PY{n}{strat\PYZus{}test\PYZus{}set}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{income\PYZus{}cat}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{inplace}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\end{Verbatim}
+
+    Copy the trainting dataset without touching it.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}22}]:} \PY{n}{housing} \PY{o}{=} \PY{n}{strat\PYZus{}train\PYZus{}set}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+    \hypertarget{visualize-geographical-data}{%
+\subsection{Visualize geographical
+data}\label{visualize-geographical-data}}
+
+Scatterplot is suitable for geographical data. Since there are overlaps
+of the circles, low values of alpha is desirable for visibility.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}23}]:} \PY{n}{housing}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{kind}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{scatter}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{x}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{longitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{y} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{latitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.1}\PY{p}{)}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}23}]:} <matplotlib.axes.\_subplots.AxesSubplot at 0x7f8682cef518>
+\end{Verbatim}
+            
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Housing_files/Housing_43_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}24}]:} \PY{n}{housing}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{kind}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{scatter}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{x}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{longitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{y} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{latitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                      \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.4}\PY{p}{,} \PY{n}{s}\PY{o}{=} \PY{n}{housing}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{population}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{/}\PY{l+m+mi}{100}\PY{p}{,} \PY{n}{label}\PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{polulation}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                      \PY{n}{c} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median\PYZus{}house\PYZus{}value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{cmap}\PY{o}{=}\PY{n}{plt}\PY{o}{.}\PY{n}{get\PYZus{}cmap}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{jet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{,} \PY{n}{colorbar} \PY{o}{=} \PY{k+kc}{True}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}24}]:} <matplotlib.legend.Legend at 0x7f86880546d8>
+\end{Verbatim}
+            
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Housing_files/Housing_44_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    The argument \texttt{s} is the radius of the circles, \texttt{c} is the
+color to be used. The colormap \texttt{jet} is not bad.
+\texttt{colorbar} produces the bar on the right. \texttt{legend} is
+necessary for the the axis names.
+
+    \hypertarget{correlation-coefficient-between-every-pair-of-attributes}{%
+\subsubsection{Correlation coefficient between every pair of
+attributes}\label{correlation-coefficient-between-every-pair-of-attributes}}
+
+The correlation coefficient or \emph{Pearson's r} between two vectors
+are defined as \[
+Corr_{X,Y} = \frac{\sum\limits_{i=1}^{n} (x_i - \bar{x}) (y_i - \bar{y})} {\sqrt{x_i - \bar{x}} \sqrt{y_i - \bar{y}}} \in [-1, 1]
+\] When the absolute value of the quantity is near 1, there is a strong
+\textbf{linear} correlation. This quantity cannot compute the negative
+correlation at all. Slope of the data does not affect the value of the
+linear correlation.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}29}]:} \PY{n}{corr\PYZus{}mat} \PY{o}{=} \PY{n}{housing}\PY{o}{.}\PY{n}{corr}\PY{p}{(}\PY{p}{)}
+         \PY{c+c1}{\PYZsh{} printing the column corresponding to median\PYZus{}house\PYZus{}value}
+         \PY{n}{corr\PYZus{}mat}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median\PYZus{}house\PYZus{}value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}29}]:} median\_house\_value    1.000000
+         median\_income         0.690551
+         total\_rooms           0.135290
+         housing\_median\_age    0.107099
+         households            0.066341
+         total\_bedrooms        0.050002
+         population           -0.024069
+         longitude            -0.040318
+         latitude             -0.148121
+         Name: median\_house\_value, dtype: float64
+\end{Verbatim}
+            
+    \hypertarget{plotting-to-observe-correlation}{%
+\subsubsection{Plotting to observe
+correlation}\label{plotting-to-observe-correlation}}
+
+The \texttt{scatter\_matix} package prints such plots
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}30}]:} \PY{k+kn}{from} \PY{n+nn}{pandas}\PY{n+nn}{.}\PY{n+nn}{plotting} \PY{k}{import} \PY{n}{scatter\PYZus{}matrix}
+         \PY{n}{attributes} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{median\PYZus{}house\PYZus{}value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{median\PYZus{}income}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{total\PYZus{}rooms}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{housing\PYZus{}median\PYZus{}age}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+         \PY{n}{scatter\PYZus{}matrix}\PY{p}{(}\PY{n}{housing}\PY{p}{[}\PY{n}{attributes}\PY{p}{]}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{20}\PY{p}{,}\PY{l+m+mi}{20}\PY{p}{)}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Housing_files/Housing_49_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    The diagonal plots are the correlations with itself, so have no use. We
+look at the first column or the first row, since we want to find the
+correration of other attribues with \texttt{median\_house\_value}
+attribute. There are linear relation with the second and third attribues
+visible from the picture. (Recall, for linear correlation, the slope is
+irrerelvant). The book says, \texttt{median\_income} (second attribute)
+is the most interesting one.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}31}]:} \PY{n}{housing}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{kind}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scatter}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{x}\PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{median\PYZus{}income}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{y}\PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{median\PYZus{}house\PYZus{}value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.1}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Housing_files/Housing_51_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    There is a concentration of data points at the top due to data caps
+applied to data during collection (e.g.setting all values aboue 50,0000
+to 50,0000).
+
+Very subtle straight lines at 480,000 and 350,000 etc that seems
+artifitial. We need to remove the districts that caused this, otherwise,
+they will pollute the data.
+
+    \hypertarget{creating-new-attributes-in-the-hope-of-better-correlation}{%
+\subsubsection{Creating new attributes in the hope of better
+correlation}\label{creating-new-attributes-in-the-hope-of-better-correlation}}
+
+Upon consideration, it seems that the following quantities may be useful
+in predicting the value of the houses.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}32}]:} \PY{n}{housing}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rooms\PYZus{}per\PYZus{}household}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{housing}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{total\PYZus{}rooms}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{/}\PY{n}{housing}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{households}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+         \PY{n}{housing}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{bedrooms\PYZus{}per\PYZus{}room}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{housing}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{total\PYZus{}bedrooms}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{/}\PY{n}{housing}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{total\PYZus{}rooms}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+         \PY{n}{housing}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{population\PYZus{}per\PYZus{}household}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{=}\PY{n}{housing}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{population}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{/}\PY{n}{housing}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{households}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}33}]:} \PY{n}{corr\PYZus{}matrix} \PY{o}{=} \PY{n}{housing}\PY{o}{.}\PY{n}{corr}\PY{p}{(}\PY{p}{)}
+         \PY{n}{corr\PYZus{}matrix}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median\PYZus{}house\PYZus{}value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}33}]:} median\_house\_value          1.000000
+         median\_income               0.690551
+         rooms\_per\_household         0.156074
+         total\_rooms                 0.135290
+         housing\_median\_age          0.107099
+         households                  0.066341
+         total\_bedrooms              0.050002
+         population\_per\_household   -0.022871
+         population                 -0.024069
+         longitude                  -0.040318
+         latitude                   -0.148121
+         bedrooms\_per\_room          -0.257121
+         Name: median\_house\_value, dtype: float64
+\end{Verbatim}
+            
+    Indeed, the attribute \texttt{bedrooms\_per\_room} shows a negative
+correlation with the house value.
+
+\hypertarget{setting-up-the-data-for-feeding}{%
+\subsection{Setting up the data for
+feeding}\label{setting-up-the-data-for-feeding}}
+
+The author now set up the X and y values of the training set.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}34}]:} \PY{n}{housing} \PY{o}{=} \PY{n}{strat\PYZus{}train\PYZus{}set}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median\PYZus{}house\PYZus{}value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)} \PY{c+c1}{\PYZsh{} note: not inplace}
+         \PY{n}{housing\PYZus{}labels} \PY{o}{=} \PY{n}{strat\PYZus{}train\PYZus{}set}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median\PYZus{}house\PYZus{}value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+    \hypertarget{dealing-with-missing-features-and-labels}{%
+\subsubsection{Dealing with missing features and
+labels}\label{dealing-with-missing-features-and-labels}}
+
+Three options to deal with missing data * get rid of column
+i.e.~attribute * get rid of row * set values to something default (zero,
+mean, median etc)
+
+Use \texttt{dropna()}, \texttt{drop()} and \texttt{fillna()} for this
+purpose. \emph{Quesion:} How do you know that there are missing values?
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}35}]:} \PY{c+c1}{\PYZsh{}\PYZsh{} choose one of the following}
+         \PY{n}{housing}\PY{o}{.}\PY{n}{dropna}\PY{p}{(}\PY{n}{subset}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{total\PYZus{}bedrooms}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{p}{;} \PY{c+c1}{\PYZsh{}dropping the row}
+         \PY{n}{housing}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{total\PYZus{}bedrooms}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{;} \PY{c+c1}{\PYZsh{} dropping the attribute}
+         \PY{c+c1}{\PYZsh{} filling by the median}
+         \PY{n}{median} \PY{o}{=} \PY{n}{housing}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{total\PYZus{}bedrooms}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{median}\PY{p}{(}\PY{p}{)}\PY{p}{;} \PY{c+c1}{\PYZsh{} will be used for test data as well}
+         \PY{n}{housing}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{total\PYZus{}bedrooms}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{fillna}\PY{p}{(}\PY{n}{median}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+
+    \hypertarget{dealling-with-missing-values-with-scikit-learn}{%
+\subsubsection{Dealling with missing values with
+Scikit-learn}\label{dealling-with-missing-values-with-scikit-learn}}
+
+Setup an instance of \texttt{SimpltImputer} and feed only the columns
+that accept the numerical values.
+
+Remember to remove the non-numerical data before feeding it to the
+\texttt{SimpleInputer}.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}36}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{impute} \PY{k}{import} \PY{n}{SimpleImputer}
+         
+         \PY{c+c1}{\PYZsh{} create an instance and define strategy}
+         \PY{n}{imputer} \PY{o}{=} \PY{n}{SimpleImputer}\PY{p}{(}\PY{n}{strategy}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         \PY{c+c1}{\PYZsh{} Drop the non\PYZhy{}numerical attributes}
+         \PY{n}{housing\PYZus{}num} \PY{o}{=} \PY{n}{housing}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ocean\PYZus{}proximity}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+         \PY{c+c1}{\PYZsh{} fit your data to compute the parameters of Imputer}
+         \PY{n}{imputer}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{housing\PYZus{}num}\PY{p}{)}
+         \PY{c+c1}{\PYZsh{} transform or estimate your data using parameters}
+         \PY{n}{X} \PY{o}{=} \PY{n}{imputer}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{n}{housing\PYZus{}num}\PY{p}{)}
+         \PY{c+c1}{\PYZsh{} convert the numerical matrix data to a dataframe}
+         \PY{n}{housing\PYZus{}tr} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{columns}\PY{o}{=}\PY{n}{housing\PYZus{}num}\PY{o}{.}\PY{n}{columns}\PY{p}{)}
+\end{Verbatim}
+
+    Note: \texttt{fit} and \texttt{transform} can be performed once (and
+some cases, faster) using \texttt{fit\_transform} method.
+
+    \hypertarget{assigning-numerical-values-to-strings-ignore-this-and-jump-next}{%
+\subsubsection{Assigning numerical values to strings (ignore this and
+jump
+next)}\label{assigning-numerical-values-to-strings-ignore-this-and-jump-next}}
+
+Using \texttt{LabelEncoder} from \texttt{sklearn} we assign numbers
+\texttt{0,\ ....,\ 5} to different labels of \texttt{ocean\_proximity}
+attribute.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}37}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{preprocessing} \PY{k}{import} \PY{n}{LabelEncoder}
+         \PY{n}{encoder} \PY{o}{=} \PY{n}{LabelEncoder}\PY{p}{(}\PY{p}{)}
+         \PY{n}{housing\PYZus{}cat} \PY{o}{=} \PY{n}{housing}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ocean\PYZus{}proximity}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+         \PY{n}{housing\PYZus{}cat\PYZus{}encoded} \PY{o}{=} \PY{n}{encoder}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{housing\PYZus{}cat}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{encoder}\PY{o}{.}\PY{n}{classes\PYZus{}}\PY{p}{)} \PY{c+c1}{\PYZsh{}Print the order of labels 0,...,5}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+['<1H OCEAN' 'INLAND' 'ISLAND' 'NEAR BAY' 'NEAR OCEAN']
+
+    \end{Verbatim}
+
+    This order does not represent the gradual distance from the ocean.
+However, we abandon the attempt to order them and use \emph{1hot}
+encoding encoding using \texttt{sklearn.preprocessing} method
+\texttt{OneHotEncoder}. 
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}38}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{preprocessing} \PY{k}{import} \PY{n}{OneHotEncoder}
+         \PY{n}{encoder} \PY{o}{=} \PY{n}{OneHotEncoder}\PY{p}{(}\PY{p}{)}
+         \PY{n}{tmp\PYZus{}housing\PYZus{}cat} \PY{o}{=} \PY{n}{housing\PYZus{}cat\PYZus{}encoded}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}
+         \PY{n}{housing\PYZus{}cat\PYZus{}1hot} \PY{o}{=} \PY{n}{encoder}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{tmp\PYZus{}housing\PYZus{}cat}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/home/debdeep/.local/lib/python3.6/site-packages/sklearn/preprocessing/\_encoders.py:368: FutureWarning: The handling of integer data will change in version 0.22. Currently, the categories are determined based on the range [0, max(values)], while in the future they will be determined based on the unique values.
+If you want the future behaviour and silence this warning, you can specify "categories='auto'".
+In case you used a LabelEncoder before this OneHotEncoder to convert the categories to integers, then you can now use the OneHotEncoder directly.
+  warnings.warn(msg, FutureWarning)
+
+    \end{Verbatim}
+
+    \hypertarget{ignore-the-previous-part-we-can-get-a-1hot-sparse-representation-using-this-easy-method}{%
+\subsubsection{Ignore the previous part, we can get a 1hot sparse
+representation using this easy
+method}\label{ignore-the-previous-part-we-can-get-a-1hot-sparse-representation-using-this-easy-method}}
+
+If you remove the sparse\_output option, you get binary representation.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}39}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{preprocessing} \PY{k}{import} \PY{n}{LabelBinarizer}
+         \PY{n}{encoder} \PY{o}{=} \PY{n}{LabelBinarizer}\PY{p}{(}\PY{n}{sparse\PYZus{}output}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+         \PY{n}{housing\PYZus{}cat\PYZus{}1hot} \PY{o}{=} \PY{n}{encoder}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{housing\PYZus{}cat}\PY{p}{)}
+         \PY{c+c1}{\PYZsh{}print(housing\PYZus{}cat\PYZus{}1hot)}
+\end{Verbatim}
+
+    \hypertarget{a-class-to-automate-adding-attributes-to-the-dataframe}{%
+\subsubsection{A class to automate adding attributes to the
+dataframe}\label{a-class-to-automate-adding-attributes-to-the-dataframe}}
+
+The main lesson is to keep adding methods and variables to this class to
+automate the data manipulation.
+
+The base class \texttt{BaseEstimator} gives you access to the
+\texttt{fit\_transform()} method. Also, the \texttt{TransformerMixin}
+base class gives us access to \texttt{get\_params()} and
+\texttt{set\_params()} methods for hyperparameters tuning. In the
+following class, we allow one hyperparamer
+\texttt{add\_bedrooms\_per\_room} that takes two arguments:
+\texttt{True} (default) and \texttt{False}.
+
+This class adds 3 columns (1 optional) to the given dataset.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}40}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{base} \PY{k}{import} \PY{n}{BaseEstimator}\PY{p}{,} \PY{n}{TransformerMixin}
+         
+         \PY{c+c1}{\PYZsh{} column numbers of necessary attributes}
+         \PY{n}{rooms\PYZus{}ix}\PY{p}{,} \PY{n}{bedrooms\PYZus{}ix}\PY{p}{,} \PY{n}{population\PYZus{}ix}\PY{p}{,} \PY{n}{household\PYZus{}ix} \PY{o}{=} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{,} \PY{l+m+mi}{6}
+         
+         \PY{k}{class} \PY{n+nc}{CombinedAttributesAdder}\PY{p}{(}\PY{n}{BaseEstimator}\PY{p}{,} \PY{n}{TransformerMixin}\PY{p}{)}\PY{p}{:}
+             \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{add\PYZus{}bedrooms\PYZus{}per\PYZus{}room} \PY{o}{=} \PY{k+kc}{True}\PY{p}{)}\PY{p}{:}
+                 \PY{c+c1}{\PYZsh{} setting the variable on creating the instance}
+                 \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{add\PYZus{}bedrooms\PYZus{}per\PYZus{}room} \PY{o}{=} \PY{n}{add\PYZus{}bedrooms\PYZus{}per\PYZus{}room}
+             \PY{k}{def} \PY{n+nf}{fit}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{k+kc}{None}\PY{p}{)}\PY{p}{:}   \PY{c+c1}{\PYZsh{} setting up the parameters}
+                 \PY{k}{return} \PY{n+nb+bp}{self}    \PY{c+c1}{\PYZsh{} Nothing to do}
+             \PY{k}{def} \PY{n+nf}{transform}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{k+kc}{None}\PY{p}{)}\PY{p}{:}  \PY{c+c1}{\PYZsh{} applying the tansform}
+                 \PY{n}{rooms\PYZus{}per\PYZus{}household} \PY{o}{=} \PY{n}{X}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{n}{population\PYZus{}ix}\PY{p}{]} \PY{o}{/} \PY{n}{X}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{n}{household\PYZus{}ix}\PY{p}{]}
+                 \PY{n}{population\PYZus{}per\PYZus{}household} \PY{o}{=} \PY{n}{X}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{n}{rooms\PYZus{}ix}\PY{p}{]} \PY{o}{/} \PY{n}{X}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{n}{household\PYZus{}ix}\PY{p}{]}
+                 
+                 \PY{k}{if} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{add\PYZus{}bedrooms\PYZus{}per\PYZus{}room}\PY{p}{:}  \PY{c+c1}{\PYZsh{} if this variable is true}
+                     \PY{n}{bedrooms\PYZus{}per\PYZus{}room} \PY{o}{=} \PY{n}{X}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{n}{bedrooms\PYZus{}ix}\PY{p}{]} \PY{o}{/} \PY{n}{X}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{n}{rooms\PYZus{}ix}\PY{p}{]}
+                     \PY{k}{return} \PY{n}{np}\PY{o}{.}\PY{n}{c\PYZus{}}\PY{p}{[}\PY{n}{X}\PY{p}{,} \PY{n}{rooms\PYZus{}per\PYZus{}household}\PY{p}{,} \PY{n}{population\PYZus{}per\PYZus{}household}\PY{p}{,} \PY{n}{bedrooms\PYZus{}per\PYZus{}room}\PY{p}{]}
+                 \PY{k}{else}\PY{p}{:}  \PY{c+c1}{\PYZsh{} if self.add\PYZus{}bedrooms\PYZus{}per\PYZus{}rooms is False}
+                     \PY{k}{return} \PY{n}{np}\PY{o}{.}\PY{n}{c\PYZus{}}\PY{p}{[}\PY{n}{X}\PY{p}{,} \PY{n}{rooms\PYZus{}per\PYZus{}household}\PY{p}{,} \PY{n}{population\PYZus{}per\PYZus{}household}\PY{p}{]}
+                 
+\end{Verbatim}
+
+    \textbf{Quesion:} The variables \texttt{...\_ix} are not part of the
+class, but are being used in the class! Bad practice or error? We test
+out our class.
+
+    Try out other methods that are automatically available.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}41}]:} \PY{n}{attr\PYZus{}adder} \PY{o}{=} \PY{n}{CombinedAttributesAdder}\PY{p}{(}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{attr\PYZus{}adder}\PY{o}{.}\PY{n}{set\PYZus{}params}\PY{p}{(}\PY{n}{add\PYZus{}bedrooms\PYZus{}per\PYZus{}room}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{attr\PYZus{}adder}\PY{o}{.}\PY{n}{get\PYZus{}params}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{attr\PYZus{}adder}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{n}{housing}\PY{o}{.}\PY{n}{values}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+CombinedAttributesAdder(add\_bedrooms\_per\_room=True)
+\{'add\_bedrooms\_per\_room': True\}
+[[-117.93 34.06 28.0 {\ldots} 3.4157650695517776 5.165378670788254
+  0.20586475164572113]
+ [-117.94 33.87 46.0 {\ldots} 2.845982142857143 4.611607142857143
+  0.21781219748305905]
+ [-121.84 37.32 16.0 {\ldots} 4.453883495145631 4.529126213592233
+  0.19506966773847803]
+ {\ldots}
+ [-122.43 37.73 52.0 {\ldots} 4.063888888888889 4.15 0.20481927710843373]
+ [-118.19 34.04 39.0 {\ldots} 5.237012987012987 3.487012987012987
+  0.30074487895716945]
+ [-122.62 38.25 20.0 {\ldots} 2.085858585858586 4.767676767676767
+  0.2176906779661017]]
+
+    \end{Verbatim}
+
+    \hypertarget{feature-scaling}{%
+\subsubsection{Feature Scaling}\label{feature-scaling}}
+
+If one attribute is at a much higher scale than the other, the methods
+won't perform well. We need to normalize or standardize the data and
+work with simlilar range.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Min-max Scaling:} Scale the attribute so that the min is 0 and
+  the max is 1.\\
+\item
+  \textbf{Standardization:} Subtract the mean from each entry then
+  divide the standard deviation to have a zero-mean, 1-SD population.
+\end{itemize}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+\begin{minipage}[b]{0.21\columnwidth}\raggedright
+Comment\strut
+\end{minipage} & \begin{minipage}[b]{0.42\columnwidth}\raggedright
+min-max scaling\strut
+\end{minipage} & \begin{minipage}[b]{0.29\columnwidth}\raggedright
+standardization\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.21\columnwidth}\raggedright
+good\strut
+\end{minipage} & \begin{minipage}[t]{0.42\columnwidth}\raggedright
+All values are between 0 and 1\strut
+\end{minipage} & \begin{minipage}[t]{0.29\columnwidth}\raggedright
+Outlier do not affect the data\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.21\columnwidth}\raggedright
+bad\strut
+\end{minipage} & \begin{minipage}[t]{0.42\columnwidth}\raggedright
+Existence of outliers will over-scale the data, so the working range
+will be too small\strut
+\end{minipage} & \begin{minipage}[t]{0.29\columnwidth}\raggedright
+Even though the SD is 1, values can be unbounded\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.21\columnwidth}\raggedright
+transformer\strut
+\end{minipage} & \begin{minipage}[t]{0.42\columnwidth}\raggedright
+\texttt{MinMaxScaler}\strut
+\end{minipage} & \begin{minipage}[t]{0.29\columnwidth}\raggedright
+\texttt{StandardScaler}\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.21\columnwidth}\raggedright
+\texttt{feature\_range}\strut
+\end{minipage} & \begin{minipage}[t]{0.42\columnwidth}\raggedright
+range\strut
+\end{minipage} & \begin{minipage}[t]{0.29\columnwidth}\raggedright
+SD\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+    \hypertarget{transformation-pipeline}{%
+\subsection{Transformation Pipeline}\label{transformation-pipeline}}
+
+So, it turns out, creating a new transformation instance, fitting them
+and applying the transformations are possible to be streamlined using a
+\texttt{Pipeline}. In the end, just call the method on the pipeline to
+run them in sequence.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}42}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{pipeline} \PY{k}{import} \PY{n}{Pipeline}
+         \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{preprocessing} \PY{k}{import} \PY{n}{StandardScaler}
+         \PY{n}{num\PYZus{}pipeline} \PY{o}{=} \PY{n}{Pipeline}\PY{p}{(}\PY{p}{[}
+             \PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{imputer}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{SimpleImputer}\PY{p}{(}\PY{n}{strategy}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{)}\PY{p}{,}
+             \PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{attrib\PYZus{}adder}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{CombinedAttributesAdder}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{,}
+             \PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{std\PYZus{}scaler}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{StandardScaler}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{,}
+         \PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+
+    Since the transforms involve only numerical manimpulatoins, it is
+important that we apply to the numerical part of the data, which we
+already created (\texttt{housing-num}) by dropping the string type
+column.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}43}]:} \PY{n}{housing\PYZus{}num\PYZus{}tr} \PY{o}{=} \PY{n}{num\PYZus{}pipeline}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{housing\PYZus{}num}\PY{p}{)}
+\end{Verbatim}
+
+    Now, we create a simple class to select attributes from a dataframe. We
+implement it as a scikit-learn transformation so that it works with the
+Pipelines.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}44}]:} \PY{k}{class} \PY{n+nc}{AttributeSelector}\PY{p}{(}\PY{n}{BaseEstimator}\PY{p}{,}  \PY{n}{TransformerMixin}\PY{p}{)}\PY{p}{:}
+             \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{columnList}\PY{p}{)}\PY{p}{:}
+                 \PY{c+c1}{\PYZsh{} setting the variable on creating the instance}
+                 \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{columnList} \PY{o}{=} \PY{n}{columnList}
+             \PY{k}{def} \PY{n+nf}{fit}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{k+kc}{None}\PY{p}{)}\PY{p}{:}   \PY{c+c1}{\PYZsh{} setting up the parameters}
+                 \PY{k}{return} \PY{n+nb+bp}{self}    \PY{c+c1}{\PYZsh{} Nothing to do}
+             \PY{k}{def} \PY{n+nf}{transform}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{k+kc}{None}\PY{p}{)}\PY{p}{:}  \PY{c+c1}{\PYZsh{} applying the tansform}
+                 \PY{k}{return} \PY{n}{X}\PY{p}{[}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{columnList}\PY{p}{]}
+\end{Verbatim}
+
+    For non-numerical transform, we can create another Pipeline. Since the
+numerical and non-numrical transformation can be used indepndently on
+the data, we can run them in parallel.
+
+\hypertarget{featureunion-can-run-multiple-pipelines-in-parallel-and-combine-the-output-in-the-end}{%
+\subsubsection{\texorpdfstring{\texttt{FeatureUnion} can run multiple
+Pipelines in parallel and combine the output in the
+end}{FeatureUnion can run multiple Pipelines in parallel and combine the output in the end}}\label{featureunion-can-run-multiple-pipelines-in-parallel-and-combine-the-output-in-the-end}}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}45}]:} \PY{c+c1}{\PYZsh{} A quick hacky replacement for LabelBinarizer}
+         \PY{k}{class} \PY{n+nc}{FxdBinarizer}\PY{p}{(}\PY{n}{BaseEstimator}\PY{p}{,}  \PY{n}{TransformerMixin}\PY{p}{)}\PY{p}{:}
+             \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{sparse}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{p}{:}
+                 \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{sparse} \PY{o}{=} \PY{n}{sparse}
+                 \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{enc} \PY{o}{=} \PY{n}{LabelBinarizer}\PY{p}{(}\PY{n}{sparse\PYZus{}output}\PY{o}{=}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{sparse}\PY{p}{)}
+             \PY{k}{def} \PY{n+nf}{fit}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{k+kc}{None}\PY{p}{)}\PY{p}{:}   \PY{c+c1}{\PYZsh{} setting up the parameters}
+                 \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{enc}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X}\PY{p}{)}
+                 \PY{k}{return} \PY{n+nb+bp}{self}    \PY{c+c1}{\PYZsh{} Nothing to do}
+             \PY{k}{def} \PY{n+nf}{transform}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{k+kc}{None}\PY{p}{)}\PY{p}{:}  \PY{c+c1}{\PYZsh{} applying the tansform}
+                 \PY{n}{YY} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{enc}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{n}{X}\PY{p}{)}
+                 \PY{k}{return} \PY{n}{YY} 
+\end{Verbatim}
+
+     Pipeline
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}46}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{pipeline} \PY{k}{import} \PY{n}{FeatureUnion}
+         
+         
+         \PY{n}{num\PYZus{}attribs} \PY{o}{=} \PY{n+nb}{list}\PY{p}{(}\PY{n}{housing\PYZus{}num}\PY{p}{)}  \PY{c+c1}{\PYZsh{} get the column names on the numerical data}
+         \PY{n}{cat\PYZus{}attribs} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ocean\PYZus{}proximity}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{c+c1}{\PYZsh{} column name of the string type data}
+         
+         \PY{n}{num\PYZus{}pipeline} \PY{o}{=} \PY{n}{Pipeline}\PY{p}{(}\PY{p}{[}
+             \PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{selector}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{AttributeSelector}\PY{p}{(}\PY{n}{num\PYZus{}attribs}\PY{p}{)}\PY{p}{)}\PY{p}{,}
+             \PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{imputer}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{SimpleImputer}\PY{p}{(}\PY{n}{strategy}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{median}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}\PY{p}{,}
+             \PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{attribs\PYZus{}adder}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{CombinedAttributesAdder}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{,}
+             \PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{std\PYZus{}scaler}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{StandardScaler}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{,}
+         \PY{p}{]}\PY{p}{)}
+         \PY{n}{cat\PYZus{}pipeline} \PY{o}{=} \PY{n}{Pipeline}\PY{p}{(}\PY{p}{[}
+             \PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{selector}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{AttributeSelector}\PY{p}{(}\PY{n}{cat\PYZus{}attribs}\PY{p}{)}\PY{p}{)}\PY{p}{,}
+             \PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{label\PYZus{}binarizer}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{FxdBinarizer}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{,}  \PY{c+c1}{\PYZsh{} changed}
+             \PY{c+c1}{\PYZsh{}(\PYZdq{}label\PYZus{}binarizer\PYZdq{}, LabelBinarizer()),  \PYZsh{} doesn\PYZsq{}t work becuase of some implementation issue, asks for 2 arguemtns instead of 3(!)}
+             
+         \PY{p}{]}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} A transform that takes the output of both pipelines}
+         \PY{c+c1}{\PYZsh{} and combines them}
+         \PY{n}{full\PYZus{}pipeline} \PY{o}{=} \PY{n}{FeatureUnion}\PY{p}{(}\PY{n}{transformer\PYZus{}list}\PY{o}{=}\PY{p}{[}
+             \PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{num\PYZus{}pipeline}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{num\PYZus{}pipeline}\PY{p}{)}\PY{p}{,}
+             \PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cat\PYZus{}pipeline}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{cat\PYZus{}pipeline}\PY{p}{)}\PY{p}{,}
+         \PY{p}{]}\PY{p}{)}
+         
+         
+         \PY{n}{housing\PYZus{}prepared} \PY{o}{=} \PY{n}{full\PYZus{}pipeline}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{housing}\PY{p}{)}
+\end{Verbatim}
+
+    \hypertarget{training-and-predicting}{%
+\subsubsection{Training and predicting}\label{training-and-predicting}}
+
+We use linear regression here. We feed the prepared data (standardized,
+imputed, attribute-added, category-binarized) and the labels to the
+model to fit it. Then predict the output using the first 5
+\emph{training} data to see the output.
+
+\textbf{Note:} Before predicting, we use only \texttt{transform()} to
+prepare the data and do \emph{not} \texttt{fit\_transform()}, since we
+do not want to re-evaluate the hyperparameters using the smaller
+dataset, which will have many missing categories, different
+normalization constant etc.
+
+\textbf{Note:} We use \texttt{list(label)} instead of \texttt{label} to
+print the values since we do not want to print the indices that are
+attached to those values.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}47}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{linear\PYZus{}model} \PY{k}{import} \PY{n}{LinearRegression}
+         \PY{n}{lin\PYZus{}reg} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}
+         \PY{n}{lin\PYZus{}reg}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{housing\PYZus{}prepared}\PY{p}{,} \PY{n}{housing\PYZus{}labels}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{housing}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{housing\PYZus{}prepared}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+         
+         \PY{n}{data} \PY{o}{=} \PY{n}{housing}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{l+m+mi}{5}\PY{p}{]}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{data}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+         \PY{n}{label} \PY{o}{=} \PY{n}{housing\PYZus{}labels}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{l+m+mi}{5}\PY{p}{]}
+         \PY{c+c1}{\PYZsh{} we do only transform since we don\PYZsq{}t want to re\PYZhy{}fit the Binarize transformation for the smaller data}
+         \PY{c+c1}{\PYZsh{} For the whole data, let\PYZsq{}s say there were 5 categories. The smaller data might contain only 3 categories}
+         \PY{c+c1}{\PYZsh{} So, re\PYZhy{}fitting will mess up the number to category mapping (cardinal)}
+         \PY{n}{data\PYZus{}prep} \PY{o}{=} \PY{n}{full\PYZus{}pipeline}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{n}{data}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{data\PYZus{}prep}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+         
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Prediction}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{Actual}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{c\PYZus{}}\PY{p}{[}\PY{n+nb}{list}\PY{p}{(}\PY{n}{label}\PY{p}{)}\PY{p}{,} \PY{n}{lin\PYZus{}reg}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{data\PYZus{}prep}\PY{p}{)}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+(16512, 9)
+(16512, 16)
+(5, 9)
+(5, 16)
+Prediction	Actual
+[[202800.         184970.64678445]
+ [187000.         239340.4344935 ]
+ [212800.         246683.7951888 ]
+ [250000.         165288.35480714]
+ [307000.         284539.6402469 ]]
+
+    \end{Verbatim}
+
+    \hypertarget{performace-of-the-estimator}{%
+\subsubsection{Performace of the
+estimator}\label{performace-of-the-estimator}}
+
+Compute MSE and RMSE. Observation: does not perform very well since the
+\texttt{median\_housing\_values} are between 120,000 and 265,000
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}48}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{metrics} \PY{k}{import} \PY{n}{mean\PYZus{}squared\PYZus{}error}
+         \PY{n}{housing\PYZus{}predictions} \PY{o}{=} \PY{n}{lin\PYZus{}reg}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{housing\PYZus{}prepared}\PY{p}{)}
+         \PY{n}{lin\PYZus{}mse} \PY{o}{=} \PY{n}{mean\PYZus{}squared\PYZus{}error}\PY{p}{(}\PY{n}{housing\PYZus{}labels}\PY{p}{,} \PY{n}{housing\PYZus{}predictions}\PY{p}{)}
+         \PY{n}{lin\PYZus{}rmse} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sqrt}\PY{p}{(}\PY{n}{lin\PYZus{}mse}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{lin\PYZus{}rmse}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+68116.54761715344
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}49}]:} \PY{n}{label}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}49}]:} count         5.000000
+         mean     231920.000000
+         std       47945.927877
+         min      187000.000000
+         25\%      202800.000000
+         50\%      212800.000000
+         75\%      250000.000000
+         max      307000.000000
+         Name: median\_house\_value, dtype: float64
+\end{Verbatim}
+            
+    Looking at the list of values it seems that the error is pretty high.
+So, we try a different model. We use \textbf{Decision Tree Regressor}
+model for fitting the data.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}50}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{tree} \PY{k}{import} \PY{n}{DecisionTreeRegressor}
+         \PY{n}{tree\PYZus{}reg} \PY{o}{=} \PY{n}{DecisionTreeRegressor}\PY{p}{(}\PY{p}{)}
+         \PY{n}{tree\PYZus{}reg}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{housing\PYZus{}prepared}\PY{p}{,} \PY{n}{housing\PYZus{}labels}\PY{p}{)}
+         
+         \PY{n}{tree\PYZus{}prediction} \PY{o}{=} \PY{n}{tree\PYZus{}reg}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{housing\PYZus{}prepared}\PY{p}{)}
+         \PY{n}{tree\PYZus{}mse} \PY{o}{=} \PY{n}{mean\PYZus{}squared\PYZus{}error}\PY{p}{(}\PY{n}{housing\PYZus{}labels}\PY{p}{,} \PY{n}{tree\PYZus{}prediction}\PY{p}{)}
+         \PY{n}{tree\PYZus{}rmse} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sqrt}\PY{p}{(}\PY{n}{tree\PYZus{}mse}\PY{p}{)}
+         \PY{n}{tree\PYZus{}rmse}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}50}]:} 0.0
+\end{Verbatim}
+            
+    This is a clear indication of \textbf{overfitting} since the error is
+shown to be zero. We need to do a cross-validation to determine how
+effective this model is.
+
+We use \texttt{cross\_val\_score} from \texttt{sklearn.model\_selection}
+to do that.
+
+This method breaks the traing data into several disjoint subsets
+(\emph{folds}), fits the model on one set, then evaluates the error
+(validates) on the other subsets. In the following code, the process is
+done 10 times.
+
+The cross validation method requires a \emph{utility} function as
+opposed to a \emph{cost} function and finds the one that maximizes the
+utility function (as opposed to minimizing the cost function,
+e.g.~rmse). So, we choose negative of mse as the utility function.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}51}]:} \PY{k}{def} \PY{n+nf}{show\PYZus{}scores}\PY{p}{(}\PY{n}{score\PYZus{}arr}\PY{p}{)}\PY{p}{:}
+             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{score}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{score\PYZus{}arr}\PY{p}{)}
+             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mean}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{score\PYZus{}arr}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{sd}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{score\PYZus{}arr}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}52}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k}{import} \PY{n}{cross\PYZus{}val\PYZus{}score}
+         
+         \PY{c+c1}{\PYZsh{} compute the utility function score for 10 cross\PYZhy{}validation}
+         \PY{c+c1}{\PYZsh{} cross\PYZus{}val\PYZus{}score(learning\PYZus{}model, X\PYZus{}data, y\PYZus{}labels, scoring=\PYZsq{}method\PYZsq{}, cv=num)}
+         \PY{n}{lin\PYZus{}tree\PYZus{}scores} \PY{o}{=} \PY{n}{cross\PYZus{}val\PYZus{}score}\PY{p}{(}\PY{n}{tree\PYZus{}reg}\PY{p}{,} \PY{n}{housing\PYZus{}prepared}\PY{p}{,} \PY{n}{housing\PYZus{}labels}\PY{p}{,}
+                                 \PY{n}{scoring}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{neg\PYZus{}mean\PYZus{}squared\PYZus{}error}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{cv}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+         
+         \PY{n}{lin\PYZus{}rmse\PYZus{}scores} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sqrt}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{lin\PYZus{}tree\PYZus{}scores}\PY{p}{)}
+         \PY{n}{show\PYZus{}scores}\PY{p}{(}\PY{n}{lin\PYZus{}rmse\PYZus{}scores}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+score	 [66809.94644406 70340.74305366 69684.13836789 67541.15621844
+ 67806.56486861 68189.187871   66825.36497583 70237.76176237
+ 73965.22604085 72837.78824238]
+mean	 69423.78778450926
+sd	 2347.7461480403085
+
+    \end{Verbatim}
+
+    The cross validation scores show that the error is actually pretty high,
+even higher than the error in Linear regression (at least the mean error
+of the cross-validation score).
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}53}]:} \PY{n}{lin\PYZus{}lin\PYZus{}score} \PY{o}{=} \PY{n}{cross\PYZus{}val\PYZus{}score}\PY{p}{(}\PY{n}{lin\PYZus{}reg}\PY{p}{,} \PY{n}{housing\PYZus{}prepared}\PY{p}{,} \PY{n}{housing\PYZus{}labels}\PY{p}{,}
+                                        \PY{n}{scoring}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{neg\PYZus{}mean\PYZus{}squared\PYZus{}error}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{cv}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+         \PY{n}{lin\PYZus{}lin\PYZus{}rmse\PYZus{}scores} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sqrt}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{lin\PYZus{}lin\PYZus{}score}\PY{p}{)}
+         \PY{n}{show\PYZus{}scores}\PY{p}{(}\PY{n}{lin\PYZus{}lin\PYZus{}rmse\PYZus{}scores}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+score	 [64212.8939011  67341.68004298 67257.98725219 67736.45141673
+ 73751.84280646 68317.17225103 67370.24975243 66870.4054549
+ 68647.94962971 73056.49423986]
+mean	 68456.31267473861
+sd	 2723.200723606746
+
+    \end{Verbatim}
+
+    \textbf{Conclusion:} the mean error for Decision Tree is higher than
+that of Linear Regression. So, in this case, the linear regression model
+works better. But neither is good enough. \textbf{Lesson:} the
+Cross-validation-score is a better measurement of the performance of the
+model.
+
+Now we try another model: \textbf{RandomForestRegressor}. It is an
+\emph{ensemble} learning method that uses an average of many simple
+learning models fitted on random samples.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}54}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{ensemble} \PY{k}{import} \PY{n}{RandomForestRegressor}
+         \PY{n}{forest\PYZus{}reg} \PY{o}{=} \PY{n}{RandomForestRegressor}\PY{p}{(}\PY{n}{n\PYZus{}estimators}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+         \PY{n}{lin\PYZus{}forest\PYZus{}score} \PY{o}{=} \PY{n}{cross\PYZus{}val\PYZus{}score}\PY{p}{(}\PY{n}{forest\PYZus{}reg}\PY{p}{,} \PY{n}{housing\PYZus{}prepared}\PY{p}{,} \PY{n}{housing\PYZus{}labels}\PY{p}{,}
+                                     \PY{n}{scoring}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{neg\PYZus{}mean\PYZus{}squared\PYZus{}error}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{cv}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+         \PY{n}{lin\PYZus{}forest\PYZus{}rmse\PYZus{}scores} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sqrt}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{lin\PYZus{}forest\PYZus{}score}\PY{p}{)}
+         \PY{n}{show\PYZus{}scores}\PY{p}{(}\PY{n}{lin\PYZus{}forest\PYZus{}rmse\PYZus{}scores}\PY{p}{)}
+         \PY{c+c1}{\PYZsh{} Note: this takes a while}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+score	 [51335.88421252 51352.92694036 52356.13879448 53053.12483065
+ 51731.32616953 50846.42606444 52113.7455512  51874.44867257
+ 52098.62767231 55144.47314104]
+mean	 52190.71220490844
+sd	 1142.847628217814
+
+    \end{Verbatim}
+
+    The mean error is better compared to the other two models.
+
+    \hypertarget{note-about-saving-the-models-to-disk}{%
+\subsubsection{Note about saving the models to
+disk}\label{note-about-saving-the-models-to-disk}}
+
+Either use \texttt{pickle} or use \texttt{sklearn.externals} function
+\texttt{joblib}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}55}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{externals} \PY{k}{import} \PY{n}{joblib}
+         \PY{n}{joblib}\PY{o}{.}\PY{n}{dump}\PY{p}{(}\PY{n}{forest\PYZus{}reg}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{forest\PYZus{}reg.pkl}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{}\PYZsh{} Later we can load this trained model using}
+         \PY{c+c1}{\PYZsh{} forest\PYZus{}reg =joblib.load(\PYZdq{}forest\PYZus{}reg.pkl\PYZdq{})}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}55}]:} ['forest\_reg.pkl']
+\end{Verbatim}
+            
+    \hypertarget{tuning-the-hyperparameters-using-gridsearchcv}{%
+\subsection{\texorpdfstring{Tuning the hyperparameters using
+\texttt{GridSearchCV}}{Tuning the hyperparameters using GridSearchCV}}\label{tuning-the-hyperparameters-using-gridsearchcv}}
+
+It is a learning model that uses a scoring method that takes a grid of
+option:value pairs as an argument and trains it to find the best
+possible option:value combinations that produces the best scores.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}56}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k}{import} \PY{n}{GridSearchCV}
+         \PY{c+c1}{\PYZsh{} A dictionary variable with option:value pairs}
+         \PY{n}{param\PYZus{}grid} \PY{o}{=} \PY{p}{[}
+             \PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{n\PYZus{}estimators}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{p}{[}\PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{30}\PY{p}{]}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{max\PYZus{}features}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{4}\PY{p}{,}\PY{l+m+mi}{6}\PY{p}{,}\PY{l+m+mi}{8}\PY{p}{]}\PY{p}{\PYZcb{}}\PY{p}{,}
+             \PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bootstrap}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{p}{[}\PY{k+kc}{False}\PY{p}{]}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{n\PYZus{}estimators}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{p}{[}\PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{10}\PY{p}{]}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{max\PYZus{}features}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{\PYZcb{}}\PY{p}{,}
+         \PY{p}{]}
+         \PY{n}{forest\PYZus{}reg} \PY{o}{=} \PY{n}{RandomForestRegressor}\PY{p}{(}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} setting up the paramaters for GridSearchCV scoring method, just like cross\PYZus{}validation\PYZus{}score}
+         \PY{c+c1}{\PYZsh{} Initialize with `refit=True` to train the model with the best parameter}
+         \PY{n}{grid\PYZus{}search} \PY{o}{=} \PY{n}{GridSearchCV}\PY{p}{(}\PY{n}{forest\PYZus{}reg}\PY{p}{,} \PY{n}{param\PYZus{}grid}\PY{p}{,} \PY{n}{cv}\PY{o}{=}\PY{l+m+mi}{5}\PY{p}{,} \PY{n}{scoring} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{neg\PYZus{}mean\PYZus{}squared\PYZus{}error}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{c+c1}{\PYZsh{} train it using data}
+         \PY{n}{grid\PYZus{}search}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{housing\PYZus{}prepared}\PY{p}{,} \PY{n}{housing\PYZus{}labels}\PY{p}{)}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}56}]:} GridSearchCV(cv=5, error\_score='raise-deprecating',
+                estimator=RandomForestRegressor(bootstrap=True, criterion='mse', max\_depth=None,
+                    max\_features='auto', max\_leaf\_nodes=None,
+                    min\_impurity\_decrease=0.0, min\_impurity\_split=None,
+                    min\_samples\_leaf=1, min\_samples\_split=2,
+                    min\_weight\_fraction\_leaf=0.0, n\_estimators='warn', n\_jobs=None,
+                    oob\_score=False, random\_state=None, verbose=0, warm\_start=False),
+                fit\_params=None, iid='warn', n\_jobs=None,
+                param\_grid=[\{'n\_estimators': [3, 10, 30], 'max\_features': [2, 4, 6, 8]\}, \{'bootstrap': [False], 'n\_estimators': [3, 10], 'max\_features': [2, 3, 4]\}],
+                pre\_dispatch='2*n\_jobs', refit=True, return\_train\_score='warn',
+                scoring='neg\_mean\_squared\_error', verbose=0)
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}57}]:} \PY{n}{grid\PYZus{}search}\PY{o}{.}\PY{n}{best\PYZus{}params\PYZus{}}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}57}]:} \{'max\_features': 6, 'n\_estimators': 30\}
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}58}]:} \PY{n}{grid\PYZus{}search}\PY{o}{.}\PY{n}{best\PYZus{}estimator\PYZus{}}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}58}]:} RandomForestRegressor(bootstrap=True, criterion='mse', max\_depth=None,
+                    max\_features=6, max\_leaf\_nodes=None, min\_impurity\_decrease=0.0,
+                    min\_impurity\_split=None, min\_samples\_leaf=1,
+                    min\_samples\_split=2, min\_weight\_fraction\_leaf=0.0,
+                    n\_estimators=30, n\_jobs=None, oob\_score=False,
+                    random\_state=None, verbose=0, warm\_start=False)
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}69}]:} \PY{c+c1}{\PYZsh{} training with the best param}
+         \PY{c+c1}{\PYZsh{} alternatively, can be done with refit=True while initializing gridSearchCV}
+         \PY{n}{bestModel} \PY{o}{=} \PY{n}{RandomForestRegressor}\PY{p}{(}\PY{n}{bootstrap}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{criterion}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mse}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{max\PYZus{}depth}\PY{o}{=}\PY{k+kc}{None}\PY{p}{,}
+                    \PY{n}{max\PYZus{}features}\PY{o}{=}\PY{l+m+mi}{6}\PY{p}{,} \PY{n}{max\PYZus{}leaf\PYZus{}nodes}\PY{o}{=}\PY{k+kc}{None}\PY{p}{,} \PY{n}{min\PYZus{}impurity\PYZus{}decrease}\PY{o}{=}\PY{l+m+mf}{0.0}\PY{p}{,}
+                    \PY{n}{min\PYZus{}impurity\PYZus{}split}\PY{o}{=}\PY{k+kc}{None}\PY{p}{,} \PY{n}{min\PYZus{}samples\PYZus{}leaf}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,}
+                    \PY{n}{min\PYZus{}samples\PYZus{}split}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{,} \PY{n}{min\PYZus{}weight\PYZus{}fraction\PYZus{}leaf}\PY{o}{=}\PY{l+m+mf}{0.0}\PY{p}{,}
+                    \PY{n}{n\PYZus{}estimators}\PY{o}{=}\PY{l+m+mi}{30}\PY{p}{,} \PY{n}{n\PYZus{}jobs}\PY{o}{=}\PY{k+kc}{None}\PY{p}{,} \PY{n}{oob\PYZus{}score}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,}
+                    \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{k+kc}{None}\PY{p}{,} \PY{n}{verbose}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{warm\PYZus{}start}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} Computing the cross\PYZhy{}validation score}
+         \PY{n}{best\PYZus{}score} \PY{o}{=} \PY{n}{cross\PYZus{}val\PYZus{}score}\PY{p}{(}\PY{n}{bestModel}\PY{p}{,} \PY{n}{housing\PYZus{}prepared}\PY{p}{,} \PY{n}{housing\PYZus{}labels}\PY{p}{,}
+                                        \PY{n}{scoring}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{neg\PYZus{}mean\PYZus{}squared\PYZus{}error}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{cv}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+         \PY{n}{best\PYZus{}rmse\PYZus{}scores} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sqrt}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{best\PYZus{}score}\PY{p}{)}
+         \PY{n}{show\PYZus{}scores}\PY{p}{(}\PY{n}{best\PYZus{}rmse\PYZus{}scores}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+score	 [47985.08016346 48752.71008399 48875.31210194 49792.50389764
+ 50170.52311195 48324.29372609 49232.30242429 48560.2853987
+ 50591.78502588 52543.35334593]
+mean	 49482.81492798828
+sd	 1287.1235645379627
+
+    \end{Verbatim}
+
+    So, the mean cross-validation error is better than the other ones so
+far. We compute the root mean square error (a less effective form of
+error, just for the record)
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}67}]:} \PY{n}{bestModel}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{housing\PYZus{}prepared}\PY{p}{,} \PY{n}{housing\PYZus{}labels}\PY{p}{)}
+         \PY{n}{best\PYZus{}prediction} \PY{o}{=} \PY{n}{bestModel}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{housing\PYZus{}prepared}\PY{p}{)}
+         \PY{n}{best\PYZus{}mse} \PY{o}{=} \PY{n}{mean\PYZus{}squared\PYZus{}error}\PY{p}{(}\PY{n}{housing\PYZus{}labels}\PY{p}{,} \PY{n}{best\PYZus{}prediction}\PY{p}{)}
+         \PY{n}{best\PYZus{}rmse} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sqrt}\PY{p}{(}\PY{n}{best\PYZus{}mse}\PY{p}{)}
+         \PY{n}{best\PYZus{}rmse}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}67}]:} 19182.031206893847
+\end{Verbatim}
+            
+    Instead of computing cross-validation score manually, we can just use
+the following method to get the mean cross-validation score. (It is a
+bit different since the random subsets are different when we run
+cross-validation again)
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}68}]:} \PY{n}{cvres} \PY{o}{=} \PY{n}{grid\PYZus{}search}\PY{o}{.}\PY{n}{cv\PYZus{}results\PYZus{}}
+         \PY{k}{for} \PY{n}{mean\PYZus{}score}\PY{p}{,} \PY{n}{params} \PY{o+ow}{in} \PY{n+nb}{zip}\PY{p}{(}\PY{n}{cvres}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mean\PYZus{}test\PYZus{}score}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{cvres}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{params}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{:}
+             \PY{n+nb}{print}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{sqrt}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{mean\PYZus{}score}\PY{p}{)}\PY{p}{,} \PY{n}{params}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+63195.36448123322 \{'max\_features': 2, 'n\_estimators': 3\}
+55564.056977356355 \{'max\_features': 2, 'n\_estimators': 10\}
+52468.77754593701 \{'max\_features': 2, 'n\_estimators': 30\}
+60132.57655957766 \{'max\_features': 4, 'n\_estimators': 3\}
+52719.93934980415 \{'max\_features': 4, 'n\_estimators': 10\}
+50361.448597563314 \{'max\_features': 4, 'n\_estimators': 30\}
+59057.29685073093 \{'max\_features': 6, 'n\_estimators': 3\}
+51900.40207208704 \{'max\_features': 6, 'n\_estimators': 10\}
+49898.32158146056 \{'max\_features': 6, 'n\_estimators': 30\}
+58617.87231180931 \{'max\_features': 8, 'n\_estimators': 3\}
+51484.79841100714 \{'max\_features': 8, 'n\_estimators': 10\}
+49982.7323496455 \{'max\_features': 8, 'n\_estimators': 30\}
+60422.79250753086 \{'bootstrap': False, 'max\_features': 2, 'n\_estimators': 3\}
+53760.31473013327 \{'bootstrap': False, 'max\_features': 2, 'n\_estimators': 10\}
+59947.86017542602 \{'bootstrap': False, 'max\_features': 3, 'n\_estimators': 3\}
+51791.94573962487 \{'bootstrap': False, 'max\_features': 3, 'n\_estimators': 10\}
+58078.29033691238 \{'bootstrap': False, 'max\_features': 4, 'n\_estimators': 3\}
+51822.80578256957 \{'bootstrap': False, 'max\_features': 4, 'n\_estimators': 10\}
+
+    \end{Verbatim}
+
+    \textbf{Conclusion:} So far, the best (in terms of cross-validation
+score) estimator turned out to be a \texttt{RandomForestRegressor} with
+parameters \texttt{max\_features=6} and \texttt{n\_estimators=30}. This
+suggests there might be a room for improvement if we increase
+\texttt{n\_estimators} further. The best parameters were found by
+\texttt{GridSearchCV} model that uses cross-validation (\texttt{cv=5})
+score as a measurement to find the best parameters out of a combination
+of given options. \textbf{Randomized} search is better in case there are
+many combinations of search options using \texttt{RandomizedSearchCV}.
+
+    Here is, how to print the importances of the columns (i.e.~the weightage
+used to calculate the estimator, like slopes). \texttt{encoder} here is
+the 1hotencoder define Section \ref{encoder}.
+
+However, the order of the feature names in \texttt{feature\_importances}
+is ordered the way we construct \texttt{attributes}, which follow the
+way we set up the data in Section \ref{attribs} section.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}74}]:} \PY{n}{feature\PYZus{}importances} \PY{o}{=} \PY{n}{grid\PYZus{}search}\PY{o}{.}\PY{n}{best\PYZus{}estimator\PYZus{}}\PY{o}{.}\PY{n}{feature\PYZus{}importances\PYZus{}}
+         \PY{n}{extra\PYZus{}attribs} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rooms\PYZus{}per\PYZus{}hhold}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{pop\PYZus{}per\PYZus{}hhold}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{bedrooms\PYZus{}per\PYZus{}room}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{c+c1}{\PYZsh{} the categories in `ocean\PYZus{}proximity` becomes 1hot columns with weightage as well}
+         \PY{n}{cat\PYZus{}one\PYZus{}hot\PYZus{}attribs} \PY{o}{=} \PY{n+nb}{list}\PY{p}{(}\PY{n}{encoder}\PY{o}{.}\PY{n}{classes\PYZus{}}\PY{p}{)}   \PY{c+c1}{\PYZsh{}This is the encoder we created before, just using the category names.}
+         \PY{n}{attributes} \PY{o}{=} \PY{n}{num\PYZus{}attribs} \PY{o}{+} \PY{n}{extra\PYZus{}attribs} \PY{o}{+} \PY{n}{cat\PYZus{}one\PYZus{}hot\PYZus{}attribs}
+         \PY{n+nb}{sorted}\PY{p}{(}\PY{n+nb}{zip}\PY{p}{(}\PY{n}{feature\PYZus{}importances}\PY{p}{,} \PY{n}{attributes}\PY{p}{)}\PY{p}{,} \PY{n}{reverse}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}74}]:} [(0.32065109989626456, 'median\_income'),
+          (0.15477123604692522, 'INLAND'),
+          (0.10742147880430111, 'rooms\_per\_hhold'),
+          (0.10392727832861338, 'bedrooms\_per\_room'),
+          (0.07356099870556142, 'longitude'),
+          (0.06877977023073048, 'latitude'),
+          (0.0470052880473577, 'pop\_per\_hhold'),
+          (0.04301140233266789, 'housing\_median\_age'),
+          (0.01739293555919001, 'population'),
+          (0.017099323700271545, 'total\_rooms'),
+          (0.015816245535461078, 'total\_bedrooms'),
+          (0.015027037956477177, 'households'),
+          (0.0072920545295663015, '<1H OCEAN'),
+          (0.005617563069934221, 'NEAR OCEAN'),
+          (0.0025184468267245514, 'NEAR BAY'),
+          (0.00010784042995342499, 'ISLAND')]
+\end{Verbatim}
+            
+    Looking at the importance values, we could drop a few less important
+columns to make the model simpler and faster. The book suggests all
+\texttt{ocean\_proximity} categories except \texttt{INLAND} can be
+dropped. But I'm not sure how to do that.
+
+    \hypertarget{testing-the-data}{%
+\subsubsection{Testing the data}\label{testing-the-data}}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}82}]:} \PY{n}{final\PYZus{}model} \PY{o}{=} \PY{n}{grid\PYZus{}search}\PY{o}{.}\PY{n}{best\PYZus{}estimator\PYZus{}}
+         
+         \PY{c+c1}{\PYZsh{} strat\PYZus{}test\PYZus{}set is the data that we set aside}
+         
+         \PY{n}{X\PYZus{}test} \PY{o}{=} \PY{n}{strat\PYZus{}test\PYZus{}set}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median\PYZus{}house\PYZus{}value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} we don\PYZsq{}t do inplace drop, so the column is still there}
+         \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{strat\PYZus{}test\PYZus{}set}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median\PYZus{}house\PYZus{}value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+         
+         \PY{n}{X\PYZus{}test\PYZus{}prepared} \PY{o}{=} \PY{n}{full\PYZus{}pipeline}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}
+         \PY{n}{final\PYZus{}predictions} \PY{o}{=} \PY{n}{final\PYZus{}model}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}test\PYZus{}prepared}\PY{p}{)}
+         
+         \PY{n}{mse} \PY{o}{=} \PY{n}{mean\PYZus{}squared\PYZus{}error}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{final\PYZus{}predictions}\PY{p}{)}
+         \PY{n}{rmse} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sqrt}\PY{p}{(}\PY{n}{mse}\PY{p}{)}
+         \PY{n}{rmse}
+         \PY{c+c1}{\PYZsh{}X\PYZus{}test = strat\PYZus{}test\PYZus{}set.drop(\PYZdq{}\PYZdq{})}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}82}]:} 50079.03725298157
+\end{Verbatim}
+            
+    \hypertarget{performance-on-the-test-data}{%
+\subsubsection{Performance on the test
+data}\label{performance-on-the-test-data}}
+
+The performance of the model on the test data is expected to be worse
+compared to what we had on the training data since the model was tuned
+to work best on the training set. Generally speaking (vaguely), if we
+fine tune the hyperparameters further to make the model fit the training
+data better, the performance on the test data is expected to be even
+worse.
+
+    \hypertarget{creating-presentations}{%
+\subsubsection{Creating presentations}\label{creating-presentations}}
+
+\begin{itemize}
+\tightlist
+\item
+  Highlight what you learned
+\item
+  What worked and what did not
+\item
+  What assumptions were made
+\item
+  What are the limitations
+\end{itemize}
+
+\textbf{Sample Sentence} to use in presentation: \emph{The median income
+is the number one predictor of housing prices.} (and other
+easy-to-remeber statements)
+
+    \hypertarget{participate-in-data-competetions}{%
+\subsubsection{Participate in data
+competetions}\label{participate-in-data-competetions}}
+
+\href{http://www.kaggle.com}{Kaggle}
+
+    \hypertarget{homework-to-chapter-2}{%
+\subsection{Homework to Chapter 2}\label{homework-to-chapter-2}}
+
+    \hypertarget{ending-here}{%
+\subsection{Ending here}\label{ending-here}}
+
+Concluding statements go here in order to keep the bottom of the fields
+slightly higher.
+
+    \hypertarget{data-project-idea}{%
+\subsubsection{Data Project Idea}\label{data-project-idea}}
+
+\begin{itemize}
+\item
+  Based on the performance on the quizzes and homeworks, predit the
+  performance in the final exam
+\item
+\end{itemize}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+    \end{document}
