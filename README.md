@@ -1,5 +1,5 @@
 My attempt to read the book [
-Hands-On Machine Learning with Scikit-Learn and TensorFlow](https://www.oreilly.com/library/view/hands-on-machine-learning/9781491962282/) and solve the exercises using Jupyter notebook.
+Hands-On Machine Learning with Scikit-Learn and TensorFlow](https://www.oreilly.com/library/view/hands-on-machine-learning/9781491962282/) and solve the exercises using Jupyter notebook. I added mathematical explanations wherever I could.
 
 Here are the main notebooks so far:
 
