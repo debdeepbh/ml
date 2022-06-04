@@ -1,0 +1,272 @@
+
+            
+         1    7
+         2    7
+         3    3
+         4    4
+         PY{n+nb}{print}PY{p}{(}PY{n}{housing}PY{p}{[}PY{p}{[}PY{l+s+s2}{PYZdq{}}PY{l+s+s2}{incomePYZus{}cat}PY{l+s+s2}{PYZdq{}}PY{p}{,} PY{l+s+s2}{PYZdq{}}PY{l+s+s2}{medianPYZus{}income}PY{l+s+s2}{PYZdq{}}PY{p}{]}PY{p}{]}PY{o}{.}PY{n}{head}PY{p}{(}PY{p}{)}PY{p}{)}
+         PY{n+nb}{print}PY{p}{(}PY{n}{this}PY{p}{)}
+         PY{n}{housing}PY{p}{[}PY{l+s+s2}{PYZdq{}}PY{l+s+s2}{incomePYZus{}cat}PY{l+s+s2}{PYZdq{}}PY{p}{]}PY{o}{.}PY{n}{where}PY{p}{(}PY{n}{housing}PY{p}{[}PY{l+s+s2}{PYZdq{}}PY{l+s+s2}{incomePYZus{}cat}PY{l+s+s2}{PYZdq{}}PY{p}{]} PY{o}{PYZlt{}} PY{l+m+mi}{5}PY{p}{,} PY{l+m+mf}{5.0}PY{p}{,} PY{n}{inplace}PY{o}{=}PY{k+kc}{True}PY{p}{)}
+         PY{n}{np}PY{o}{.}PY{n}{where}PY{p}{(}PY{p}{(}PY{l+m+mi}{5}PY{o}{PYZlt{}} PY{n}{this}PY{p}{)} PY{o}{PYZam{}} PY{p}{(}PY{n}{this} PY{o}{PYZlt{}} PY{l+m+mi}{10}PY{p}{)}PY{p}{)} PY{c+c1}{PYZsh{} prints the row and column indices of matching entries}
+         PY{n}{this}PY{o}{.}PY{n}{where}PY{p}{(}PY{n}{this} PY{o}{PYZgt{}} PY{l+m+mi}{2}PY{p}{,} PY{l+m+mi}{7}PY{p}{)}
+         PY{n}{trainPYZus{}set}PY{p}{,} PY{n}{testPYZus{}set} PY{o}{=} PY{n}{trainPYZus{}testPYZus{}split}PY{p}{(}PY{n}{housing}PY{p}{,} PY{n}{testPYZus{}size}PY{o}{=}PY{l+m+mf}{0.2}PY{p}{,} PY{n}{randomPYZus{}state}PY{o}{=}PY{l+m+mi}{23}PY{p}{)}
+         dtype: int64
+    Note: Instead of purely random sampling, the splitting should be done
+    begin{Verbatim}[commandchars=\{}]
+    end{Verbatim}
+    hypertarget{creating-fake-categories-within-an-attribute}{%
+    hypertarget{notes-on-where}{%
+    hypertarget{sklearns-stratified-shuffle-split}{%
+   income_cat  median_income
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+0         5.0         8.3252
+0    0
+1         5.0         8.3014
+1    1
+2         5.0         7.2574
+2    2
+3         4.0         5.6431
+3    3
+4         3.0         3.8462
+4    4
+A	torch/linalg.py	/^A = torch.arange(20).reshape(5, 4)$/;"	v
+A class to automate adding attributes to the dataframe	.ipynb_checkpoints/Housing-checkpoint.tex	/^    \\hypertarget{a-class-to-automate-adding-attributes-to-the-dataframe}{%$/;"	b
+A class to automate adding attributes to the dataframe	Housing.tex	/^    \\hypertarget{a-class-to-automate-adding-attributes-to-the-dataframe}{%$/;"	b
+Assigning numerical values to strings  ignore this and jump next 	.ipynb_checkpoints/Housing-checkpoint.tex	/^    \\hypertarget{assigning-numerical-values-to-strings-ignore-this-and-jump-next}{%$/;"	b
+Assigning numerical values to strings  ignore this and jump next 	Housing.tex	/^    \\hypertarget{assigning-numerical-values-to-strings-ignore-this-and-jump-next}{%$/;"	b
+B	torch/linalg.py	/^B = torch.tensor([[1, 2, 3], [2, 0, 4], [3, 4, 5]])$/;"	v
+BB	torch/linalg.py	/^BB = torch.mm(B,B)$/;"	v
+Bsum	torch/linalg.py	/^Bsum = B.sum(axis=1)$/;"	v
+Bsum_same	torch/linalg.py	/^Bsum_same = B.sum(axis=1, keepdims=True)$/;"	v
+Bv	torch/linalg.py	/^Bv = torch.mv(B, Bsum)$/;"	v
+C	torch/linalg.py	/^C = B * B$/;"	v
+Creating new attributes in the hope of better correlation	.ipynb_checkpoints/Housing-checkpoint.tex	/^    \\hypertarget{creating-new-attributes-in-the-hope-of-better-correlation}{%$/;"	b
+Creating new attributes in the hope of better correlation	Housing.tex	/^    \\hypertarget{creating-new-attributes-in-the-hope-of-better-correlation}{%$/;"	b
+Creating presentations	.ipynb_checkpoints/Housing-checkpoint.tex	/^    \\hypertarget{creating-presentations}{%$/;"	b
+Creating presentations	Housing.tex	/^    \\hypertarget{creating-presentations}{%$/;"	b
+Data Project Idea	.ipynb_checkpoints/Housing-checkpoint.tex	/^    \\hypertarget{data-project-idea}{%$/;"	b
+Data Project Idea	Housing.tex	/^    \\hypertarget{data-project-idea}{%$/;"	b
+Dealing with missing features and labels	.ipynb_checkpoints/Housing-checkpoint.tex	/^    \\hypertarget{dealing-with-missing-features-and-labels}{%$/;"	b
+Dealing with missing features and labels	Housing.tex	/^    \\hypertarget{dealing-with-missing-features-and-labels}{%$/;"	b
+Dealling with missing values with Scikit-learn	.ipynb_checkpoints/Housing-checkpoint.tex	/^    \\hypertarget{dealling-with-missing-values-with-scikit-learn}{%$/;"	b
+Dealling with missing values with Scikit-learn	Housing.tex	/^    \\hypertarget{dealling-with-missing-values-with-scikit-learn}{%$/;"	b
+Documentaion	ml-notes.tex	/^\\maketitle $/;"	s
+Ending here	.ipynb_checkpoints/Housing-checkpoint.tex	/^    \\hypertarget{ending-here}{%$/;"	u
+Ending here	Housing.tex	/^    \\hypertarget{ending-here}{%$/;"	u
+Feature Scaling	.ipynb_checkpoints/Housing-checkpoint.tex	/^    \\hypertarget{feature-scaling}{%$/;"	b
+Feature Scaling	Housing.tex	/^    \\hypertarget{feature-scaling}{%$/;"	b
+Homework to Chapter 2	.ipynb_checkpoints/Housing-checkpoint.tex	/^    \\hypertarget{homework-to-chapter-2}{%$/;"	u
+Homework to Chapter 2	Housing.tex	/^    \\hypertarget{homework-to-chapter-2}{%$/;"	u
+Ignore the previous part  we can get a 1hot sparse representation using this easy method	.ipynb_checkpoints/Housing-checkpoint.tex	/^    \\hypertarget{ignore-the-previous-part-we-can-get-a-1hot-sparse-representation-using-this-easy-method}{%$/;"	b
+Ignore the previous part  we can get a 1hot sparse representation using this easy method	Housing.tex	/^    \\hypertarget{ignore-the-previous-part-we-can-get-a-1hot-sparse-representation-using-this-easy-method}{%$/;"	b
+LogisticRegression	.ipynb_checkpoints/logistic-checkpoint.py	/^class LogisticRegression():$/;"	c
+LogisticRegression	.ipynb_checkpoints/logistic-money-checkpoint.py	/^class LogisticRegression():$/;"	c
+LogisticRegression	logistic-money.py	/^class LogisticRegression():$/;"	c
+LogisticRegression	logistic.py	/^class LogisticRegression():$/;"	c
+Participate in data competetions	.ipynb_checkpoints/Housing-checkpoint.tex	/^    \\hypertarget{participate-in-data-competetions}{%$/;"	b
+Participate in data competetions	Housing.tex	/^    \\hypertarget{participate-in-data-competetions}{%$/;"	b
+Performance on the test data	.ipynb_checkpoints/Housing-checkpoint.tex	/^    \\hypertarget{performance-on-the-test-data}{%$/;"	b
+Performance on the test data	Housing.tex	/^    \\hypertarget{performance-on-the-test-data}{%$/;"	b
+Plotting to observe correlation	.ipynb_checkpoints/Housing-checkpoint.tex	/^    \\hypertarget{plotting-to-observe-correlation}{%$/;"	b
+Plotting to observe correlation	Housing.tex	/^    \\hypertarget{plotting-to-observe-correlation}{%$/;"	b
+Python	ml-notes.tex	/^If the number of features (dependent variables) is $p$ and the maximum distance of any two points in a cluster is less than $d$, then the required data points (sample size) need to be $n \\sim \\frac{1}{d^p}$.$/;"	s
+See
+Setting up the data for feeding	.ipynb_checkpoints/Housing-checkpoint.tex	/^\\hypertarget{setting-up-the-data-for-feeding}{%$/;"	u
+Setting up the data for feeding	Housing.tex	/^\\hypertarget{setting-up-the-data-for-feeding}{%$/;"	u
+Splitting data done with sklearn s
+Testing the data	.ipynb_checkpoints/Housing-checkpoint.tex	/^    \\hypertarget{testing-the-data}{%$/;"	b
+Testing the data	Housing.tex	/^    \\hypertarget{testing-the-data}{%$/;"	b
+They allow you to random seed using texttt{random_state}
+To ensure uniform sampling from all representative categories of an
+X	torch/linalg.py	/^X = torch.arange(24).reshape(2, 3, 4)$/;"	v
+X_test	.ipynb_checkpoints/logistic-checkpoint.py	/^X_test = df_test.values[:,0:4].astype(float)$/;"	v
+X_test	.ipynb_checkpoints/logistic-money-checkpoint.py	/^X_test = df_test.values[:,0:4].astype(float)$/;"	v
+X_test	logistic-money.py	/^X_test = df_test.values[:,0:4].astype(float)$/;"	v
+X_test	logistic.py	/^X_test = df_test.values[:,0:4].astype(float)$/;"	v
+X_train	.ipynb_checkpoints/logistic-checkpoint.py	/^X_train = df_train.values[:,0:4].astype(float)$/;"	v
+X_train	.ipynb_checkpoints/logistic-money-checkpoint.py	/^X_train = df_train.values[:,0:4].astype(float)$/;"	v
+X_train	logistic-money.py	/^X_train = df_train.values[:,0:4].astype(float)$/;"	v
+X_train	logistic.py	/^X_train = df_train.values[:,0:4].astype(float)$/;"	v
+Y1_train	.ipynb_checkpoints/logistic-checkpoint.py	/^Y1_train = np.array([to_bin_y[1][x] for x in Y_train])$/;"	v
+Y1_train	.ipynb_checkpoints/logistic-money-checkpoint.py	/^Y1_train = np.array([to_bin_y[1][x] for x in Y_train])$/;"	v
+Y1_train	logistic-money.py	/^Y1_train = np.array([to_bin_y[1][x] for x in Y_train])$/;"	v
+Y1_train	logistic.py	/^Y1_train = np.array([to_bin_y[1][x] for x in Y_train])$/;"	v
+Y2_train	.ipynb_checkpoints/logistic-checkpoint.py	/^Y2_train = np.array([to_bin_y[2][x] for x in Y_train])$/;"	v
+Y2_train	.ipynb_checkpoints/logistic-money-checkpoint.py	/^Y2_train = np.array([to_bin_y[2][x] for x in Y_train])$/;"	v
+Y2_train	logistic-money.py	/^Y2_train = np.array([to_bin_y[2][x] for x in Y_train])$/;"	v
+Y2_train	logistic.py	/^Y2_train = np.array([to_bin_y[2][x] for x in Y_train])$/;"	v
+YM_train	.ipynb_checkpoints/logistic-checkpoint.py	/^YM_train = np.array([flower2name[k] for k in Y_train])$/;"	v
+YM_train	.ipynb_checkpoints/logistic-money-checkpoint.py	/^YM_train = np.array([flower2name[k] for k in Y_train])$/;"	v
+YM_train	logistic-money.py	/^YM_train = np.array([flower2name[k] for k in Y_train])$/;"	v
+YM_train	logistic.py	/^YM_train = np.array([flower2name[k] for k in Y_train])$/;"	v
+YY_train	.ipynb_checkpoints/logistic-checkpoint.py	/^YY_train = np.array([to_bin_y[3][x] for x in Y_train])$/;"	v
+YY_train	.ipynb_checkpoints/logistic-money-checkpoint.py	/^YY_train = np.array([to_bin_y[3][x] for x in Y_train])$/;"	v
+YY_train	logistic-money.py	/^YY_train = np.array([to_bin_y[3][x] for x in Y_train])$/;"	v
+YY_train	logistic.py	/^YY_train = np.array([to_bin_y[3][x] for x in Y_train])$/;"	v
+Y_test	.ipynb_checkpoints/logistic-checkpoint.py	/^Y_test = [flower2name[k] for k in df_test.values[:,4]]$/;"	v
+Y_test	.ipynb_checkpoints/logistic-money-checkpoint.py	/^Y_test = [flower2name[k] for k in df_test.values[:,4]]$/;"	v
+Y_test	logistic-money.py	/^Y_test = [flower2name[k] for k in df_test.values[:,4]]$/;"	v
+Y_test	logistic.py	/^Y_test = [flower2name[k] for k in df_test.values[:,4]]$/;"	v
+Y_train	.ipynb_checkpoints/logistic-checkpoint.py	/^Y_train = df_train.values[:,4]$/;"	v
+Y_train	.ipynb_checkpoints/logistic-money-checkpoint.py	/^Y_train = df_train.values[:,4]$/;"	v
+Y_train	logistic-money.py	/^Y_train = df_train.values[:,4]$/;"	v
+Y_train	logistic.py	/^Y_train = df_train.values[:,4]$/;"	v
+__init__	.ipynb_checkpoints/logistic-checkpoint.py	/^    def __init__(self, learning_rate = 0.7, max_iter = 1000):$/;"	m	class:LogisticRegression
+__init__	.ipynb_checkpoints/logistic-money-checkpoint.py	/^    def __init__(self, learning_rate = 0.7, max_iter = 1000):$/;"	m	class:LogisticRegression
+__init__	logistic-money.py	/^    def __init__(self, learning_rate = 0.7, max_iter = 1000):$/;"	m	class:LogisticRegression
+__init__	logistic.py	/^    def __init__(self, learning_rate = 0.7, max_iter = 1000):$/;"	m	class:LogisticRegression
+add_bias_col	.ipynb_checkpoints/logistic-checkpoint.py	/^    def add_bias_col(self, X):$/;"	m	class:LogisticRegression
+add_bias_col	.ipynb_checkpoints/logistic-money-checkpoint.py	/^    def add_bias_col(self, X):$/;"	m	class:LogisticRegression
+add_bias_col	logistic-money.py	/^    def add_bias_col(self, X):$/;"	m	class:LogisticRegression
+add_bias_col	logistic.py	/^    def add_bias_col(self, X):$/;"	m	class:LogisticRegression
+attribute}label{creating-fake-categories-within-an-attribute}}
+b	torch/linreg.py	/^b = torch.zeros(1, requires_grad=True)$/;"	v
+batch_size	torch/linreg.py	/^batch_size = 10$/;"	v
+batch_size	torch/linreg_ready.py	/^batch_size = 10$/;"	v
+begin{Verbatim}[commandchars=\{}]
+bli	.ipynb_checkpoints/happiness-checkpoint.py	/^bli =  pd.read_csv("datasets\/BLI_20012019062939110.csv")$/;"	v
+bli	happiness.py	/^bli =  pd.read_csv("datasets\/BLI_20012019062939110.csv")$/;"	v
+categories of median_income
+classify	.ipynb_checkpoints/logistic-checkpoint.py	/^    def classify(self, X):$/;"	m	class:LogisticRegression
+classify	.ipynb_checkpoints/logistic-money-checkpoint.py	/^    def classify(self, X):$/;"	m	class:LogisticRegression
+classify	logistic-money.py	/^    def classify(self, X):$/;"	m	class:LogisticRegression
+classify	logistic.py	/^    def classify(self, X):$/;"	m	class:LogisticRegression
+cost_function	.ipynb_checkpoints/logistic-checkpoint.py	/^    def cost_function(self):$/;"	m	class:LogisticRegression
+cost_function	.ipynb_checkpoints/logistic-money-checkpoint.py	/^    def cost_function(self):$/;"	m	class:LogisticRegression
+cost_function	logistic-money.py	/^    def cost_function(self):$/;"	m	class:LogisticRegression
+cost_function	logistic.py	/^    def cost_function(self):$/;"	m	class:LogisticRegression
+data	torch/rw.py	/^data = pd.get_dummies(data, dummy_na=True)$/;"	v
+data	torch/rw.py	/^data = pd.read_csv(data_file)$/;"	v
+data_file	torch/rw.py	/^data_file = os.path.join('data', 'house_tiny.csv')$/;"	v
+data_iter	torch/linreg.py	/^def data_iter(batch_size, features, labels):$/;"	f
+data_iter	torch/linreg_ready.py	/^data_iter = load_array((features, labels), batch_size)$/;"	v
+df	.ipynb_checkpoints/logistic-checkpoint.py	/^df = pd.read_csv('datasets\/iris.data', header = None)$/;"	v
+df	.ipynb_checkpoints/logistic-money-checkpoint.py	/^df = pd.read_csv('datasets\/iris.data', header = None)$/;"	v
+df	logistic-money.py	/^df = pd.read_csv('datasets\/iris.data', header = None)$/;"	v
+df	logistic.py	/^df = pd.read_csv('datasets\/iris.data', header = None)$/;"	v
+df_test	.ipynb_checkpoints/logistic-checkpoint.py	/^df_test = df.loc[~df.index.isin(df_train.index)]$/;"	v
+df_test	.ipynb_checkpoints/logistic-money-checkpoint.py	/^df_test = df.loc[~df.index.isin(df_train.index)]$/;"	v
+df_test	logistic-money.py	/^df_test = df.loc[~df.index.isin(df_train.index)]$/;"	v
+df_test	logistic.py	/^df_test = df.loc[~df.index.isin(df_train.index)]$/;"	v
+df_train	.ipynb_checkpoints/logistic-checkpoint.py	/^df_train = df.sample(frac = 0.7)$/;"	v
+df_train	.ipynb_checkpoints/logistic-money-checkpoint.py	/^df_train = df.sample(frac = 0.7)$/;"	v
+df_train	logistic-money.py	/^df_train = df.sample(frac = 0.7)$/;"	v
+df_train	logistic.py	/^df_train = df.sample(frac = 0.7)$/;"	v
+dtype: int64
+end{Verbatim}
+flower2name	.ipynb_checkpoints/logistic-checkpoint.py	/^flower2name = { 'Iris-setosa': 0, 'Iris-versicolor': 1, 'Iris-virginica': 2 }$/;"	v
+flower2name	.ipynb_checkpoints/logistic-money-checkpoint.py	/^flower2name = { 'Iris-setosa': 0, 'Iris-versicolor': 1, 'Iris-virginica': 2 }$/;"	v
+flower2name	logistic-money.py	/^flower2name = { 'Iris-setosa': 0, 'Iris-versicolor': 1, 'Iris-virginica': 2 }$/;"	v
+flower2name	logistic.py	/^flower2name = { 'Iris-setosa': 0, 'Iris-versicolor': 1, 'Iris-virginica': 2 }$/;"	v
+for further explantions. texttt{df1.where()} works only for dataframes.
+func2	.ipynb_checkpoints/logistic-checkpoint.py	/^def func2 (x_i):$/;"	f
+func2	.ipynb_checkpoints/logistic-money-checkpoint.py	/^def func2 (x_i):$/;"	f
+func2	logistic-money.py	/^def func2 (x_i):$/;"	f
+func2	logistic.py	/^def func2 (x_i):$/;"	f
+gdp	.ipynb_checkpoints/happiness-checkpoint.py	/^gdp = pd.read_csv("datasets\/WEO_Data.xls", delimiter='\\t', encoding='latin1',  na_values="n\/a")$/;"	v
+gdp	happiness.py	/^gdp = pd.read_csv("datasets\/WEO_Data.xls", delimiter='\\t', encoding='latin1',  na_values="n\/a")$/;"	v
+generate_data2	.ipynb_checkpoints/logistic-checkpoint.py	/^def generate_data2 (num_points):$/;"	f
+generate_data2	.ipynb_checkpoints/logistic-money-checkpoint.py	/^def generate_data2 (num_points):$/;"	f
+generate_data2	logistic-money.py	/^def generate_data2 (num_points):$/;"	f
+generate_data2	logistic.py	/^def generate_data2 (num_points):$/;"	f
+gradient	.ipynb_checkpoints/logistic-checkpoint.py	/^    def gradient(self):$/;"	m	class:LogisticRegression
+gradient	.ipynb_checkpoints/logistic-money-checkpoint.py	/^    def gradient(self):$/;"	m	class:LogisticRegression
+gradient	logistic-money.py	/^    def gradient(self):$/;"	m	class:LogisticRegression
+gradient	logistic.py	/^    def gradient(self):$/;"	m	class:LogisticRegression
+gradient_descent	.ipynb_checkpoints/logistic-checkpoint.py	/^    def gradient_descent(self):$/;"	m	class:LogisticRegression
+gradient_descent	.ipynb_checkpoints/logistic-money-checkpoint.py	/^    def gradient_descent(self):$/;"	m	class:LogisticRegression
+gradient_descent	logistic-money.py	/^    def gradient_descent(self):$/;"	m	class:LogisticRegression
+gradient_descent	logistic.py	/^    def gradient_descent(self):$/;"	m	class:LogisticRegression
+href{https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.where.html}{here}
+hypothesis	.ipynb_checkpoints/logistic-checkpoint.py	/^    def hypothesis(self, X):$/;"	m	class:LogisticRegression
+hypothesis	.ipynb_checkpoints/logistic-money-checkpoint.py	/^    def hypothesis(self, X):$/;"	m	class:LogisticRegression
+hypothesis	logistic-money.py	/^    def hypothesis(self, X):$/;"	m	class:LogisticRegression
+hypothesis	logistic.py	/^    def hypothesis(self, X):$/;"	m	class:LogisticRegression
+id_of_p	torch/manipulation.py	/^id_of_p = id(p)$/;"	v
+id_of_q	torch/manipulation.py	/^id_of_q = id(q)$/;"	v
+important feature (e.g. texttt{median_income} here), we create
+k-Nearest Neighbor  k-NN 	ml-notes.tex	/^\\section{p}<++>$/;"	s
+linreg	torch/linreg.py	/^def linreg(X, w, b): $/;"	f
+load_array	torch/linreg_ready.py	/^def load_array(data_arrays, batch_size, is_train=True):  $/;"	f
+loss	torch/linreg.py	/^loss = squared_loss # name of the loss function $/;"	v
+lr	torch/linreg.py	/^lr = 0.03   # learning rate$/;"	v
+lr_1	.ipynb_checkpoints/logistic-checkpoint.py	/^lr_1 = LogisticRegression()$/;"	v
+lr_1	.ipynb_checkpoints/logistic-money-checkpoint.py	/^lr_1 = LogisticRegression()$/;"	v
+lr_1	logistic-money.py	/^lr_1 = LogisticRegression()$/;"	v
+lr_1	logistic.py	/^lr_1 = LogisticRegression()$/;"	v
+lr_2	.ipynb_checkpoints/logistic-checkpoint.py	/^lr_2 = LogisticRegression()$/;"	v
+lr_2	.ipynb_checkpoints/logistic-money-checkpoint.py	/^lr_2 = LogisticRegression()$/;"	v
+lr_2	logistic-money.py	/^lr_2 = LogisticRegression()$/;"	v
+lr_2	logistic.py	/^lr_2 = LogisticRegression()$/;"	v
+lr_3	.ipynb_checkpoints/logistic-checkpoint.py	/^lr_3 = LogisticRegression()$/;"	v
+lr_3	.ipynb_checkpoints/logistic-money-checkpoint.py	/^lr_3 = LogisticRegression()$/;"	v
+lr_3	logistic-money.py	/^lr_3 = LogisticRegression()$/;"	v
+lr_3	logistic.py	/^lr_3 = LogisticRegression()$/;"	v
+net	torch/linreg.py	/^net = linreg    # name of the model function$/;"	v
+new_id_of_p	torch/manipulation.py	/^new_id_of_p = id(p)$/;"	v
+new_id_of_q	torch/manipulation.py	/^new_id_of_q = id(q)$/;"	v
+norm	torch/linalg.py	/^norm = torch.abs(Bv).sum()$/;"	v
+num_epochs	torch/linreg.py	/^num_epochs = 3$/;"	v
+numpy matrix operations	ml-notes.tex	/^\\end{itemize}$/;"	s
+out	.ipynb_checkpoints/logistic-checkpoint.py	/^out = np.matrix([lr_1.classify(X_test), lr_2.classify(X_test), lr_3.classify(X_test)])$/;"	v
+out	.ipynb_checkpoints/logistic-money-checkpoint.py	/^out = np.matrix([lr_1.classify(X_test), lr_2.classify(X_test), lr_3.classify(X_test)])$/;"	v
+out	logistic-money.py	/^out = np.matrix([lr_1.classify(X_test), lr_2.classify(X_test), lr_3.classify(X_test)])$/;"	v
+out	logistic.py	/^out = np.matrix([lr_1.classify(X_test), lr_2.classify(X_test), lr_3.classify(X_test)])$/;"	v
+p	ml-notes.tex	/^Create a random matrix with entries from a normal distribution with size 2x1 using np.random.normal(size = (2,1))$/;"	s
+p	torch/manipulation.py	/^p = torch.zeros_like(x)$/;"	v
+p	torch/manipulation.py	/^p = x + y$/;"	v
+q	torch/manipulation.py	/^q = torch.zeros_like(x)$/;"	v
+returns the emph{indices} of a dataframe satisfying a condition. But
+sgd	torch/linreg.py	/^def sgd(params, lr, batch_size): $/;"	f
+squared_loss	torch/linreg.py	/^def squared_loss(y_hat, y):$/;"	f
+subsection{Creating fake categories within an
+subsubsection{Sklearn s Stratified Shuffle Split	.ipynb_checkpoints/Housing-checkpoint.tex	/^    \\hypertarget{splitting-data-done-with-sklearns-train_test_split}{%$/;"	b
+subsubsection{Sklearn s Stratified Shuffle Split	Housing.tex	/^    \\hypertarget{splitting-data-done-with-sklearns-train_test_split}{%$/;"	b
+subsubsection{texorpdfstring{Notes on
+synthetic_data	torch/linreg.py	/^def synthetic_data(w, b, num_examples):  #@save$/;"	f
+synthetic_data	torch/linreg_ready.py	/^def synthetic_data(w, b, num_examples):  #@save$/;"	f
+testNums	.ipynb_checkpoints/logistic-checkpoint.py	/^testNums = np.argmax(out, axis = 0)$/;"	v
+testNums	.ipynb_checkpoints/logistic-money-checkpoint.py	/^testNums = np.argmax(out, axis = 0)$/;"	v
+testNums	logistic-money.py	/^testNums = np.argmax(out, axis = 0)$/;"	v
+testNums	logistic.py	/^testNums = np.argmax(out, axis = 0)$/;"	v
+texttt{df.where(condition_to_keep_intact, value_to_set_if_condition_is_false, inplace=True/False)}
+texttt{df} is a Numpy dataframe. First, texttt{np.where(condition)}
+texttt{np.where()} is quite different from texttt{df.where()} where
+texttt{where()}}{Notes on where()}}label{notes-on-where}}
+to_bin_y	.ipynb_checkpoints/logistic-checkpoint.py	/^to_bin_y = { 1: { 'Iris-setosa': 1, 'Iris-versicolor': 0, 'Iris-virginica': 0 },$/;"	v
+to_bin_y	.ipynb_checkpoints/logistic-money-checkpoint.py	/^to_bin_y = { 1: { 'Iris-setosa': 1, 'Iris-versicolor': 0, 'Iris-virginica': 0 },$/;"	v
+to_bin_y	logistic-money.py	/^to_bin_y = { 1: { 'Iris-setosa': 1, 'Iris-versicolor': 0, 'Iris-virginica': 0 },$/;"	v
+to_bin_y	logistic.py	/^to_bin_y = { 1: { 'Iris-setosa': 1, 'Iris-versicolor': 0, 'Iris-virginica': 0 },$/;"	v
+train	.ipynb_checkpoints/logistic-checkpoint.py	/^    def train(self, X, Y):$/;"	m	class:LogisticRegression
+train	.ipynb_checkpoints/logistic-money-checkpoint.py	/^    def train(self, X, Y):$/;"	m	class:LogisticRegression
+train	logistic-money.py	/^    def train(self, X, Y):$/;"	m	class:LogisticRegression
+train	logistic.py	/^    def train(self, X, Y):$/;"	m	class:LogisticRegression
+train_test_split}label{splitting-data-done-with-sklearns-train_test_split}}
+true_b	torch/linreg.py	/^true_b = 4.2$/;"	v
+true_b	torch/linreg_ready.py	/^true_b = 4.2$/;"	v
+true_w	torch/linreg.py	/^true_w = torch.tensor([2, -3.4])$/;"	v
+true_w	torch/linreg_ready.py	/^true_w = torch.tensor([2, -3.4])$/;"	v
+u	torch/plots.py	/^u = y.detach()$/;"	v
+uniformly to avoid bias in sampling.
+w	torch/linreg.py	/^w = torch.normal(0, 0.01, size=(2,1), requires_grad=True)$/;"	v
+w	torch/manipulation.py	/^w = torch.cat((x, y), dim=1)$/;"	v
+while making sure samples from all groups (emph{strata}) are done
+x	torch/manipulation.py	/^x = torch.arange(12, dtype=torch.float32).reshape((3,4))$/;"	v
+x	torch/plots.py	/^x = torch.arange(4.0)$/;"	v
+y	torch/manipulation.py	/^y = torch.tensor([[2, 1, 4, 3], [1, 2, 3, 4], [4, 3, 2, 1]])$/;"	v
+y	torch/plots.py	/^y = 2 * torch.dot(x, x)$/;"	v
+y	torch/plots.py	/^y = x * x$/;"	v
+y	torch/plots.py	/^y = x.sum()$/;"	v
+z	torch/manipulation.py	/^z = torch.cat((x, y), dim=0)$/;"	v
+z	torch/plots.py	/^z = u * x$/;"	v
+{color{incolor}In [{color{incolor}13}]:} PY{k+kn}{from} PY{n+nn}{sklearn}PY{n+nn}{.}PY{n+nn}{modelPYZus{}selection} PY{k}{import} PY{n}{trainPYZus{}testPYZus{}split}
+{color{incolor}In [{color{incolor}14}]:} PY{n}{housing}PY{p}{[}PY{l+s+s2}{PYZdq{}}PY{l+s+s2}{incomePYZus{}cat}PY{l+s+s2}{PYZdq{}}PY{p}{]} PY{o}{=} PY{n}{np}PY{o}{.}PY{n}{ceil}PY{p}{(}PY{n}{housing}PY{p}{[}PY{l+s+s2}{PYZdq{}}PY{l+s+s2}{medianPYZus{}income}PY{l+s+s2}{PYZdq{}}PY{p}{]} PY{o}{/} PY{l+m+mf}{1.5}PY{p}{)}
+{color{incolor}In [{color{incolor}15}]:} PY{n}{this} PY{o}{=} PY{n}{np}PY{o}{.}PY{n}{arange}PY{p}{(}PY{l+m+mi}{25}PY{p}{)}PY{o}{.}PY{n}{reshape}PY{p}{(}PY{l+m+mi}{5}PY{p}{,}PY{l+m+mi}{5}PY{p}{)} PY{c+c1}{PYZsh{} arange(10) (not arrange) is Matlab 1:10, reshape for matrix dimension}
+{color{incolor}In [{color{incolor}16}]:} PY{n}{this} PY{o}{=} PY{n}{pd}PY{o}{.}PY{n}{Series}PY{p}{(}PY{n+nb}{range}PY{p}{(}PY{l+m+mi}{5}PY{p}{)}PY{p}{)}
+{color{outcolor}Out[{color{outcolor}15}]:} (array([1, 1, 1, 1]), array([1, 2, 3, 4]))
+{color{outcolor}Out[{color{outcolor}16}]:} 0    7
