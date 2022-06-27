@@ -29,6 +29,7 @@ features, labels = synthetic_data(true_w, true_b, 1000)
 
 def load_array(data_arrays, batch_size, shuffle=True):  
     """Construct a PyTorch data iterator."""
+    # the asterisk is used to denote a variable number of arguments
     dataset = data.TensorDataset(*data_arrays)
     return data.DataLoader(dataset, batch_size, shuffle=shuffle)
 
