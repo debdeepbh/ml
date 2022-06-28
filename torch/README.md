@@ -150,3 +150,7 @@ b = net[0].bias.data
 ```
 
 
+## Downloading and viewing the fashion datasets [`fashion.py`](fashion.py)
+
+- Download the dataset from `torchvision.datasets.FashionMNIST()` 
+- show the image using `imshow`
