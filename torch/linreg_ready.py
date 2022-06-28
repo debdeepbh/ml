@@ -69,3 +69,12 @@ for epoch in range(num_epochs):
     # again, nn.MSELoss() computes the mean of all the errors
     l = loss(net(features), labels)
     print(f'epoch {epoch + 1}, loss {l:f}')
+
+# reading trained weights
+w = net[0].weight.data
+b = net[0].bias.data
+print('trained values of w and b', w, b)
+# error
+print('error in estimating w:', true_w - w.reshape(true_w.shape))
+print('error in estimating b:', true_b - b)
+

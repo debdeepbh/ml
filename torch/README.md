@@ -2,6 +2,12 @@
 
 [book](https://d2l.ai/chapter_preliminaries/ndarray.html)
 
+# Install
+
+```
+pip3 install torch
+```
+
 # Topics
 
 ## Read/write with pandas [`rw.py`](rw.py)
@@ -46,6 +52,7 @@ $$
 Initial guess:
 $$
 m = normal(0, 0.01)
+\\
 b = zeros
 $$
 Iteration: for each `epoch` (iteration of minimization step) and for each minibatch, 
@@ -55,6 +62,7 @@ Iteration: for each `epoch` (iteration of minimization step) and for each miniba
 1.
 $$
 (m,b)_{new} = (m,b)_{old} - \Delta t \nabla_{(m,b)} (loss on current minibatch) / batchsize
+\\
 (m,b)_{new}.grad.zero_()
 $$
 where $\Delta t$ is the learning rate, gradient is computed using auto differentiation with $m, b$ as `requires_grad_(True)` with initialization of normal(0,0.01) and `zeros`, respectively.
@@ -132,4 +140,13 @@ for epoch in 3:
     print(f'epoch {epoch + 1}, loss {l:f}')
 ```
 
-### Prediction and reading the loss-minimizing parameters
+### Reading the loss-minimizing parameters
+
+- Read the trained wights $w$ and bias $b$ using
+
+```
+w = net[0].weight.data
+b = net[0].bias.data
+```
+
+
