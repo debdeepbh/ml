@@ -192,3 +192,56 @@ See another tutorial at [stanford tutorial](http://ufldl.stanford.edu/tutorial/s
 $$
 \nabla_{w} -\log L=  - \sum_{i=1}^n x^i (y^i  - y^{hat,i}).
 $$
+
+### Code
+- For 28x28 images with 10 possible labels, $W \in \R^{28*28 \times 10}$ and $b \in \R^{10}$. As before, they are initialized with normal(0, 0.01) and zeros, respectively.
+- The cross entropy of $i$-th prediction $- y^i \log(y^{hat,i})$ is summed over the minibatch and is minimized using the stochastic gradient descent method. Each epoch runs $N/batchsize$ iterations of learning.
+- The training accuracy (#correct prediction in the minibatch / batchsize) and test accuracy (#correct prediction on all test data/ size of test data) is printed after each epoch.
+
+
+## Softmax with inbuilt functions [`fashion_softmax_ready.py`](fashion_softmax_ready.py)
+
+- Sequentially define a neural network where the first layer flattens the `1x28x28`, then passes through a linear neural network with 10 outputs
+
+```python
+net = nn.Sequential(nn.Flatten(), nn.Linear(28*28, 10))
+```
+
+- Initializing all the weights (including biases) in the entire sequential network (recursively) to a normal(0, 0.01)
+
+```python
+def init_weights(m):
+    if isinstance(m, nn.Linear):
+        nn.init.normal_(m.weight, std=0.01)
+net.apply(init_weights) # recursively initializes all weights
+```
+
+Alternatively, we can initialize only the weights and biases of the second layer (`nn.Linear(28*28, 10)`) with normal(0,0.01) and zeros, respectively, with
+
+```python
+net[1].weight.data.normal_(0, 0.01)
+net[1].bias.data.fill_(0)
+```
+
+- Define the loss function and training algorithm
+
+```python
+loss = nn.CrossEntropyLoss(reduction='mean')
+trainer = torch.optim.SGD(net.parameters(), lr=0.1)
+```
+
+- Train using
+
+```python
+for epoch in range(num_epochs):
+    for X, y in train_iter:
+        l = loss(net(X) ,y)
+        trainer.zero_grad()
+        l.backward()
+        trainer.step()
+
+    # computing loss on test data (appropriate when reduction='sum' is sum)
+    for X, y in test_iter:
+        l_acc += loss(net(X), y)
+    print('loss on test data', l_acc)
+```
