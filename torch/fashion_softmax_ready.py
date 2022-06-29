@@ -61,8 +61,8 @@ print('params', net.parameters)
 # nn.CrossEntropyLoss() with `reduction='none'` is vector-valued, autodiff cannot be computed
 # Therefore, use nn.CrossEntropyLoss(reduction='sum' or 'mean') or while training do loss.sum().backward() or loss.mean().backward()
 # loss = nn.CrossEntropyLoss(reduction='none')
-# reduction = 'mean'
-reduction = 'sum'
+reduction = 'mean'
+# reduction = 'sum'
 loss = nn.CrossEntropyLoss(reduction=reduction)
 trainer = torch.optim.SGD(net.parameters(), lr=0.1)
 
