@@ -78,25 +78,28 @@ where $\Delta t$ is the learning rate, gradient is computed using auto different
 
 ### Iterator
 
-Data iterator library comes from
+Use `next(iter(data))` to iterate over a chunk of data. For example,
+
+```python
+x = list(range(50))
+it = iter(x)	# define an iterator
+print(next(it))	# output: 0
+print(next(it)) # output: 1
+print(next(it)) # output: 2
+```
+
+The torch utility `data.DataLoader()` creates an iterator that allows creation of minibatches and also allows shuffles. Moreover, parallel loading is supported. See [`fashion.py`](fashion.py) for an example.
 
 ```python
 from torch.utils import data
+dd = data.DataLoader(x, batch_size=5, shuffle=False, num_workers=4)
+it = iter(dd)
+print(next(dd))	# output: [0, 1, 2, 3, 4]
+print(next(dd))	# output: [5, 6, 7, 8, 9]
+print(next(dd))	# output: [10, 11, 12, 13, 14]
 ```
 
-It provides an iterator that loads inside an iterator function
 
-```python
-def load_array(data_arrays, batch_size):  
-    dataset = data.TensorDataset(*data_arrays)
-    return data.DataLoader(dataset, batch_size, shuffle=True)
-```
-
-and called using
-
-```python
-data_iter = load_array((features, labels), batch_size)
-```
 
 
 ### Neural network structure
@@ -152,5 +155,40 @@ b = net[0].bias.data
 
 ## Downloading and viewing the fashion datasets [`fashion.py`](fashion.py)
 
-- Download the dataset from `torchvision.datasets.FashionMNIST()` 
+- Download the dataset from `torchvision.datasets.FashionMNIST()`. Use `train=False` to get the testing data.
+- Use `transform=tansforms.ToTensor()` to convert image data into a normalized (between 0 and 1) 32-bit floating point tensor.
 - show the image using `imshow`
+
+## Softmax regression [`fashion_softmax.py`](fashion_softmax.py)
+
+- Goal: Given data $x \in \R^d$ with *one-hot* label $y \in \R^p$ (i.e, each $y = e_i$ for some $i$, where $e_i$ is a standard Euclidean basis), need to estimate weights $W \in \R^{d \times p}$ and bias $b \in \R^p$ such that
+$$
+y^{hat} = softmax { ( \sum_j x_j W_{jk} + b_k)_{k=1}^p }
+$$
+estimates $y$, where, for any $z \in \R^p$
+$$
+softmax(z) = z / \sum_{j=1}^p z_j .
+$$
+
+- For a minibatch of $n$ datapoints, $X \in \R^{n \times d}$ is the feature matrix (where each row contains a feature) and $Y \in \R^{n \times p}$ is the label matrix (each row contains an label). 
+
+The likelihood function to *maximize* is therefore  (the explanation is questionable)
+$$
+L = \prod_{i=1}^n P(y^i | x^i)
+$$
+and the loss function to *minimize* is
+$$
+- \log (L) 
+= - \sum_{i=1}^n \sum_{j=1}^p y_j^i \log (y^{hat,i}_j) 
+$$
+because (questionable explanation)
+$$
+P(y^i | x^i) = \prod_{j=1}^p e^{y_j \log (y^{hat}_j} .
+$$
+
+See another tutorial at [stanford tutorial](http://ufldl.stanford.edu/tutorial/supervised/SoftmaxRegression/)
+
+- The derivative of the loss function $-\log L$ is given by
+$$
+\nabla_{w} -\log L=  - \sum_{i=1}^n x^i (y^i  - y^{hat,i}).
+$$

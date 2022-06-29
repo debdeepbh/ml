@@ -19,6 +19,7 @@ mnist_test = torchvision.datasets.FashionMNIST(root='data', train=False, transfo
 # represented by 6000 images in the training dataset and by 1000 in the test dataset. 
 
 print('train len', len(mnist_train), 'test len', len(mnist_test))
+print('first train data label', mnist_train[0][1])
 
 print('Shape of each image', mnist_train[0][0].shape) # [1, 28 , 28] single-channel 28x28
 
