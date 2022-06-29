@@ -230,6 +230,8 @@ loss = nn.CrossEntropyLoss(reduction='mean')
 trainer = torch.optim.SGD(net.parameters(), lr=0.1)
 ```
 
+Note: `reduction='mean'` produces consistently better accuracy on test data than `sum`.
+
 - Train using
 
 ```python
@@ -245,3 +247,17 @@ for epoch in range(num_epochs):
         l_acc += loss(net(X), y)
     print('loss on test data', l_acc)
 ```
+
+- Compute accuracy (different metric than loss) by computing number of correct prediction to the total number of data points on the test data. To compute predicted label from softmax value (which is a vector of floats), use `argmax`.
+
+- Compute total number of correct predictions on a minibatch of test data 
+
+```python
+def accuracy(y_hat, y):
+    """Compute the number of correct predictions by converting softmax value to integer label"""
+    if len(y_hat.shape) > 1 and y_hat.shape[1] > 1:
+        y_hat = y_hat.argmax(axis=1)
+    cmp = (y_hat == y )
+    return float(cmp.sum())
+```
+
