@@ -191,7 +191,7 @@ $$ -\log (L) = - \sum_{i=1}^n \sum_{j=1}^p y_j^i \log (y^{hat,i}_j) $$
 because (questionable explanation)
 
 $$
-P(y^i | x^i) = \prod_{j=1}^p e^{y_j \log (y^{hat}_j} .
+P(y^i | x^i) = \prod_{j=1}^p e^{y_j \log (y^{hat}_j)} .
 $$
 
 See another tutorial at [stanford tutorial](http://ufldl.stanford.edu/tutorial/supervised/SoftmaxRegression/)
@@ -347,7 +347,7 @@ test_ls.append( log_rmse(net, train_features, train_labels) )
 - Train the neural net $k$ times (each with `num_epochs` epochs) and return the average error of the last epoch. Call this $k$-fold validation error.
 
 ### Saving data
-- Save to csv using `data.to_csv(filenam, index=False)
+- Save to csv using `data.to_csv(filenam, index=False)`
 
 
 
