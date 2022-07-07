@@ -43,6 +43,7 @@ pip3 install torch
 - create synthetic data using $y = mX + b + n$ where $n$ is normal(0,1) `torch.normal`
 - a batch iterator shuffles indices of the data and returns (`yield`s) batches of data so that every call of the iterator returns a non-overlapping subset. Using `yield` instead of `return` makes a function behave like a `for` loop by remembering all the previous calls.
 - **Prediction model:** `y_hat = m_est * X + b_est ` and **loss function** to minimize is 
+
 $$
 loss =  \sum_{minibatch} | y_{hat} - y|^2
 $$
@@ -50,21 +51,25 @@ $$
 - **Minimization using stochastic gradient descent:** 
 
 Initial guess:
+
 $$
 m = normal(0, 0.01)
 \\
 b = zeros
 $$
+
 Iteration: for each `epoch` (iteration of minimization step) and for each minibatch, 
 
 1. compute the $loss on current minibatch$
 1. compute $\nabla_{(m,b)} (loss on current minibatch)$ using backward differentiation
 1.
+
 $$
 (m,b)_{new} = (m,b)_{old} - \Delta t \nabla_{(m,b)} (loss on current minibatch) / batchsize
 \\
 (m,b)_{new}.grad.zero_()
 $$
+
 where $\Delta t$ is the learning rate, gradient is computed using auto differentiation with $m, b$ as `requires_grad_(True)` with initialization of normal(0,0.01) and `zeros`, respectively.
 
 - The stochastisticity comes from the randomness associated with picking the subsets (minibatches).
@@ -161,21 +166,22 @@ b = net[0].bias.data
 
 ## Softmax regression [`fashion_softmax.py`](fashion_softmax.py)
 
-- Goal: Given data $x \in \R^d$ with *one-hot* label $y \in \R^p$ (i.e, each $y = e_i$ for some $i$, where $e_i$ is a standard Euclidean basis), need to estimate weights $W \in \R^{d \times p}$ and bias $b \in \R^p$ such that
+- Goal: Given data $x \in R^d$ with *one-hot* label $y \in R^p$ (i.e, each $y = e_i$ for some $i$, where $e_i$ is a standard Euclidean basis), need to estimate weights $W \in R^{d \times p}$ and bias $b \in R^p$ such that
 
 $$
 y^{hat} = softmax { ( \sum_j x_j W_{jk} + b_k)_{k=1}^p }
 $$
 
-estimates $y$, where, for any $z \in \R^p$
+estimates $y$, where, for any $z \in R^p$
 
 $$
 softmax(z) = z / \sum_{j=1}^p z_j .
 $$
 
-- For a minibatch of $n$ datapoints, $X \in \R^{n \times d}$ is the feature matrix (where each row contains a feature) and $Y \in \R^{n \times p}$ is the label matrix (each row contains an label). 
+- For a minibatch of $n$ datapoints, $X \in R^{n \times d}$ is the feature matrix (where each row contains a feature) and $Y \in R^{n \times p}$ is the label matrix (each row contains an label). 
 
 The likelihood function to *maximize* is therefore  (the explanation is questionable)
+
 $$
 L = \prod_{i=1}^n P(y^i | x^i)
 $$
@@ -186,7 +192,9 @@ $$
 - \log (L) 
 = - \sum_{i=1}^n \sum_{j=1}^p y_j^i \log (y^{hat,i}_j) 
 $$
+
 because (questionable explanation)
+
 $$
 P(y^i | x^i) = \prod_{j=1}^p e^{y_j \log (y^{hat}_j} .
 $$
@@ -194,12 +202,13 @@ $$
 See another tutorial at [stanford tutorial](http://ufldl.stanford.edu/tutorial/supervised/SoftmaxRegression/)
 
 - The derivative of the loss function $-\log L$ is given by
+
 $$
 \nabla_{w} -\log L=  - \sum_{i=1}^n x^i (y^i  - y^{hat,i}).
 $$
 
 ### Code
-- For 28x28 images with 10 possible labels, $W \in \R^{28*28 \times 10}$ and $b \in \R^{10}$. As before, they are initialized with normal(0, 0.01) and zeros, respectively.
+- For 28x28 images with 10 possible labels, $W \in R^{28*28 \times 10}$ and $b \in R^{10}$. As before, they are initialized with normal(0, 0.01) and zeros, respectively.
 - The cross entropy of $i$-th prediction $- y^i \log(y^{hat,i})$ is summed over the minibatch and is minimized using the stochastic gradient descent method. Each epoch runs $N/batchsize$ iterations of learning.
 - The training accuracy (#correct prediction in the minibatch / batchsize) and test accuracy (#correct prediction on all test data/ size of test data) is printed after each epoch.
 
@@ -338,7 +347,12 @@ test_ls.append( log_rmse(net, train_features, train_labels) )
 ```
 
 ### k-fold cross-validation
-- Partition entire training dataset into $k$ 
+
+- For $i=0, 2, \dots, k-1$, partition the entire training dataset into $k$ parts and return the $i$-th part as validation data and the rest as training data.
+- Train the neural net $k$ times (each with `num_epochs` epochs) and return the average error of the last epoch. Call this $k$-fold validation error.
+
+### Saving data
+- Save to csv using `data.to_csv(filenam, index=False)`
 
 
 
