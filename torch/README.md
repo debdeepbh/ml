@@ -162,10 +162,13 @@ b = net[0].bias.data
 ## Softmax regression [`fashion_softmax.py`](fashion_softmax.py)
 
 - Goal: Given data $x \in \R^d$ with *one-hot* label $y \in \R^p$ (i.e, each $y = e_i$ for some $i$, where $e_i$ is a standard Euclidean basis), need to estimate weights $W \in \R^{d \times p}$ and bias $b \in \R^p$ such that
+
 $$
 y^{hat} = softmax { ( \sum_j x_j W_{jk} + b_k)_{k=1}^p }
 $$
+
 estimates $y$, where, for any $z \in \R^p$
+
 $$
 softmax(z) = z / \sum_{j=1}^p z_j .
 $$
@@ -176,7 +179,9 @@ The likelihood function to *maximize* is therefore  (the explanation is question
 $$
 L = \prod_{i=1}^n P(y^i | x^i)
 $$
+
 and the loss function to *minimize* is
+
 $$
 - \log (L) 
 = - \sum_{i=1}^n \sum_{j=1}^p y_j^i \log (y^{hat,i}_j) 
@@ -260,4 +265,81 @@ def accuracy(y_hat, y):
     cmp = (y_hat == y )
     return float(cmp.sum())
 ```
+
+## Prediction of housing price [`kaggle-housing.py`](kaggle-housing.py)
+
+
+#### Reading
+- Read the csv files using `pd.read_csv(filename, na_values='-')`.
+- Combine the train and test data into a single dataset of features (`pd.concat()`) to perform data processing simultaneously.
+
+### Preparing the data
+-  Numeric features
+    - Extract numeric feature names with `numeric features  = data.dtypes[ data != 'object'].index`
+    - Normalize numeric columns to zero-mean and 1-std  with `(data[numeric_features] - data[numeric_features].mean() ) / data[numeric_features].std()`
+    - Fill `NA` values by `0` with `data = data.fillna(0)`
+
+- Non-numeric features
+    - Convert all non-numerical features into one-hot encoding with `data.get_dummies(data, dummy_na=True)`. This also considers `NA` values as a category. The resulting dataframe is now entirely numeric.
+
+    **Note:** For examples, `data.get_dummies()` **replaces** the non-numeric columns `Col` with labels `cat, dog, NA` by `Col_cat` `Col_dog` `Col_NA`.
+
+-  Convert the numeric dataframe into a tensor using `torch.tensor( data.values, dtype=torch.float32)`
+
+### Data iterator
+
+- Any number of inputs (separated by `,`) to a function definition via `*data_arrays`.
+- Pack all data into a `dataset = data.TensorDataset(*data_arrays)`
+- Iterate the dataset with `data.DataLoader(dataset, batch_size, shuffle=True)`
+
+```python
+def load_array(data_arrays, batch_size, shuffle=True):  
+    # the asterisk is used to denote a variable number of arguments
+    dataset = data.TensorDataset(*data_arrays)
+    return data.DataLoader(dataset, batch_size, shuffle=shuffle)
+```
+
+### Creating the neural network
+- To use a linear regression, use `net = nn.Sequential( nn.Linear(num_features, 1) )`
+- Initialize the weights and biases in the standard way
+
+```python
+def init_weights(m):
+    if isinstance(m, nn.Linear):
+        nn.init.normal_(m.weight, std=0.01)
+
+net.apply(init_weights) # recursively initializes all weights
+```
+
+- Define the loss function `loss = nn.MSELoss()` and an additional loss function `log_rmse`.
+- Train the model in the usual way
+
+```python
+
+for epoch in range(num_epochs):
+    for X, y in train_iter:
+	# 1.set zero gradient
+	optimizer.zero_grad()
+
+	# 2. compute the loss
+	l = loss(net(X), y)
+	# l = attempt_log_rmse(net(X), y)
+
+	# 3. backward differentiation
+	l.backward()
+
+	# 4. take iteration step with learning rate
+	optimizer.step()
+
+# save the training loss in: train_ls = []
+train_ls.append( log_rmse(net, train_features, train_labels) )
+# save the test loss in: test_ls = []
+test_ls.append( log_rmse(net, train_features, train_labels) )
+```
+
+### k-fold cross-validation
+- Partition entire training dataset into $k$ 
+
+
+
 
