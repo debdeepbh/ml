@@ -44,28 +44,26 @@ pip3 install torch
 - a batch iterator shuffles indices of the data and returns (`yield`s) batches of data so that every call of the iterator returns a non-overlapping subset. Using `yield` instead of `return` makes a function behave like a `for` loop by remembering all the previous calls.
 - **Prediction model:** `y_hat = m_est * X + b_est ` and **loss function** to minimize is 
 
-$$
-loss =  \sum_{minibatch} | y_{hat} - y|^2
-$$
+$$ Loss(minibatch) =  \sum_{minibatch} | y_{hat} - y|^2 $$
 
 - **Minimization using stochastic gradient descent:** 
 
 Initial guess:
 
 $$
-m = normal(0, 0.01)
+m = normal(0, 0.01),
 \\
 b = zeros
 $$
 
 Iteration: for each `epoch` (iteration of minimization step) and for each minibatch, 
 
-1. compute the $loss on current minibatch$
-1. compute $\nabla_{(m,b)} (loss on current minibatch)$ using backward differentiation
+1. compute the $Loss(minibatch)$
+1. compute $\nabla_{(m,b)} (Loss(minibatch))$  using backward differentiation
 1.
 
 $$
-(m,b)_{new} = (m,b)_{old} - \Delta t \nabla_{(m,b)} (loss on current minibatch) / batchsize
+(m,b)_{new} = (m,b)_{old} - \Delta t \nabla_{(m,b)} (Loss(minibatch)) / batchsize, 
 \\
 (m,b)_{new}.grad.zero_()
 $$
@@ -188,10 +186,7 @@ $$
 
 and the loss function to *minimize* is
 
-$$
-- \log (L) 
-= - \sum_{i=1}^n \sum_{j=1}^p y_j^i \log (y^{hat,i}_j) 
-$$
+$$ -\log (L) = - \sum_{i=1}^n \sum_{j=1}^p y_j^i \log (y^{hat,i}_j) $$
 
 because (questionable explanation)
 
@@ -352,7 +347,7 @@ test_ls.append( log_rmse(net, train_features, train_labels) )
 - Train the neural net $k$ times (each with `num_epochs` epochs) and return the average error of the last epoch. Call this $k$-fold validation error.
 
 ### Saving data
-- Save to csv using `data.to_csv(filenam, index=False)`
+- Save to csv using `data.to_csv(filenam, index=False)
 
 
 
