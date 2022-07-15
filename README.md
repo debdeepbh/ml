@@ -31,10 +31,10 @@ Machine learning tools applied to datasets for prediction and classification. I 
 
 ## Notes
 
-* [`ml-notes.tex`](ml-notes.tex): My notes of linear, logistic, and softmax regression
-* [`Models.ipynb`](Models.ipynb): Implementation of various models
-* [`Support Vector Machine.ipynb`](Support Vector Machine.ipynb): Support vector machine
-* [`signal.ipynb`](signal.ipynb): Signal processing on time series data using `scipy`
+- [`ml-notes.tex`](ml-notes.tex): My notes of linear, logistic, and softmax regression
+- [`Models.ipynb`](Models.ipynb): Implementation of various models
+- [`Support Vector Machine.ipynb`](Support Vector Machine.ipynb): Support vector machine
+- [signal](signal.ipynb) : Signal processing on time series data using `scipy`
 
 ## Datasets
 
