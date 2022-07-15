@@ -31,6 +31,7 @@ Machine learning tools applied to datasets for prediction and classification. I 
 
 ## Notes
 
+- [torch](torch):  Implementation of deep neural networks in `pytorch`
 - [`ml-notes.tex`](ml-notes.tex): My notes of linear, logistic, and softmax regression
 - [`Models.ipynb`](Models.ipynb): Implementation of various models
 - [`Support Vector Machine.ipynb`](svm.ipynb): Support vector machine
