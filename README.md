@@ -13,19 +13,15 @@ Machine learning tools applied to datasets for prediction and classification. I 
 
 ## Analysis of datasets 
 
-### Prediction
 
-* [`happiness.py`](happiness.py): Predicting happiness quotient for different countries 
 * [`Housing.ipynb` ](Housing.ipynb): Predicting housing price in California using linear regression
 - [`kaggle-housing.py`](torch/kaggle-housing.py) Predicting housing price in Ames (kaggle dataset) using softmax repression
-* [`lightdata.ipynb`](lightdata.ipynb): Learning the optimum brightness level of laptop screen based on ambient light and content of the screen
-
-### Classification
-
-* [`logistic.py`](logistic.py): Classification of iris flowers using petal information using logistic regression
 * [`MNIST.ipynb`](MNIST.ipynb): Exploring MNIST data and classifying handwritten digits
 - [`fashion_softmax_ready.py`](torch/fashion_softmax_ready.py): Classifying fashion-MNIST data using a single-layer neural network
 - [`fashion_softmax.py`](torch/fashion_softmax.py) Softmax regression to classify fashion data implemented from scratch 
+* [`logistic.py`](logistic.py): Classification of iris flowers using petal information using logistic regression
+* [`lightdata.ipynb`](lightdata.ipynb): Learning the optimum brightness level of laptop screen based on ambient light and content of the screen
+* [`happiness.py`](happiness.py): Predicting happiness quotients for different countries 
 * [`logistic-money.py`](logistic-money.py): Logistic regression on expenditure to identify the user responsible for transaction
 
 
