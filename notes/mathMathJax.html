@@ -1,0 +1,45 @@
+<h1 id="notes">Notes</h1>
+<p><span class="math display">\[
+% User defined functions
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\E}{\mathcal{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\br}[1]{\color{red} (#1) \color{black}}
+\newcommand{\bb}[1]{\color{blue} (#1) \color{black}}
+\newcommand{\what}{\bb{??}}
+\newcommand{\half}{\frac{1}{2}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\jap}[1]{\left\langle #1 \right\rangle}
+\newcommand{\inn}[1]{\left\langle #1 \right\rangle}
+\]</span></p>
+<p>We will enhance the nice <a
+href="https://pytorch.org/tutorials/beginner/pytorch_with_examples.html">pytorch
+example</a> with extra notes.</p>
+<p>The goal is the fit <span class="math inline">\(\sin x\)</span> using
+a cubic polynomial.</p>
+<p>The data will be generated using by sampling the curve <span
+class="math inline">\(y = \sin x\)</span>. But this relationship between
+<span class="math inline">\(x\)</span> and <span
+class="math inline">\(y\)</span> will not be known to the modeler.</p>
+<p>Let the data <span class="math inline">\(\{(x_i,
+y_i)\}_{i=1}^n\)</span> be given.</p>
+<p>Our model is <span class="math inline">\(y = f(x)\)</span> where</p>
+<p><span class="math display">\[
+f(x) = a + bx + cx^2 + d x^3
+\]</span></p>
+<p>, where <span class="math inline">\(a, b, c, d\)</span> are the free
+parameters to minimizer over.</p>
+<p>The minimization problem is therefore min $_{i=1}^{n} ^2 : a, b, c, d
+} $</p>
+<p>To minimizer, we use gradient descent method. Define <span
+class="math inline">\(\omega = (a, b, c, d)\)</span></p>
+<p><span class="math display">\[
+L(\omega) = \sum_{i=1}^{n} \abs{y_i - f_\omega(x_i)}^2
+\]</span></p>
+<p>and then use the scheme <span class="math display">\[
+\omega_{n+1} = \omega_n - \eta \nabla_\omega L
+\]</span></p>

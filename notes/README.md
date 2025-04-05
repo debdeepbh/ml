@@ -1,0 +1,438 @@
+---
+title: Notes on minimization problems using pytorch
+author: Debdeep Bhattacharya
+header-includes: |
+    \usepackage{amsmath, amssymb, amsthm, amsfonts, color, bm}
+
+    \newcommand{\F}{\mathcal{F}}
+    \newcommand{\E}{\mathcal{E}}
+    \newcommand{\R}{\mathbb{R}}
+    \newcommand{\C}{\mathbb{C}}
+    \newcommand{\N}{\mathbb{N}}
+    \newcommand{\Z}{\mathbb{Z}}
+    \newcommand{\br}[1]{\color{red} (#1) \color{black}}
+    \newcommand{\bb}[1]{\color{blue} (#1) \color{black}}
+
+    \newcommand{\ww}{\boldsymbol{\omega}}
+    \newcommand{\1}{\boldsymbol{1}}
+    \newcommand{\xx}{\mathbf{x}}
+    \newcommand{\yy}{\mathbf{y}}
+    \newcommand{\vv}{\mathbf{v}}
+    \newcommand{\uu}{\mathbf{u}}
+
+    \newcommand{\what}{\bb{??}}
+    \newcommand{\half}{\frac{1}{2}}
+    \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+    \newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+    \newcommand{\jap}[1]{\left\langle #1 \right\rangle}
+    \newcommand{\inn}[1]{\left\langle #1 \right\rangle}
+---
+
+We will enhance the nice [pytorch example](https://pytorch.org/tutorials/beginner/pytorch_with_examples.html) with extra explanations.
+
+# Problem setup
+
+
+
+The goal is the fit $\sin x$ using a cubic polynomial.
+
+The data will be generated using by sampling the curve $y = \sin x$. But this relationship between $x$ and $y$ will not be known to the modeler.
+
+Let the data $\{(x_i, y_i)\}_{i=1}^n$ be given.
+
+Our model is $y = f(x)$ where 
+$$
+f_\ww(x) = a + bx + cx^2 + d x^3,
+$$
+where $\ww = (a, b, c, d)$ are the free parameters to minimizer over.
+
+The minimization problem is therefore  
+
+\begin{align*}
+\min \left\{\sum_{i=1}^{n} \abs{y_i - f_\ww(x_i)}^2: \ww \in \R^4 \right\}
+\end{align*}
+
+To minimize, we use gradient descent method.  Defining the *loss function* (objective function)
+$$
+L(\ww) = \sum_{i=1}^{n} \abs{f_\ww(x_i) - y_i}^2
+$$
+
+and then use the scheme
+$$
+\ww_{n+1} = \ww_n - \eta \nabla_\ww L(\ww_n)
+$$
+with initial guess $\ww_0$ and *learning rate* (numerical step size) $\eta$.
+
+We would need to compute
+$$
+\nabla_\ww L(\ww) = 2 \sum_{i=1}^{n} (f_\ww(x_i) - y_i) \nabla_\ww f_\ww(x_i)
+$$
+explicitly.
+For our model $f_\ww$, noting that
+$$
+\begin{align*}
+    \nabla_\ww f_\ww(x_i) = \begin{bmatrix} 1 \\ x_i \\ x_i^2 \\ x_i^3 \end{bmatrix} 
+\end{align*}	
+$$
+we have
+$$
+\begin{align*}
+    \frac{\partial L}{\partial a}(\ww) & = 2 \sum_{i=1}^{n} (f_\ww(x_i) - y_i)
+    \\
+    \frac{\partial L}{\partial b}(\ww) &= 2 \sum_{i=1}^{n} (f_\ww(x_i) - y_i) x_i
+    \\
+    \frac{\partial L}{\partial c}(\ww) &= 2 \sum_{i=1}^{n} (f_\ww(x_i) - y_i) x_i^2
+    \\
+    \frac{\partial L}{\partial d}(\ww) &= 2 \sum_{i=1}^{n} ( f_\ww(x_i) - y_i) x_i^3
+\end{align*}
+$$
+
+In summary,
+$$
+\begin{align*}
+    \nabla_\ww L(\ww_n) = \begin{bmatrix} \uu \cdot \1 \\ \uu \cdot \xx \\ \uu \cdot \xx^2 \\ \uu \cdot \xx^3 \end{bmatrix} 
+\end{align*}	
+$$
+where $\1 \in \R^n$ is a vector of ones, $\xx^n \in \R^n$ is elementwise $n$-th power of $\xx = (x_i)_{i=1}^n$, and $\uu = 2 (f_{\ww_n}(x_i) - y_i)_{i=1}^n$.
+
+This is done in the following python code:
+
+```python
+import numpy as np
+import math
+
+# Create random input and output data
+x = np.linspace(-math.pi, math.pi, 2000)
+y = np.sin(x)
+
+# Randomly initialize weights
+a = np.random.randn()
+b = np.random.randn()
+c = np.random.randn()
+d = np.random.randn()
+
+learning_rate = 1e-6
+for t in range(2000):
+    # Forward pass: compute predicted y
+    # y = a + b x + c x^2 + d x^3
+    y_pred = a + b * x + c * x ** 2 + d * x ** 3
+
+    # Compute and print loss
+    loss = np.square(y_pred - y).sum()
+    if t % 100 == 99:
+        print(t, loss)
+
+    # Backprop to compute gradients of a, b, c, d with respect to loss
+    grad_y_pred = 2.0 * (y_pred - y)
+    grad_a = grad_y_pred.sum()
+    grad_b = (grad_y_pred * x).sum()
+    grad_c = (grad_y_pred * x ** 2).sum()
+    grad_d = (grad_y_pred * x ** 3).sum()
+
+    # Update weights
+    a -= learning_rate * grad_a
+    b -= learning_rate * grad_b
+    c -= learning_rate * grad_c
+    d -= learning_rate * grad_d
+
+print(f'Result: y = {a} + {b} x + {c} x^2 + {d} x^3')
+```
+
+# Automatic differentiation
+
+The minimization problems are set up using the loss function, which is a **composition** of several functions $g^1: \R^4 \to \R^n$, $g^2: \R^n \to \R^n$, and $g^3: \R^n \to \R$
+
+$$
+\begin{align*}
+    g^1(\ww) &= (y_i - f_\ww(x_i))_{i=1}^n
+\\
+    g^2(\xx) &= (x_i^2)_{i=1}^n
+\\
+    g^3(\xx) &= \sum_{i=1}^{n} x_i
+\end{align*}
+$$
+Then,
+$$
+L(\ww) = g^3(g^2(g^1(\ww)))
+$$
+Therefore, the $k$-th partial derivative of the loss function is
+
+$$
+\begin{align*}
+\frac{\partial}{\partial \omega_k} L(\ww) 
+    & = \sum_{i=1}^{n} \frac{\partial }{\partial x_i} g^3(\xx)|_{\xx = g^2(g^1(\ww))} \frac{\partial}{\partial \omega_k}  g^2_i(g^1(\ww))
+\\
+    & = \sum_{i=1}^{n} \frac{\partial }{\partial x_i} g^3(\xx)|_{\xx = g^2(g^1(\ww))} \sum_{j=1}^{n} \frac{\partial}{\partial x_j}  g^2_i(\xx)|_{\xx = g^1(\ww)} \frac{\partial}{\partial \omega_k}  g^1_j(\ww)
+\end{align*}
+$$
+
+More generally, if $\ww \in \R^p$ (i.e., $p$ parameters to minimize), 
+and if $L$ is a composition of $M$ functions
+$$
+L(\ww) = (g^{M} \circ g^{M-1} \circ \dots \circ g^1)(\ww),
+$$
+where $g^1: \R^p \to \R^{p_1}$, $g^2: \R^{p_1} \to \R^{p_2}, \dots,  g^{M-1}: \R^{p_{M-2}} \to \R^{p_{M-1}}$, $g^M: \R^{p_{M-1}} \to \R$,
+we can write
+$$
+\begin{align*}
+    \frac{\partial}{\partial \omega_k} L(\ww)  
+    = &  
+    \sum_{i_{M-1}=1}^{p_{M-1}} 
+    \frac{\partial }{\partial x_{i_{M-1}}} g^M(\xx^{M-1})
+    \sum_{i_{M-2}=1}^{p_{M-2}} 
+    \frac{\partial }{\partial x_{i_{M-2}}} g_{i_{M-1}}^{M-1}(\xx^{M-2})
+    \dots
+    \\
+    & 
+    \sum_{i_{M_1}=1}^{p_1} 
+    \frac{\partial }{\partial x_{i_{M_1}}} g_{i_{M_2}}^{2}(\xx^1)
+    % \sum_{i_{M_1}=1}^{p_1} 
+    \frac{\partial }{\partial \omega_{k}} g_{i_{M_1}}^{1}(\ww)
+    \\
+    = &  
+    \sum_{i_{M-1}=1}^{p_{M-1}} 
+    \sum_{i_{M-2}=1}^{p_{M-2}} 
+    \dots
+    \sum_{i_{M_1}=1}^{p_1} 
+    \frac{\partial }{\partial x_{i_{M-1}}} g^M(\xx^{M-1})
+    \frac{\partial }{\partial x_{i_{M-2}}} g_{i_{M-1}}^{M-1}(\xx^{M-2})
+    \dots
+    \\
+    & 
+    \frac{\partial }{\partial x_{i_{M_1}}} g_{i_{M_2}}^{2}(\xx^1)
+    % \sum_{i_{M_1}=1}^{p_1} 
+    \frac{\partial }{\partial \omega_{k}} g_{i_{M_1}}^{1}(\ww)
+    \\
+\end{align*}	
+$$
+where $\xx^i$ is defined as $(g^i \circ g^{i-1} \circ \dots \circ g^1) (\ww)$ for each $i=1, 2, \dots, M-1$.
+
+Therefore, to compute $\nabla_\ww L(\ww)$, one needs to know 
+$$
+d_{rst} = \frac{\partial}{\partial x_r} g^s_t(\xx^{s-1})
+$$
+for all $s=1, \dots, M$, $t=1, \dots, p_s$, and $r=1, \dots, p_{s-1}$.
+Combining all $d_{rst}$ to compute $\nabla_\ww L(\ww)$ is know as *backward propagation*.
+
+Note that the tensor $d_{rst}$ describes the $r$-th partial derivative of $t$-th component of the function $g^s$, evaluated at the immediate value $\xx^{s-1}$.
+
+## Auto-differentiation in pytorch
+
+Let $\ww = (a, b, c, d) \in \R^4$.
+
+In `pytorch`, setting `requires_grad=True` while defining a variable $a$ implies we would want to compute $\frac{\partial}{\partial a}$ of a function of $a$ at some point.
+
+```python
+# Setting requires_grad=True indicates that we want to compute gradients with
+# respect to these Tensors during the backward pass.
+a = torch.randn((), dtype=dtype, requires_grad=True)
+b = torch.randn((), dtype=dtype, requires_grad=True)
+c = torch.randn((), dtype=dtype, requires_grad=True)
+d = torch.randn((), dtype=dtype, requires_grad=True)
+```
+
+Given (fixed) data `x` and `y`, we define a loss function $L(\ww)$ called `loss`
+
+```python
+y_pred = a + b * x + c * x ** 2 + d * x ** 3
+loss = (y_pred - y).pow(2).sum()
+```
+
+**Remark:** Any variable such as `y_pred` and `loss` defined as a function of variables with `requires_grad=True` (such as `a, b, c, d`), will automatically have `requires_grad=True`. This feature makes sure that a computational graph gets created to store the subsequent partial derivatives $d_{rst}$. To define *inferential* variables (variables you do not plan to compute partial derivative of) you need to turn this off manually using `torch.no_grad()` like this
+
+```
+>>> with torch.no_grad():
+...     y = x * 2
+>>> y.requires_grad
+False
+
+>>> @torch.no_grad()
+... def tripler(x):
+...     return x * 3
+>>> z = tripler(x)
+>>> z.requires_grad
+```
+
+At some point during our computation, we will need to compute the partial derivative 
+$\frac{\partial}{\partial a}L(\ww^n)$ using the current value of $\ww = \ww^n$. In fact, we can compute all the partial derivatives $\nabla_\ww L(\ww^n)$ at once by calling the `backward()` function on the objective function $L$ (`loss`) like this:
+
+```python
+# Use autograd to compute the backward pass. This call will compute the
+# gradient of loss with respect to all Tensors with requires_grad=True.
+# After this call a.grad, b.grad. c.grad and d.grad will be Tensors holding
+# the gradient of the loss with respect to a, b, c, d respectively.
+loss.backward()
+```
+
+At this point, all partial derivates of `loss` function $L$ with respect to all variables with a `requires_grad=True` is computed at the current value of $\ww = \ww^n$. We can get the value of $\frac{\partial}{\partial a}L(\ww^n)$ at the current value $\ww = \ww^n$ using `a.grad`.
+
+```python
+a.grad
+b.grad
+c.grad
+d.grad
+```
+
+### Updating the parameters (variables with `requires_grad=True`)
+
+$$\frac{\partial}{\partial a}L(\ww^n)
+\to \frac{\partial}{\partial a}L(\ww^{n+1})$$
+
+Note that we would want to update the value of $\ww$ (in particular, the value of $a$) from $\ww^n$ to $\ww^{n+1}$, for example, during a gradient descent method. This should change $\frac{\partial}{\partial a}L(\ww^n)$, but the update does not happen unless you run `loss.backward()` again. 
+
+**Remark:** While manually updating variables with `requires_grad=True`, we turn off gradient computation (why?). We would recompute the gradient again anyway, and do not want to spend computational power computing the gradients of update functions. Therefore, do the following: 
+
+```python
+# Manually update weights using gradient descent. Wrap in torch.no_grad()
+# because weights have requires_grad=True, but we don't need to track this
+# in autograd.
+with torch.no_grad():
+    a -= learning_rate * a.grad
+    b -= learning_rate * b.grad
+    c -= learning_rate * c.grad
+    d -= learning_rate * d.grad
+
+    # Manually zero the gradients after updating weights
+    a.grad = None
+    b.grad = None
+    c.grad = None
+    d.grad = None
+```
+
+### Defining derivatives beyond pytorch's capability
+
+If we are using an exotic function $g$ for which `pytorch` does not have the formula for derivate (and we do), we can define it ourselves
+
+```python
+class LegendrePolynomial3(torch.autograd.Function):
+    """
+    We can implement our own custom autograd Functions by subclassing
+    torch.autograd.Function and implementing the forward and backward passes
+    which operate on Tensors.
+    """
+
+    @staticmethod
+    def forward(ctx, input):
+        """
+        In the forward pass we receive a Tensor containing the input and return
+        a Tensor containing the output. ctx is a context object that can be used
+        to stash information for backward computation. You can cache arbitrary
+        objects for use in the backward pass using the ctx.save_for_backward method.
+        """
+        ctx.save_for_backward(input)
+        return 0.5 * (5 * input ** 3 - 3 * input)
+
+    @staticmethod
+    def backward(ctx, grad_output):
+        """
+        In the backward pass we receive a Tensor containing the gradient of the loss
+        with respect to the output, and we need to compute the gradient of the loss
+        with respect to the input.
+        """
+        input, = ctx.saved_tensors
+        return grad_output * 1.5 * (5 * input ** 2 - 1)
+```
+
+We can `apply` this function within the loop and define a loss function like this:
+
+```python
+# To apply our Function, we use Function.apply method. We alias this as 'P3'.
+P3 = LegendrePolynomial3.apply
+# Forward pass: compute predicted y using operations; we compute
+# P3 using our custom autograd operation.
+y_pred = a + b * P3(c + d * x)
+# Compute and print loss
+loss = (y_pred - y).pow(2).sum()
+```
+
+
+
+To use optimized pytorch features such as `torch.nn.MSELoss()`, `torch.optim.SGD()`, `optimizer.step()` etc for your own model, you need to define your own model as a module, which is a derived class of `torch.nn.Module`.
+
+```python
+class Polynomial3(torch.nn.Module):
+    def __init__(self):
+        """
+        In the constructor we instantiate four parameters and assign them as
+        member parameters.
+        """
+        super().__init__()
+        self.a = torch.nn.Parameter(torch.randn(()))
+        self.b = torch.nn.Parameter(torch.randn(()))
+        self.c = torch.nn.Parameter(torch.randn(()))
+        self.d = torch.nn.Parameter(torch.randn(()))
+
+    def forward(self, x):
+        """
+        In the forward function we accept a Tensor of input data and we must return
+        a Tensor of output data. We can use Modules defined in the constructor as
+        well as arbitrary operators on Tensors.
+        """
+        return self.a + self.b * x + self.c * x ** 2 + self.d * x ** 3
+
+    def string(self):
+        """
+        Just like any class in Python, you can also define custom method on PyTorch modules
+        """
+        return f'y = {self.a.item()} + {self.b.item()} x + {self.c.item()} x^2 + {self.d.item()} x^3'
+
+# Construct our model by instantiating the class defined above
+model = Polynomial3()
+```
+
+Note that we do not need to define a `backward()` method for a `torch.nn.Module` as it is derived from the operations specified within the `forward()` method.
+If your model (`torch.nn.Module`) uses an exotic function which you define via a `torch.autograd.Function`, then you define the derivate of the function within the `backward()` method of the function, but not in the model.
+
+
+---
+
+# Tex and markdown conversion to html with pandoc
+
+- To use latex goodies such as snippet completion etc in vim, set 
+
+```vim
+:setfiletype pandoc.tex
+```
+
+- Put all latex preamble in the header part of the `.md` file [source](https://pandoc.org/MANUAL.html#extension-yaml_metadata_block) like this
+
+```yaml
+---
+title: Readme
+author: Author
+header-includes: |
+    \usepackage{amsmath, amssymb, amsthm, amsfonts, color, bm}
+
+    \newcommand{\R}{\mathcal{R}}
+    \newcommand{\ww}{\boldsymbol{\omega}}
+    \newcommand{\xx}{\mathbf{x}}
+---
+```
+
+
+Converting a tex file into html `pandoc file.tex -o file.html` uses unicode by default to render math symbols. We need to use `mathjax` for a nicer rendering. Other options are
+
+```
+--mathml, --webtex, --mathjax, --katex
+```
+
+and demos can be found in pandoc [demos](https://pandoc.org/demos.html).
+
+According to [pandoc documentation](https://pandoc.org/chunkedhtml-demo/3.6-math-rendering-in-html.html) One need to specify the url of the `.js` file that would be used to convert math into mathjax. By default pandoc uses some link form some content delivery network (CDN), which does not work on firefox at the first attempt. So we can specify the url like this:
+
+```bash
+pandoc math.text -s --mathjax=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js -o   mathMathJax.html
+```
+
+There are other CDN locations on [mathjax documentation](https://docs.mathjax.org/en/latest/web/start.html#cdn-list) from sites like
+
+- jsdelivr.com [latest or specific version] (recommended)
+- unpkg.com [latest or specific version]
+- cdnjs.com
+- raw.githack.com
+- gitcdn.xyz
+- cdn.statically.io
+
+```bash
+pandoc README.md -s --mathjax=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js -o   README.html
+```

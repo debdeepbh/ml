@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Debdeep Bhattacharya" />
+  <title>Notes on minimization problems using pytorch</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Notes on minimization problems using pytorch</h1>
+<p class="author">Debdeep Bhattacharya</p>
+</header>
+<p>We will enhance the nice <a
+href="https://pytorch.org/tutorials/beginner/pytorch_with_examples.html">pytorch
+example</a> with extra explanations.</p>
+<h1 id="problem-setup">Problem setup</h1>
+<p>The goal is the fit <span class="math inline">\(\sin x\)</span> using
+a cubic polynomial.</p>
+<p>The data will be generated using by sampling the curve <span
+class="math inline">\(y = \sin x\)</span>. But this relationship between
+<span class="math inline">\(x\)</span> and <span
+class="math inline">\(y\)</span> will not be known to the modeler.</p>
+<p>Let the data <span class="math inline">\(\{(x_i,
+y_i)\}_{i=1}^n\)</span> be given.</p>
+<p>Our model is <span class="math inline">\(y = f(x)\)</span> where
+<span class="math display">\[
+f_\boldsymbol{\omega}(x) = a + bx + cx^2 + d x^3,
+\]</span> where <span class="math inline">\(\boldsymbol{\omega}= (a, b,
+c, d)\)</span> are the free parameters to minimizer over.</p>
+<p>The minimization problem is therefore</p>
+<p><span class="math display">\[\begin{align*}
+\min \left\{\sum_{i=1}^{n} \left\lvert y_i -
+f_\boldsymbol{\omega}(x_i)\right\rvert^2: \boldsymbol{\omega}\in
+\mathbb{R}^4 \right\}
+\end{align*}\]</span></p>
+<p>To minimize, we use gradient descent method. Defining the <em>loss
+function</em> (objective function) <span class="math display">\[
+L(\boldsymbol{\omega}) = \sum_{i=1}^{n} \left\lvert
+f_\boldsymbol{\omega}(x_i) - y_i\right\rvert^2
+\]</span></p>
+<p>and then use the scheme <span class="math display">\[
+\boldsymbol{\omega}_{n+1} = \boldsymbol{\omega}_n - \eta
+\nabla_\boldsymbol{\omega}L(\boldsymbol{\omega}_n)
+\]</span> with initial guess <span
+class="math inline">\(\boldsymbol{\omega}_0\)</span> and <em>learning
+rate</em> (numerical step size) <span
+class="math inline">\(\eta\)</span>.</p>
+<p>We would need to compute <span class="math display">\[
+\nabla_\boldsymbol{\omega}L(\boldsymbol{\omega}) = 2 \sum_{i=1}^{n}
+(f_\boldsymbol{\omega}(x_i) - y_i)
+\nabla_\boldsymbol{\omega}f_\boldsymbol{\omega}(x_i)
+\]</span> explicitly. For our model <span
+class="math inline">\(f_\boldsymbol{\omega}\)</span>, noting that <span
+class="math display">\[
+\begin{align*}
+    \nabla_\boldsymbol{\omega}f_\boldsymbol{\omega}(x_i) =
+\begin{bmatrix} 1 \\ x_i \\ x_i^2 \\ x_i^3 \end{bmatrix}
+\end{align*}    
+\]</span> we have <span class="math display">\[
+\begin{align*}
+    \frac{\partial L}{\partial a}(\boldsymbol{\omega}) &amp; = 2
+\sum_{i=1}^{n} (f_\boldsymbol{\omega}(x_i) - y_i)
+    \\
+    \frac{\partial L}{\partial b}(\boldsymbol{\omega}) &amp;= 2
+\sum_{i=1}^{n} (f_\boldsymbol{\omega}(x_i) - y_i) x_i
+    \\
+    \frac{\partial L}{\partial c}(\boldsymbol{\omega}) &amp;= 2
+\sum_{i=1}^{n} (f_\boldsymbol{\omega}(x_i) - y_i) x_i^2
+    \\
+    \frac{\partial L}{\partial d}(\boldsymbol{\omega}) &amp;= 2
+\sum_{i=1}^{n} ( f_\boldsymbol{\omega}(x_i) - y_i) x_i^3
+\end{align*}
+\]</span></p>
+<p>In summary, <span class="math display">\[
+\begin{align*}
+    \nabla_\boldsymbol{\omega}L(\boldsymbol{\omega}_n) = \begin{bmatrix}
+\mathbf{u}\cdot \boldsymbol{1} \\ \mathbf{u}\cdot \mathbf{x}\\
+\mathbf{u}\cdot \mathbf{x}^2 \\ \mathbf{u}\cdot \mathbf{x}^3
+\end{bmatrix}
+\end{align*}    
+\]</span> where <span class="math inline">\(\boldsymbol{1} \in
+\mathbb{R}^n\)</span> is a vector of ones, <span
+class="math inline">\(\mathbf{x}^n \in \mathbb{R}^n\)</span> is
+elementwise <span class="math inline">\(n\)</span>-th power of <span
+class="math inline">\(\mathbf{x}= (x_i)_{i=1}^n\)</span>, and <span
+class="math inline">\(\mathbf{u}= 2 (f_{\boldsymbol{\omega}_n}(x_i) -
+y_i)_{i=1}^n\)</span>.</p>
+<p>This is done in the following python code:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create random input and output data</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="op">-</span>math.pi, math.pi, <span class="dv">2000</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.sin(x)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Randomly initialize weights</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.random.randn()</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> np.random.randn()</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> np.random.randn()</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> np.random.randn()</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>learning_rate <span class="op">=</span> <span class="fl">1e-6</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2000</span>):</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Forward pass: compute predicted y</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># y = a + b x + c x^2 + d x^3</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    y_pred <span class="op">=</span> a <span class="op">+</span> b <span class="op">*</span> x <span class="op">+</span> c <span class="op">*</span> x <span class="op">**</span> <span class="dv">2</span> <span class="op">+</span> d <span class="op">*</span> x <span class="op">**</span> <span class="dv">3</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Compute and print loss</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> np.square(y_pred <span class="op">-</span> y).<span class="bu">sum</span>()</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> t <span class="op">%</span> <span class="dv">100</span> <span class="op">==</span> <span class="dv">99</span>:</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(t, loss)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Backprop to compute gradients of a, b, c, d with respect to loss</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    grad_y_pred <span class="op">=</span> <span class="fl">2.0</span> <span class="op">*</span> (y_pred <span class="op">-</span> y)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    grad_a <span class="op">=</span> grad_y_pred.<span class="bu">sum</span>()</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    grad_b <span class="op">=</span> (grad_y_pred <span class="op">*</span> x).<span class="bu">sum</span>()</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    grad_c <span class="op">=</span> (grad_y_pred <span class="op">*</span> x <span class="op">**</span> <span class="dv">2</span>).<span class="bu">sum</span>()</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    grad_d <span class="op">=</span> (grad_y_pred <span class="op">*</span> x <span class="op">**</span> <span class="dv">3</span>).<span class="bu">sum</span>()</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Update weights</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    a <span class="op">-=</span> learning_rate <span class="op">*</span> grad_a</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    b <span class="op">-=</span> learning_rate <span class="op">*</span> grad_b</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    c <span class="op">-=</span> learning_rate <span class="op">*</span> grad_c</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    d <span class="op">-=</span> learning_rate <span class="op">*</span> grad_d</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&#39;Result: y = </span><span class="sc">{</span>a<span class="sc">}</span><span class="ss"> + </span><span class="sc">{</span>b<span class="sc">}</span><span class="ss"> x + </span><span class="sc">{</span>c<span class="sc">}</span><span class="ss"> x^2 + </span><span class="sc">{</span>d<span class="sc">}</span><span class="ss"> x^3&#39;</span>)</span></code></pre></div>
+<h1 id="automatic-differentiation">Automatic differentiation</h1>
+<p>The minimization problems are set up using the loss function, which
+is a <strong>composition</strong> of several functions <span
+class="math inline">\(g^1: \mathbb{R}^4 \to \mathbb{R}^n\)</span>, <span
+class="math inline">\(g^2: \mathbb{R}^n \to \mathbb{R}^n\)</span>, and
+<span class="math inline">\(g^3: \mathbb{R}^n \to
+\mathbb{R}\)</span></p>
+<p><span class="math display">\[
+\begin{align*}
+    g^1(\boldsymbol{\omega}) &amp;= (y_i -
+f_\boldsymbol{\omega}(x_i))_{i=1}^n
+\\
+    g^2(\mathbf{x}) &amp;= (x_i^2)_{i=1}^n
+\\
+    g^3(\mathbf{x}) &amp;= \sum_{i=1}^{n} x_i
+\end{align*}
+\]</span> Then, <span class="math display">\[
+L(\boldsymbol{\omega}) = g^3(g^2(g^1(\boldsymbol{\omega})))
+\]</span> Therefore, the <span class="math inline">\(k\)</span>-th
+partial derivative of the loss function is</p>
+<p><span class="math display">\[
+\begin{align*}
+\frac{\partial}{\partial \omega_k} L(\boldsymbol{\omega})
+    &amp; = \sum_{i=1}^{n} \frac{\partial }{\partial x_i}
+g^3(\mathbf{x})|_{\mathbf{x}= g^2(g^1(\boldsymbol{\omega}))}
+\frac{\partial}{\partial \omega_k}  g^2_i(g^1(\boldsymbol{\omega}))
+\\
+    &amp; = \sum_{i=1}^{n} \frac{\partial }{\partial x_i}
+g^3(\mathbf{x})|_{\mathbf{x}= g^2(g^1(\boldsymbol{\omega}))}
+\sum_{j=1}^{n} \frac{\partial}{\partial
+x_j}  g^2_i(\mathbf{x})|_{\mathbf{x}= g^1(\boldsymbol{\omega})}
+\frac{\partial}{\partial \omega_k}  g^1_j(\boldsymbol{\omega})
+\end{align*}
+\]</span></p>
+<p>More generally, if <span class="math inline">\(\boldsymbol{\omega}\in
+\mathbb{R}^p\)</span> (i.e., <span class="math inline">\(p\)</span>
+parameters to minimize), and if <span class="math inline">\(L\)</span>
+is a composition of <span class="math inline">\(M\)</span> functions
+<span class="math display">\[
+L(\boldsymbol{\omega}) = (g^{M} \circ g^{M-1} \circ \dots \circ
+g^1)(\boldsymbol{\omega}),
+\]</span> where <span class="math inline">\(g^1: \mathbb{R}^p \to
+\mathbb{R}^{p_1}\)</span>, <span class="math inline">\(g^2:
+\mathbb{R}^{p_1} \to \mathbb{R}^{p_2}, \dots, g^{M-1}:
+\mathbb{R}^{p_{M-2}} \to \mathbb{R}^{p_{M-1}}\)</span>, <span
+class="math inline">\(g^M: \mathbb{R}^{p_{M-1}} \to \mathbb{R}\)</span>,
+we can write <span class="math display">\[
+\begin{align*}
+    \frac{\partial}{\partial \omega_k} L(\boldsymbol{\omega})  
+    = &amp;  
+    \sum_{i_{M-1}=1}^{p_{M-1}}
+    \frac{\partial }{\partial x_{i_{M-1}}} g^M(\mathbf{x}^{M-1})
+    \sum_{i_{M-2}=1}^{p_{M-2}}
+    \frac{\partial }{\partial x_{i_{M-2}}}
+g_{i_{M-1}}^{M-1}(\mathbf{x}^{M-2})
+    \dots
+    \\
+    &amp;
+    \sum_{i_{M_1}=1}^{p_1}
+    \frac{\partial }{\partial x_{i_{M_1}}} g_{i_{M_2}}^{2}(\mathbf{x}^1)
+    % \sum_{i_{M_1}=1}^{p_1}
+    \frac{\partial }{\partial \omega_{k}}
+g_{i_{M_1}}^{1}(\boldsymbol{\omega})
+    \\
+    = &amp;  
+    \sum_{i_{M-1}=1}^{p_{M-1}}
+    \sum_{i_{M-2}=1}^{p_{M-2}}
+    \dots
+    \sum_{i_{M_1}=1}^{p_1}
+    \frac{\partial }{\partial x_{i_{M-1}}} g^M(\mathbf{x}^{M-1})
+    \frac{\partial }{\partial x_{i_{M-2}}}
+g_{i_{M-1}}^{M-1}(\mathbf{x}^{M-2})
+    \dots
+    \\
+    &amp;
+    \frac{\partial }{\partial x_{i_{M_1}}} g_{i_{M_2}}^{2}(\mathbf{x}^1)
+    % \sum_{i_{M_1}=1}^{p_1}
+    \frac{\partial }{\partial \omega_{k}}
+g_{i_{M_1}}^{1}(\boldsymbol{\omega})
+    \\
+\end{align*}    
+\]</span> where <span class="math inline">\(\mathbf{x}^i\)</span> is
+defined as <span class="math inline">\((g^i \circ g^{i-1} \circ \dots
+\circ g^1) (\boldsymbol{\omega})\)</span> for each <span
+class="math inline">\(i=1, 2, \dots, M-1\)</span>.</p>
+<p>Therefore, to compute <span
+class="math inline">\(\nabla_\boldsymbol{\omega}L(\boldsymbol{\omega})\)</span>,
+one needs to know <span class="math display">\[
+d_{rst} = \frac{\partial}{\partial x_r} g^s_t(\mathbf{x}^{s-1})
+\]</span> for all <span class="math inline">\(s=1, \dots, M\)</span>,
+<span class="math inline">\(t=1, \dots, p_s\)</span>, and <span
+class="math inline">\(r=1, \dots, p_{s-1}\)</span>. Combining all <span
+class="math inline">\(d_{rst}\)</span> to compute <span
+class="math inline">\(\nabla_\boldsymbol{\omega}L(\boldsymbol{\omega})\)</span>
+is know as <em>backward propagation</em>.</p>
+<p>Note that the tensor <span class="math inline">\(d_{rst}\)</span>
+describes the <span class="math inline">\(r\)</span>-th partial
+derivative of <span class="math inline">\(t\)</span>-th component of the
+function <span class="math inline">\(g^s\)</span>, evaluated at the
+immediate value <span
+class="math inline">\(\mathbf{x}^{s-1}\)</span>.</p>
+<h2 id="auto-differentiation-in-pytorch">Auto-differentiation in
+pytorch</h2>
+<p>Let <span class="math inline">\(\boldsymbol{\omega}= (a, b, c, d) \in
+\mathbb{R}^4\)</span>.</p>
+<p>In <code>pytorch</code>, setting <code>requires_grad=True</code>
+while defining a variable <span class="math inline">\(a\)</span> implies
+we would want to compute <span
+class="math inline">\(\frac{\partial}{\partial a}\)</span> of a function
+of <span class="math inline">\(a\)</span> at some point.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Setting requires_grad=True indicates that we want to compute gradients with</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># respect to these Tensors during the backward pass.</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> torch.randn((), dtype<span class="op">=</span>dtype, requires_grad<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> torch.randn((), dtype<span class="op">=</span>dtype, requires_grad<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> torch.randn((), dtype<span class="op">=</span>dtype, requires_grad<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> torch.randn((), dtype<span class="op">=</span>dtype, requires_grad<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
+<p>Given (fixed) data <code>x</code> and <code>y</code>, we define a
+loss function <span
+class="math inline">\(L(\boldsymbol{\omega})\)</span> called
+<code>loss</code></p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> a <span class="op">+</span> b <span class="op">*</span> x <span class="op">+</span> c <span class="op">*</span> x <span class="op">**</span> <span class="dv">2</span> <span class="op">+</span> d <span class="op">*</span> x <span class="op">**</span> <span class="dv">3</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> (y_pred <span class="op">-</span> y).<span class="bu">pow</span>(<span class="dv">2</span>).<span class="bu">sum</span>()</span></code></pre></div>
+<p><strong>Remark:</strong> Any variable such as <code>y_pred</code> and
+<code>loss</code> defined as a function of variables with
+<code>requires_grad=True</code> (such as <code>a, b, c, d</code>), will
+automatically have <code>requires_grad=True</code>. This feature makes
+sure that a computational graph gets created to store the subsequent
+partial derivatives <span class="math inline">\(d_{rst}\)</span>. To
+define <em>inferential</em> variables (variables you do not plan to
+compute partial derivative of) you need to turn this off manually using
+<code>torch.no_grad()</code> like this</p>
+<pre><code>&gt;&gt;&gt; with torch.no_grad():
+...     y = x * 2
+&gt;&gt;&gt; y.requires_grad
+False
+
+&gt;&gt;&gt; @torch.no_grad()
+... def tripler(x):
+...     return x * 3
+&gt;&gt;&gt; z = tripler(x)
+&gt;&gt;&gt; z.requires_grad</code></pre>
+<p>At some point during our computation, we will need to compute the
+partial derivative <span class="math inline">\(\frac{\partial}{\partial
+a}L(\boldsymbol{\omega}^n)\)</span> using the current value of <span
+class="math inline">\(\boldsymbol{\omega}=
+\boldsymbol{\omega}^n\)</span>. In fact, we can compute all the partial
+derivatives <span
+class="math inline">\(\nabla_\boldsymbol{\omega}L(\boldsymbol{\omega}^n)\)</span>
+at once by calling the <code>backward()</code> function on the objective
+function <span class="math inline">\(L\)</span> (<code>loss</code>) like
+this:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use autograd to compute the backward pass. This call will compute the</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># gradient of loss with respect to all Tensors with requires_grad=True.</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># After this call a.grad, b.grad. c.grad and d.grad will be Tensors holding</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># the gradient of the loss with respect to a, b, c, d respectively.</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>loss.backward()</span></code></pre></div>
+<p>At this point, all partial derivates of <code>loss</code> function
+<span class="math inline">\(L\)</span> with respect to all variables
+with a <code>requires_grad=True</code> is computed at the current value
+of <span class="math inline">\(\boldsymbol{\omega}=
+\boldsymbol{\omega}^n\)</span>. We can get the value of <span
+class="math inline">\(\frac{\partial}{\partial
+a}L(\boldsymbol{\omega}^n)\)</span> at the current value <span
+class="math inline">\(\boldsymbol{\omega}=
+\boldsymbol{\omega}^n\)</span> using <code>a.grad</code>.</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>a.grad</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>b.grad</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>c.grad</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>d.grad</span></code></pre></div>
+<h3
+id="updating-the-parameters-variables-with-requires_gradtrue">Updating
+the parameters (variables with <code>requires_grad=True</code>)</h3>
+<p><span class="math display">\[\frac{\partial}{\partial
+a}L(\boldsymbol{\omega}^n)
+\to \frac{\partial}{\partial a}L(\boldsymbol{\omega}^{n+1})\]</span></p>
+<p>Note that we would want to update the value of <span
+class="math inline">\(\boldsymbol{\omega}\)</span> (in particular, the
+value of <span class="math inline">\(a\)</span>) from <span
+class="math inline">\(\boldsymbol{\omega}^n\)</span> to <span
+class="math inline">\(\boldsymbol{\omega}^{n+1}\)</span>, for example,
+during a gradient descent method. This should change <span
+class="math inline">\(\frac{\partial}{\partial
+a}L(\boldsymbol{\omega}^n)\)</span>, but the update does not happen
+unless you run <code>loss.backward()</code> again.</p>
+<p><strong>Remark:</strong> While manually updating variables with
+<code>requires_grad=True</code>, we turn off gradient computation
+(why?). We would recompute the gradient again anyway, and do not want to
+spend computational power computing the gradients of update functions.
+Therefore, do the following:</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Manually update weights using gradient descent. Wrap in torch.no_grad()</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># because weights have requires_grad=True, but we don&#39;t need to track this</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># in autograd.</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    a <span class="op">-=</span> learning_rate <span class="op">*</span> a.grad</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    b <span class="op">-=</span> learning_rate <span class="op">*</span> b.grad</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    c <span class="op">-=</span> learning_rate <span class="op">*</span> c.grad</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    d <span class="op">-=</span> learning_rate <span class="op">*</span> d.grad</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Manually zero the gradients after updating weights</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    a.grad <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    b.grad <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    c.grad <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    d.grad <span class="op">=</span> <span class="va">None</span></span></code></pre></div>
+<h3 id="defining-derivatives-beyond-pytorchs-capability">Defining
+derivatives beyond pytorch’s capability</h3>
+<p>If we are using an exotic function <span
+class="math inline">\(g\)</span> for which <code>pytorch</code> does not
+have the formula for derivate (and we do), we can define it
+ourselves</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> LegendrePolynomial3(torch.autograd.Function):</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">    We can implement our own custom autograd Functions by subclassing</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">    torch.autograd.Function and implementing the forward and backward passes</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">    which operate on Tensors.</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">@staticmethod</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(ctx, <span class="bu">input</span>):</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">        In the forward pass we receive a Tensor containing the input and return</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">        a Tensor containing the output. ctx is a context object that can be used</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">        to stash information for backward computation. You can cache arbitrary</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">        objects for use in the backward pass using the ctx.save_for_backward method.</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">        &quot;&quot;&quot;</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>        ctx.save_for_backward(<span class="bu">input</span>)</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="fl">0.5</span> <span class="op">*</span> (<span class="dv">5</span> <span class="op">*</span> <span class="bu">input</span> <span class="op">**</span> <span class="dv">3</span> <span class="op">-</span> <span class="dv">3</span> <span class="op">*</span> <span class="bu">input</span>)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">@staticmethod</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> backward(ctx, grad_output):</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co">        In the backward pass we receive a Tensor containing the gradient of the loss</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">        with respect to the output, and we need to compute the gradient of the loss</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co">        with respect to the input.</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="co">        &quot;&quot;&quot;</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>        <span class="bu">input</span>, <span class="op">=</span> ctx.saved_tensors</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> grad_output <span class="op">*</span> <span class="fl">1.5</span> <span class="op">*</span> (<span class="dv">5</span> <span class="op">*</span> <span class="bu">input</span> <span class="op">**</span> <span class="dv">2</span> <span class="op">-</span> <span class="dv">1</span>)</span></code></pre></div>
+<p>We can <code>apply</code> this function within the loop and define a
+loss function like this:</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To apply our Function, we use Function.apply method. We alias this as &#39;P3&#39;.</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>P3 <span class="op">=</span> LegendrePolynomial3.<span class="bu">apply</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Forward pass: compute predicted y using operations; we compute</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># P3 using our custom autograd operation.</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> a <span class="op">+</span> b <span class="op">*</span> P3(c <span class="op">+</span> d <span class="op">*</span> x)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute and print loss</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> (y_pred <span class="op">-</span> y).<span class="bu">pow</span>(<span class="dv">2</span>).<span class="bu">sum</span>()</span></code></pre></div>
+<p>To use optimized pytorch features such as
+<code>torch.nn.MSELoss()</code>, <code>torch.optim.SGD()</code>,
+<code>optimizer.step()</code> etc for your own model, you need to define
+your own model as a module, which is a derived class of
+<code>torch.nn.Module</code>.</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Polynomial3(torch.nn.Module):</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">        In the constructor we instantiate four parameters and assign them as</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">        member parameters.</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">        &quot;&quot;&quot;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.a <span class="op">=</span> torch.nn.Parameter(torch.randn(()))</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.b <span class="op">=</span> torch.nn.Parameter(torch.randn(()))</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.c <span class="op">=</span> torch.nn.Parameter(torch.randn(()))</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.d <span class="op">=</span> torch.nn.Parameter(torch.randn(()))</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co">        In the forward function we accept a Tensor of input data and we must return</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co">        a Tensor of output data. We can use Modules defined in the constructor as</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co">        well as arbitrary operators on Tensors.</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co">        &quot;&quot;&quot;</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.a <span class="op">+</span> <span class="va">self</span>.b <span class="op">*</span> x <span class="op">+</span> <span class="va">self</span>.c <span class="op">*</span> x <span class="op">**</span> <span class="dv">2</span> <span class="op">+</span> <span class="va">self</span>.d <span class="op">*</span> x <span class="op">**</span> <span class="dv">3</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> string(<span class="va">self</span>):</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="co">        Just like any class in Python, you can also define custom method on PyTorch modules</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="co">        &quot;&quot;&quot;</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="ss">f&#39;y = </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>a<span class="sc">.</span>item()<span class="sc">}</span><span class="ss"> + </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>b<span class="sc">.</span>item()<span class="sc">}</span><span class="ss"> x + </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>c<span class="sc">.</span>item()<span class="sc">}</span><span class="ss"> x^2 + </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>d<span class="sc">.</span>item()<span class="sc">}</span><span class="ss"> x^3&#39;</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Construct our model by instantiating the class defined above</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Polynomial3()</span></code></pre></div>
+<p>Note that we do not need to define a <code>backward()</code> method
+for a <code>torch.nn.Module</code> as it is derived from the operations
+specified within the <code>forward()</code> method. If your model
+(<code>torch.nn.Module</code>) uses an exotic function which you define
+via a <code>torch.autograd.Function</code>, then you define the derivate
+of the function within the <code>backward()</code> method of the
+function, but not in the model.</p>
+<hr />
+<h1 id="tex-and-markdown-conversion-to-html-with-pandoc">Tex and
+markdown conversion to html with pandoc</h1>
+<ul>
+<li>To use latex goodies such as snippet completion etc in vim, set</li>
+</ul>
+<pre class="vim"><code>:setfiletype pandoc.tex</code></pre>
+<ul>
+<li>Put all latex preamble in the header part of the <code>.md</code>
+file <a
+href="https://pandoc.org/MANUAL.html#extension-yaml_metadata_block">source</a>
+like this</li>
+</ul>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> Readme</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">author</span><span class="kw">:</span><span class="at"> Author</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">header-includes</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    \usepackage{amsmath, amssymb, amsthm, amsfonts, color, bm}</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    \newcommand{\R}{\mathcal{R}}</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    \newcommand{\ww}{\boldsymbol{\omega}}</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    \newcommand{\xx}{\mathbf{x}}</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div>
+<p>Converting a tex file into html
+<code>pandoc file.tex -o file.html</code> uses unicode by default to
+render math symbols. We need to use <code>mathjax</code> for a nicer
+rendering. Other options are</p>
+<pre><code>--mathml, --webtex, --mathjax, --katex</code></pre>
+<p>and demos can be found in pandoc <a
+href="https://pandoc.org/demos.html">demos</a>.</p>
+<p>According to <a
+href="https://pandoc.org/chunkedhtml-demo/3.6-math-rendering-in-html.html">pandoc
+documentation</a> One need to specify the url of the <code>.js</code>
+file that would be used to convert math into mathjax. By default pandoc
+uses some link form some content delivery network (CDN), which does not
+work on firefox at the first attempt. So we can specify the url like
+this:</p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pandoc</span> math.text <span class="at">-s</span> <span class="at">--mathjax</span><span class="op">=</span>https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js <span class="at">-o</span>   mathMathJax.html</span></code></pre></div>
+<p>There are other CDN locations on <a
+href="https://docs.mathjax.org/en/latest/web/start.html#cdn-list">mathjax
+documentation</a> from sites like</p>
+<ul>
+<li>jsdelivr.com [latest or specific version] (recommended)</li>
+<li>unpkg.com [latest or specific version]</li>
+<li>cdnjs.com</li>
+<li>raw.githack.com</li>
+<li>gitcdn.xyz</li>
+<li>cdn.statically.io</li>
+</ul>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pandoc</span> README.md <span class="at">-s</span> <span class="at">--mathjax</span><span class="op">=</span>https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js <span class="at">-o</span>   README.html</span></code></pre></div>
+</body>
+</html>
