@@ -29,33 +29,14 @@ header-includes: |
 ---
 
 
-$$
-\usepackage{amsmath, amssymb, amsthm, amsfonts, color, bm}
-\newcommand{\F}{\mathcal{F}}
-\newcommand{\E}{\mathcal{E}}
-\newcommand{\R}{\mathbb{R}}
-\newcommand{\C}{\mathbb{C}}
-\newcommand{\N}{\mathbb{N}}
-\newcommand{\Z}{\mathbb{Z}}
-\newcommand{\br}[1]{\color{red} (#1) \color{black}}
-\newcommand{\bb}[1]{\color{blue} (#1) \color{black}}
-\newcommand{\ww}{\boldsymbol{\omega}}
-\newcommand{\1}{\boldsymbol{1}}
-\newcommand{\xx}{\mathbf{x}}
-\newcommand{\yy}{\mathbf{y}}
-\newcommand{\vv}{\mathbf{v}}
-\newcommand{\uu}{\mathbf{u}}
-\newcommand{\what}{\bb{??}}
-\newcommand{\half}{\frac{1}{2}}
-\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
-\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
-\newcommand{\jap}[1]{\left\langle #1 \right\rangle}
-\newcommand{\inn}[1]{\left\langle #1 \right\rangle}
-$$
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
 
 We will enhance the nice [pytorch example](https://pytorch.org/tutorials/beginner/pytorch_with_examples.html) with extra explanations.
 
-# Problem setup 2
+# Problem setup
 
 
 
@@ -522,7 +503,7 @@ We want our `.md` file to convert to pdf or tex without much hassle. While using
     \end{align*}
     ```
 
-    This causes some pain since `vim-pandoc` does not render the math symbols within the environments.
+    This causes some pain since `vim-pandoc` does not render the math symbols within the environments in vim. Surprisingly, converting a tex file to md puts `$$`s around latex environments. So weird.
 
 - If you are using `\usepackage{bm}` for bold fonts and using commands like `\boldsymbol{\sigma}` etc (apparently better alternative to `\pmb{}`), make sure to put braces around it when using as subscript or superscript. For example, use `f_{\boldsymbol{\sigma}}(x)` instead of `f_\boldsymbol{\sigma}(x)`. The second usage will put `(x)` also within the subscript when you convert it into tex. This is a very weird behavior since you would think both are Tex commands.
 
@@ -566,6 +547,9 @@ Converting marp-focused `.md` file into html using `pandoc` is very glitchy. Few
 - Bullet points render in a single line
 - 
 
+## Github readme compatibility
+
+The markdown files with header does not render in github webpages, even though both are mathjax.
 
 
 ## Referencing
