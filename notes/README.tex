@@ -78,30 +78,6 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
-\usepackage{amsmath, amssymb, amsthm, amsfonts, color, bm}
-
-\newcommand{\F}{\mathcal{F}}
-\newcommand{\E}{\mathcal{E}}
-\newcommand{\R}{\mathbb{R}}
-\newcommand{\C}{\mathbb{C}}
-\newcommand{\N}{\mathbb{N}}
-\newcommand{\Z}{\mathbb{Z}}
-\newcommand{\br}[1]{\color{red} (#1) \color{black}}
-\newcommand{\bb}[1]{\color{blue} (#1) \color{black}}
-
-\newcommand{\ww}{\boldsymbol{\omega}}
-\newcommand{\1}{\boldsymbol{1}}
-\newcommand{\xx}{\mathbf{x}}
-\newcommand{\yy}{\mathbf{y}}
-\newcommand{\vv}{\mathbf{v}}
-\newcommand{\uu}{\mathbf{u}}
-
-\newcommand{\what}{\bb{??}}
-\newcommand{\half}{\frac{1}{2}}
-\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
-\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
-\newcommand{\jap}[1]{\left\langle #1 \right\rangle}
-\newcommand{\inn}[1]{\left\langle #1 \right\rangle}
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
@@ -125,8 +101,8 @@ We will enhance the nice
 \href{https://pytorch.org/tutorials/beginner/pytorch_with_examples.html}{pytorch
 example} with extra explanations.
 
-\hypertarget{problem-setup-2}{%
-\section{Problem setup 2}\label{problem-setup-2}}
+\hypertarget{problem-setup}{%
+\section{Problem setup}\label{problem-setup}}
 
 The goal is the fit \(\sin x\) using a cubic polynomial.
 
@@ -136,16 +112,19 @@ modeler.
 
 Let the data \(\{(x_i, y_i)\}_{i=1}^n\) be given.
 
-Our model is \(y = f(x)\) where \[
+Our model is \(y = f(x)\) where \begin{align}
+    \label{eq:model-cubic}
 f_{\boldsymbol{\omega}}(x) = a + bx + cx^2 + d x^3,
-\] where \(\boldsymbol{\omega}= (a, b, c, d)\) are the free parameters
-to minimizer over.
+\end{align} where \(\boldsymbol{\omega}= (a, b, c, d)\) are the free
+parameters to minimizer over.
 
 The minimization problem is therefore
 
-\begin{align*}
+\[
+\begin{align}
 \min \left\{\sum_{i=1}^{n} \left\lvert y_i - f_{\boldsymbol{\omega}}(x_i)\right\rvert^2: \boldsymbol{\omega}\in \mathbb{R}^4 \right\}
-\end{align*}
+\end{align}
+\]
 
 To minimize, we use gradient descent method. Defining the \emph{loss
 function} (objective function) \[
@@ -593,8 +572,6 @@ There is no general closed-form solution to the minimization problem.
 Methods like gradient descent can be use to find a minimizer
 numerically.
 
-draw-this.svg.svg
-
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
 \hypertarget{tex-and-markdown-conversion-to-html-with-pandoc}{%
@@ -686,6 +663,146 @@ documentation} from sites like
 \end{Highlighting}
 \end{Shaded}
 
+\hypertarget{latex-writing-guide-for-mathjax}{%
+\subsection{LaTeX writing guide for
+MathJax}\label{latex-writing-guide-for-mathjax}}
+
+We want our \texttt{.md} file to convert to pdf or tex without much
+hassle. While using mathjax, a few things to remember for a quick
+conversion.
+
+\begin{itemize}
+\tightlist
+\item
+  Typically, in the header of any website using latex code, we need to
+  add this script to load MathJax
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\textless{}}\KeywordTok{script}\OtherTok{ type=}\StringTok{"text/javascript"}\OtherTok{ id=}\StringTok{"MathJax{-}script"}\OtherTok{ async} \ErrorTok{src}\OtherTok{=}\StringTok{"https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex{-}chtml{-}full.js"}\NormalTok{\textgreater{} \textless{}/}\KeywordTok{script}\NormalTok{\textgreater{}}
+\end{Highlighting}
+\end{Shaded}
+
+Here \texttt{tex-chtml-full} is a collection of components (combination
+of various packages and output font formats).
+
+\begin{itemize}
+\tightlist
+\item
+  You can load any out of the following components
+  \href{https://docs.mathjax.org/en/latest/web/components/index.html}{link}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    tex-chtml
+  \item
+    tex-chtml-full
+  \item
+    tex-svg
+  \item
+    tex-svg-full
+  \item
+    tex-mml-chtml
+  \item
+    tex-mml-svg
+  \item
+    mml-chtml
+  \item
+    mml-svg
+  \end{itemize}
+\item
+  Various properties of the parser can be changed by adding a config
+  script \textbf{before} the \texttt{.js} file is called within the
+  \texttt{\textless{}script\textgreater{}} tag of the header of the
+  \texttt{.md} file
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\AttributeTok{\textless{}script\textgreater{}}
+\AttributeTok{MathJax = \{}
+\AttributeTok{  }\FunctionTok{tex}\KeywordTok{:}\AttributeTok{ }\KeywordTok{\{}
+\AttributeTok{    }\FunctionTok{inlineMath}\KeywordTok{:}\AttributeTok{ }\KeywordTok{[[}\StringTok{\textquotesingle{}$\textquotesingle{}}\KeywordTok{,}\AttributeTok{ }\StringTok{\textquotesingle{}$\textquotesingle{}}\KeywordTok{],}\AttributeTok{ }\KeywordTok{[}\StringTok{\textquotesingle{}\textbackslash{}\textbackslash{}(\textquotesingle{}}\KeywordTok{,}\AttributeTok{ }\StringTok{\textquotesingle{}\textbackslash{}\textbackslash{})\textquotesingle{}}\KeywordTok{]],}
+\AttributeTok{    }\FunctionTok{tags}\KeywordTok{:}\AttributeTok{ }\StringTok{\textquotesingle{}ams\textquotesingle{}}\KeywordTok{,}\AttributeTok{              // equation numbering }\StringTok{\textquotesingle{}ams\textquotesingle{}}\AttributeTok{ or }\StringTok{\textquotesingle{}all\textquotesingle{}}
+\AttributeTok{  }\KeywordTok{\}}\AttributeTok{,}
+\AttributeTok{  }\FunctionTok{svg}\KeywordTok{:}\AttributeTok{ }\KeywordTok{\{}
+\AttributeTok{    }\FunctionTok{fontCache}\KeywordTok{:}\AttributeTok{ }\StringTok{\textquotesingle{}global\textquotesingle{}}
+\AttributeTok{  }\KeywordTok{\}}
+\AttributeTok{\};}
+\AttributeTok{\textless{}/script\textgreater{}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Equation numbering is turned off by default, it can be enabled using
+  the config
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tex}\KeywordTok{:}\AttributeTok{ }\KeywordTok{\{}
+\AttributeTok{    }\FunctionTok{tags}\KeywordTok{:}\AttributeTok{ }\StringTok{\textquotesingle{}ams\textquotesingle{}}\KeywordTok{,}\AttributeTok{              // equation numbering }\StringTok{\textquotesingle{}ams\textquotesingle{}}\AttributeTok{ or }\StringTok{\textquotesingle{}all\textquotesingle{}}
+\KeywordTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Tex environments \textbf{not} enclosed by double \texttt{\$\$}s will
+  be parsed by default as latex code. The default option
+\end{itemize}
+
+\begin{verbatim}
+    processEnvironments: true, // process \begin{xxx}...\end{xxx} outside math mode
+\end{verbatim}
+
+is responsible for this.
+
+For example,
+
+\begin{verbatim}
+```
+\begin{align*}
+x^2
+\end{align*}
+```
+\end{verbatim}
+
+is fine.
+
+This is actually desired when converting \texttt{.md} to \texttt{.tex}.
+Otherwise, math environments enclosed by double \texttt{\$\$}s will
+throw error in the tex file. It needs to be remove manually before or
+after conversion before compiling latex. But developing the habit of
+writing math environments without the \texttt{\$\$}s causes some pain
+since \texttt{vim-pandoc} does not render the math symbols within the
+environments in vim.
+
+\begin{itemize}
+\item
+  If you are using \texttt{\textbackslash{}usepackage\{bm\}} for bold
+  fonts and using commands like
+  \texttt{\textbackslash{}boldsymbol\{\textbackslash{}sigma\}} etc
+  (apparently better alternative to \texttt{\textbackslash{}pmb\{\}}),
+  make sure to put braces around it when using as subscript or
+  superscript. For example, use
+  \texttt{f\_\{\textbackslash{}boldsymbol\{\textbackslash{}sigma\}\}(x)}
+  instead of
+  \texttt{f\_\textbackslash{}boldsymbol\{\textbackslash{}sigma\}(x)}.
+  The second usage will put \texttt{(x)} also within the subscript when
+  you convert it into tex. This is a very weird behavior since you would
+  think both are Tex commands.
+\item
+  Bullet points: make sure to leave an empty line before the first top
+  level bullet point. For sub-bullet points, no need to have empty line.
+  Empty lines between bullet points makes the bullets more sparse.
+\end{itemize}
+
 \hypertarget{diagrams}{%
 \subsection{Diagrams}\label{diagrams}}
 
@@ -724,6 +841,31 @@ A sample block of code
 ```
 
 produces a flowchart-like diagram.
+
+\hypertarget{marp-and-usual-markdown}{%
+\subsection{Marp and usual markdown}\label{marp-and-usual-markdown}}
+
+Converting marp-focused \texttt{.md} file into html using
+\texttt{pandoc} is very glitchy. Few things that do not work so far
+
+\begin{itemize}
+\tightlist
+\item
+  Putting latex preambles to the yaml header
+\item
+  Custom css for creating columns: math within the custom css does not
+  render. Pandoc is not able to accept the marp theme css
+\item
+  Bullet points render in a single line
+\item
+\end{itemize}
+
+\hypertarget{github-readme-compatibility}{%
+\subsection{Github readme
+compatibility}\label{github-readme-compatibility}}
+
+The markdown files with header does not render in github webpages, even
+though both are mathjax.
 
 \hypertarget{referencing}{%
 \subsection{Referencing}\label{referencing}}
