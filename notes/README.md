@@ -28,6 +28,31 @@ header-includes: |
     \newcommand{\inn}[1]{\left\langle #1 \right\rangle}
 ---
 
+
+$$
+\usepackage{amsmath, amssymb, amsthm, amsfonts, color, bm}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\E}{\mathcal{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\br}[1]{\color{red} (#1) \color{black}}
+\newcommand{\bb}[1]{\color{blue} (#1) \color{black}}
+\newcommand{\ww}{\boldsymbol{\omega}}
+\newcommand{\1}{\boldsymbol{1}}
+\newcommand{\xx}{\mathbf{x}}
+\newcommand{\yy}{\mathbf{y}}
+\newcommand{\vv}{\mathbf{v}}
+\newcommand{\uu}{\mathbf{u}}
+\newcommand{\what}{\bb{??}}
+\newcommand{\half}{\frac{1}{2}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\jap}[1]{\left\langle #1 \right\rangle}
+\newcommand{\inn}[1]{\left\langle #1 \right\rangle}
+$$
+
 We will enhance the nice [pytorch example](https://pytorch.org/tutorials/beginner/pytorch_with_examples.html) with extra explanations.
 
 # Problem setup 2
