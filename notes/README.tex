@@ -1,0 +1,731 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{amsmath, amssymb, amsthm, amsfonts, color, bm}
+
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\E}{\mathcal{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\br}[1]{\color{red} (#1) \color{black}}
+\newcommand{\bb}[1]{\color{blue} (#1) \color{black}}
+
+\newcommand{\ww}{\boldsymbol{\omega}}
+\newcommand{\1}{\boldsymbol{1}}
+\newcommand{\xx}{\mathbf{x}}
+\newcommand{\yy}{\mathbf{y}}
+\newcommand{\vv}{\mathbf{v}}
+\newcommand{\uu}{\mathbf{u}}
+
+\newcommand{\what}{\bb{??}}
+\newcommand{\half}{\frac{1}{2}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\jap}[1]{\left\langle #1 \right\rangle}
+\newcommand{\inn}[1]{\left\langle #1 \right\rangle}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Notes on minimization problems using pytorch},
+  pdfauthor={Debdeep Bhattacharya},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Notes on minimization problems using pytorch}
+\author{Debdeep Bhattacharya}
+\date{}
+
+\begin{document}
+\maketitle
+
+We will enhance the nice
+\href{https://pytorch.org/tutorials/beginner/pytorch_with_examples.html}{pytorch
+example} with extra explanations.
+
+\hypertarget{problem-setup-2}{%
+\section{Problem setup 2}\label{problem-setup-2}}
+
+The goal is the fit \(\sin x\) using a cubic polynomial.
+
+The data will be generated by sampling the curve \(y = \sin x\). But
+this relationship between \(x\) and \(y\) will not be known to the
+modeler.
+
+Let the data \(\{(x_i, y_i)\}_{i=1}^n\) be given.
+
+Our model is \(y = f(x)\) where \[
+f_{\boldsymbol{\omega}}(x) = a + bx + cx^2 + d x^3,
+\] where \(\boldsymbol{\omega}= (a, b, c, d)\) are the free parameters
+to minimizer over.
+
+The minimization problem is therefore
+
+\begin{align*}
+\min \left\{\sum_{i=1}^{n} \left\lvert y_i - f_{\boldsymbol{\omega}}(x_i)\right\rvert^2: \boldsymbol{\omega}\in \mathbb{R}^4 \right\}
+\end{align*}
+
+To minimize, we use gradient descent method. Defining the \emph{loss
+function} (objective function) \[
+L(\boldsymbol{\omega}) = \sum_{i=1}^{n} \left\lvert f_{\boldsymbol{\omega}}(x_i) - y_i\right\rvert^2
+\]
+
+and then use the scheme \[
+\boldsymbol{\omega}_{n+1} = \boldsymbol{\omega}_n - \eta \nabla_{\boldsymbol{\omega}} L(\boldsymbol{\omega}_n)
+\] with initial guess \(\boldsymbol{\omega}_0\) and \emph{learning rate}
+(numerical step size) \(\eta\).
+
+We would need to compute \[
+\nabla_{\boldsymbol{\omega}} L(\boldsymbol{\omega}) = 2 \sum_{i=1}^{n} (f_{\boldsymbol{\omega}}(x_i) - y_i) \nabla_{\boldsymbol{\omega}} f_{\boldsymbol{\omega}}(x_i)
+\] explicitly. For our model \(f_{\boldsymbol{\omega}}\), noting that
+\begin{align*}
+    \nabla_{\boldsymbol{\omega}} f_{\boldsymbol{\omega}}(x_i) = \begin{bmatrix} 1 \\ x_i \\ x_i^2 \\ x_i^3 \end{bmatrix} 
+\end{align*} we have \begin{align*}
+    \frac{\partial L}{\partial a}(\boldsymbol{\omega}) & = 2 \sum_{i=1}^{n} (f_{\boldsymbol{\omega}}(x_i) - y_i)
+    \\
+    \frac{\partial L}{\partial b}(\boldsymbol{\omega}) &= 2 \sum_{i=1}^{n} (f_{\boldsymbol{\omega}}(x_i) - y_i) x_i
+    \\
+    \frac{\partial L}{\partial c}(\boldsymbol{\omega}) &= 2 \sum_{i=1}^{n} (f_{\boldsymbol{\omega}}(x_i) - y_i) x_i^2
+    \\
+    \frac{\partial L}{\partial d}(\boldsymbol{\omega}) &= 2 \sum_{i=1}^{n} ( f_{\boldsymbol{\omega}}(x_i) - y_i) x_i^3
+\end{align*}
+
+In summary, \begin{align*}
+    \nabla_{\boldsymbol{\omega}} L(\boldsymbol{\omega}_n) = \begin{bmatrix} \mathbf{u}\cdot \boldsymbol{1} \\ \mathbf{u}\cdot \mathbf{x}\\ \mathbf{u}\cdot \mathbf{x}^2 \\ \mathbf{u}\cdot \mathbf{x}^3 \end{bmatrix} 
+\end{align*} where \(\boldsymbol{1} \in \mathbb{R}^n\) is a vector of
+ones, \(\mathbf{x}^n \in \mathbb{R}^n\) is elementwise \(n\)-th power of
+\(\mathbf{x}= (x_i)_{i=1}^n\), and
+\(\mathbf{u}= 2 (f_{\boldsymbol{\omega}_n}(x_i) - y_i)_{i=1}^n\).
+
+This is done in the following python code:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
+\ImportTok{import}\NormalTok{ math}
+
+\CommentTok{\# Create random input and output data}
+\NormalTok{x }\OperatorTok{=}\NormalTok{ np.linspace(}\OperatorTok{{-}}\NormalTok{math.pi, math.pi, }\DecValTok{2000}\NormalTok{)}
+\NormalTok{y }\OperatorTok{=}\NormalTok{ np.sin(x)}
+
+\CommentTok{\# Randomly initialize weights}
+\NormalTok{a }\OperatorTok{=}\NormalTok{ np.random.randn()}
+\NormalTok{b }\OperatorTok{=}\NormalTok{ np.random.randn()}
+\NormalTok{c }\OperatorTok{=}\NormalTok{ np.random.randn()}
+\NormalTok{d }\OperatorTok{=}\NormalTok{ np.random.randn()}
+
+\NormalTok{learning\_rate }\OperatorTok{=} \FloatTok{1e{-}6}
+\ControlFlowTok{for}\NormalTok{ t }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(}\DecValTok{2000}\NormalTok{):}
+    \CommentTok{\# Forward pass: compute predicted y}
+    \CommentTok{\# y = a + b x + c x\^{}2 + d x\^{}3}
+\NormalTok{    y\_pred }\OperatorTok{=}\NormalTok{ a }\OperatorTok{+}\NormalTok{ b }\OperatorTok{*}\NormalTok{ x }\OperatorTok{+}\NormalTok{ c }\OperatorTok{*}\NormalTok{ x }\OperatorTok{**} \DecValTok{2} \OperatorTok{+}\NormalTok{ d }\OperatorTok{*}\NormalTok{ x }\OperatorTok{**} \DecValTok{3}
+
+    \CommentTok{\# Compute and print loss}
+\NormalTok{    loss }\OperatorTok{=}\NormalTok{ np.square(y\_pred }\OperatorTok{{-}}\NormalTok{ y).}\BuiltInTok{sum}\NormalTok{()}
+    \ControlFlowTok{if}\NormalTok{ t }\OperatorTok{\%} \DecValTok{100} \OperatorTok{==} \DecValTok{99}\NormalTok{:}
+        \BuiltInTok{print}\NormalTok{(t, loss)}
+
+    \CommentTok{\# Backprop to compute gradients of a, b, c, d with respect to loss}
+\NormalTok{    grad\_y\_pred }\OperatorTok{=} \FloatTok{2.0} \OperatorTok{*}\NormalTok{ (y\_pred }\OperatorTok{{-}}\NormalTok{ y)}
+\NormalTok{    grad\_a }\OperatorTok{=}\NormalTok{ grad\_y\_pred.}\BuiltInTok{sum}\NormalTok{()}
+\NormalTok{    grad\_b }\OperatorTok{=}\NormalTok{ (grad\_y\_pred }\OperatorTok{*}\NormalTok{ x).}\BuiltInTok{sum}\NormalTok{()}
+\NormalTok{    grad\_c }\OperatorTok{=}\NormalTok{ (grad\_y\_pred }\OperatorTok{*}\NormalTok{ x }\OperatorTok{**} \DecValTok{2}\NormalTok{).}\BuiltInTok{sum}\NormalTok{()}
+\NormalTok{    grad\_d }\OperatorTok{=}\NormalTok{ (grad\_y\_pred }\OperatorTok{*}\NormalTok{ x }\OperatorTok{**} \DecValTok{3}\NormalTok{).}\BuiltInTok{sum}\NormalTok{()}
+
+    \CommentTok{\# Update weights}
+\NormalTok{    a }\OperatorTok{{-}=}\NormalTok{ learning\_rate }\OperatorTok{*}\NormalTok{ grad\_a}
+\NormalTok{    b }\OperatorTok{{-}=}\NormalTok{ learning\_rate }\OperatorTok{*}\NormalTok{ grad\_b}
+\NormalTok{    c }\OperatorTok{{-}=}\NormalTok{ learning\_rate }\OperatorTok{*}\NormalTok{ grad\_c}
+\NormalTok{    d }\OperatorTok{{-}=}\NormalTok{ learning\_rate }\OperatorTok{*}\NormalTok{ grad\_d}
+
+\BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f\textquotesingle{}Result: y = }\SpecialCharTok{\{}\NormalTok{a}\SpecialCharTok{\}}\SpecialStringTok{ + }\SpecialCharTok{\{}\NormalTok{b}\SpecialCharTok{\}}\SpecialStringTok{ x + }\SpecialCharTok{\{}\NormalTok{c}\SpecialCharTok{\}}\SpecialStringTok{ x\^{}2 + }\SpecialCharTok{\{}\NormalTok{d}\SpecialCharTok{\}}\SpecialStringTok{ x\^{}3\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{automatic-differentiation}{%
+\section{Automatic differentiation}\label{automatic-differentiation}}
+
+The minimization problems are set up using the loss function, which is a
+\textbf{composition} of several functions
+\(g^1: \mathbb{R}^4 \to \mathbb{R}^n\),
+\(g^2: \mathbb{R}^n \to \mathbb{R}^n\), and
+\(g^3: \mathbb{R}^n \to \mathbb{R}\)
+
+\begin{align*}
+    g^1(\boldsymbol{\omega}) &= (y_i - f_{\boldsymbol{\omega}}(x_i))_{i=1}^n
+\\
+    g^2(\mathbf{x}) &= (x_i^2)_{i=1}^n
+\\
+    g^3(\mathbf{x}) &= \sum_{i=1}^{n} x_i
+\end{align*} Then, \[
+L(\boldsymbol{\omega}) = g^3(g^2(g^1(\boldsymbol{\omega})))
+\] Therefore, the \(k\)-th partial derivative of the loss function is
+
+\begin{align*}
+\frac{\partial}{\partial \omega_k} L(\boldsymbol{\omega}) 
+    & = \sum_{i=1}^{n} \frac{\partial }{\partial x_i} g^3(\mathbf{x})|_{\mathbf{x}= g^2(g^1(\boldsymbol{\omega}))} \frac{\partial}{\partial \omega_k}  g^2_i(g^1(\boldsymbol{\omega}))
+\\
+    & = \sum_{i=1}^{n} \frac{\partial }{\partial x_i} g^3(\mathbf{x})|_{\mathbf{x}= g^2(g^1(\boldsymbol{\omega}))} \sum_{j=1}^{n} \frac{\partial}{\partial x_j}  g^2_i(\mathbf{x})|_{\mathbf{x}= g^1(\boldsymbol{\omega})} \frac{\partial}{\partial \omega_k}  g^1_j(\boldsymbol{\omega})
+\end{align*}
+
+More generally, if \(\boldsymbol{\omega}\in \mathbb{R}^p\) (i.e., \(p\)
+parameters to minimize), and if \(L\) is a composition of \(M\)
+functions \[
+L(\boldsymbol{\omega}) = (g^{M} \circ g^{M-1} \circ \dots \circ g^1)(\boldsymbol{\omega}),
+\] where \(g^1: \mathbb{R}^p \to \mathbb{R}^{p_1}\),
+\(g^2: \mathbb{R}^{p_1} \to \mathbb{R}^{p_2}, \dots, g^{M-1}: \mathbb{R}^{p_{M-2}} \to \mathbb{R}^{p_{M-1}}\),
+\(g^M: \mathbb{R}^{p_{M-1}} \to \mathbb{R}\), we can write
+\begin{align*}
+    \frac{\partial}{\partial \omega_k} L(\boldsymbol{\omega})  
+    = &  
+    \sum_{i_{M-1}=1}^{p_{M-1}} 
+    \frac{\partial }{\partial x_{i_{M-1}}} g^M(\mathbf{x}^{M-1})
+    \sum_{i_{M-2}=1}^{p_{M-2}} 
+    \frac{\partial }{\partial x_{i_{M-2}}} g_{i_{M-1}}^{M-1}(\mathbf{x}^{M-2})
+    \dots
+    \\
+    & 
+    \sum_{i_{M_1}=1}^{p_1} 
+    \frac{\partial }{\partial x_{i_{M_1}}} g_{i_{M_2}}^{2}(\mathbf{x}^1)
+    % \sum_{i_{M_1}=1}^{p_1} 
+    \frac{\partial }{\partial \omega_{k}} g_{i_{M_1}}^{1}(\boldsymbol{\omega})
+    \\
+    = &  
+    \sum_{i_{M-1}=1}^{p_{M-1}} 
+    \sum_{i_{M-2}=1}^{p_{M-2}} 
+    \dots
+    \sum_{i_{M_1}=1}^{p_1} 
+    \frac{\partial }{\partial x_{i_{M-1}}} g^M(\mathbf{x}^{M-1})
+    \frac{\partial }{\partial x_{i_{M-2}}} g_{i_{M-1}}^{M-1}(\mathbf{x}^{M-2})
+    \dots
+    \\
+    & 
+    \frac{\partial }{\partial x_{i_{M_1}}} g_{i_{M_2}}^{2}(\mathbf{x}^1)
+    % \sum_{i_{M_1}=1}^{p_1} 
+    \frac{\partial }{\partial \omega_{k}} g_{i_{M_1}}^{1}(\boldsymbol{\omega})
+    \\
+\end{align*} where \(\mathbf{x}^i\) is defined as
+\((g^i \circ g^{i-1} \circ \dots \circ g^1) (\boldsymbol{\omega})\) for
+each \(i=1, 2, \dots, M-1\).
+
+Therefore, to compute
+\(\nabla_{\boldsymbol{\omega}} L(\boldsymbol{\omega})\), one needs to
+know \[
+d_{rst} = \frac{\partial}{\partial x_r} g^s_t(\mathbf{x}^{s-1})
+\] for all \(s=1, \dots, M\), \(t=1, \dots, p_s\), and
+\(r=1, \dots, p_{s-1}\). Combining all \(d_{rst}\) to compute
+\(\nabla_{\boldsymbol{\omega}} L(\boldsymbol{\omega})\) is know as
+\emph{backward propagation}.
+
+Note that the tensor \(d_{rst}\) describes the \(r\)-th partial
+derivative of \(t\)-th component of the function \(g^s\), evaluated at
+the immediate value \(\mathbf{x}^{s-1}\).
+
+The graph-theoretic realization of this procedure is a directed graph
+from left to right with leaves on the left as \(\omega_k\). Edges of the
+graph represent the partial derivates of the target nodes with respect
+to the source nodes evaluated at the value of the source node. The last
+node on the right is the loss function \(L\) In this setup,
+back-propagation procedure populates the leaf nodes \(\omega_k\) with
+\(\frac{\partial}{\partial \omega_k} L(\boldsymbol{\omega})\).
+
+\hypertarget{auto-differentiation-in-pytorch}{%
+\subsection{Auto-differentiation in
+pytorch}\label{auto-differentiation-in-pytorch}}
+
+Let \(\boldsymbol{\omega}= (a, b, c, d) \in \mathbb{R}^4\).
+
+In \texttt{pytorch}, setting \texttt{requires\_grad=True} while defining
+a variable \(a\) implies we would want to compute
+\(\frac{\partial}{\partial a}\) of a function of \(a\) at some point.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Setting requires\_grad=True indicates that we want to compute gradients with}
+\CommentTok{\# respect to these Tensors during the backward pass.}
+\NormalTok{a }\OperatorTok{=}\NormalTok{ torch.randn((), dtype}\OperatorTok{=}\NormalTok{dtype, requires\_grad}\OperatorTok{=}\VariableTok{True}\NormalTok{)}
+\NormalTok{b }\OperatorTok{=}\NormalTok{ torch.randn((), dtype}\OperatorTok{=}\NormalTok{dtype, requires\_grad}\OperatorTok{=}\VariableTok{True}\NormalTok{)}
+\NormalTok{c }\OperatorTok{=}\NormalTok{ torch.randn((), dtype}\OperatorTok{=}\NormalTok{dtype, requires\_grad}\OperatorTok{=}\VariableTok{True}\NormalTok{)}
+\NormalTok{d }\OperatorTok{=}\NormalTok{ torch.randn((), dtype}\OperatorTok{=}\NormalTok{dtype, requires\_grad}\OperatorTok{=}\VariableTok{True}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Given (fixed) data \texttt{x} and \texttt{y}, we define a loss function
+\(L(\boldsymbol{\omega})\) called \texttt{loss}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y\_pred }\OperatorTok{=}\NormalTok{ a }\OperatorTok{+}\NormalTok{ b }\OperatorTok{*}\NormalTok{ x }\OperatorTok{+}\NormalTok{ c }\OperatorTok{*}\NormalTok{ x }\OperatorTok{**} \DecValTok{2} \OperatorTok{+}\NormalTok{ d }\OperatorTok{*}\NormalTok{ x }\OperatorTok{**} \DecValTok{3}
+\NormalTok{loss }\OperatorTok{=}\NormalTok{ (y\_pred }\OperatorTok{{-}}\NormalTok{ y).}\BuiltInTok{pow}\NormalTok{(}\DecValTok{2}\NormalTok{).}\BuiltInTok{sum}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Remark:} Any variable such as \texttt{y\_pred} and \texttt{loss}
+defined as a function of variables with \texttt{requires\_grad=True}
+(such as \texttt{a,\ b,\ c,\ d}), will automatically have
+\texttt{requires\_grad=True}. This feature makes sure that a
+computational graph gets created to store the subsequent partial
+derivatives \(d_{rst}\). To define \emph{inferential} variables
+(variables you do not plan to compute partial derivative of) you need to
+turn this off manually using \texttt{torch.no\_grad()} like this
+
+\begin{verbatim}
+>>> with torch.no_grad():
+...     y = x * 2
+>>> y.requires_grad
+False
+
+>>> @torch.no_grad()
+... def tripler(x):
+...     return x * 3
+>>> z = tripler(x)
+>>> z.requires_grad
+\end{verbatim}
+
+At some point during our computation, we will need to compute the
+partial derivative
+\(\frac{\partial}{\partial a}L(\boldsymbol{\omega}^n)\) using the
+current value of \(\boldsymbol{\omega}= \boldsymbol{\omega}^n\). In
+fact, we can compute all the partial derivatives
+\(\nabla_{\boldsymbol{\omega}} L(\boldsymbol{\omega}^n)\) at once by
+calling the \texttt{backward()} function on the objective function \(L\)
+(\texttt{loss}) like this:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Use autograd to compute the backward pass. This call will compute the}
+\CommentTok{\# gradient of loss with respect to all Tensors with requires\_grad=True.}
+\CommentTok{\# After this call a.grad, b.grad. c.grad and d.grad will be Tensors holding}
+\CommentTok{\# the gradient of the loss with respect to a, b, c, d respectively.}
+\NormalTok{loss.backward()}
+\end{Highlighting}
+\end{Shaded}
+
+At this point, all partial derivates of \texttt{loss} function \(L\)
+with respect to all variables with a \texttt{requires\_grad=True} is
+computed at the current value of
+\(\boldsymbol{\omega}= \boldsymbol{\omega}^n\). We can get the value of
+\(\frac{\partial}{\partial a}L(\boldsymbol{\omega}^n)\) at the current
+value \(\boldsymbol{\omega}= \boldsymbol{\omega}^n\) using
+\texttt{a.grad}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a.grad}
+\NormalTok{b.grad}
+\NormalTok{c.grad}
+\NormalTok{d.grad}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{updating-the-parameters-variables-with-requires_gradtrue}{%
+\subsubsection{\texorpdfstring{Updating the parameters (variables with
+\texttt{requires\_grad=True})}{Updating the parameters (variables with requires\_grad=True)}}\label{updating-the-parameters-variables-with-requires_gradtrue}}
+
+\[\frac{\partial}{\partial a}L(\boldsymbol{\omega}^n)
+\to \frac{\partial}{\partial a}L(\boldsymbol{\omega}^{n+1})\]
+
+Note that we would want to update the value of \(\boldsymbol{\omega}\)
+(in particular, the value of \(a\)) from \(\boldsymbol{\omega}^n\) to
+\(\boldsymbol{\omega}^{n+1}\), for example, during a gradient descent
+method. This should change
+\(\frac{\partial}{\partial a}L(\boldsymbol{\omega}^n)\), but the update
+does not happen unless you run \texttt{loss.backward()} again.
+
+\textbf{Remark:} While manually updating variables with
+\texttt{requires\_grad=True}, we turn off gradient computation (why?).
+We would recompute the gradient again anyway, and do not want to spend
+computational power computing the gradients of update functions.
+Therefore, do the following:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Manually update weights using gradient descent. Wrap in torch.no\_grad()}
+\CommentTok{\# because weights have requires\_grad=True, but we don\textquotesingle{}t need to track this}
+\CommentTok{\# in autograd.}
+\ControlFlowTok{with}\NormalTok{ torch.no\_grad():}
+\NormalTok{    a }\OperatorTok{{-}=}\NormalTok{ learning\_rate }\OperatorTok{*}\NormalTok{ a.grad}
+\NormalTok{    b }\OperatorTok{{-}=}\NormalTok{ learning\_rate }\OperatorTok{*}\NormalTok{ b.grad}
+\NormalTok{    c }\OperatorTok{{-}=}\NormalTok{ learning\_rate }\OperatorTok{*}\NormalTok{ c.grad}
+\NormalTok{    d }\OperatorTok{{-}=}\NormalTok{ learning\_rate }\OperatorTok{*}\NormalTok{ d.grad}
+
+    \CommentTok{\# Manually zero the gradients after updating weights}
+\NormalTok{    a.grad }\OperatorTok{=} \VariableTok{None}
+\NormalTok{    b.grad }\OperatorTok{=} \VariableTok{None}
+\NormalTok{    c.grad }\OperatorTok{=} \VariableTok{None}
+\NormalTok{    d.grad }\OperatorTok{=} \VariableTok{None}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{defining-derivatives-beyond-pytorchs-capability}{%
+\subsubsection{Defining derivatives beyond pytorch's
+capability}\label{defining-derivatives-beyond-pytorchs-capability}}
+
+If we are using an exotic function \(g\) for which \texttt{pytorch} does
+not have the formula for derivate (and we do), we can define it
+ourselves
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{class}\NormalTok{ LegendrePolynomial3(torch.autograd.Function):}
+    \CommentTok{"""}
+\CommentTok{    We can implement our own custom autograd Functions by subclassing}
+\CommentTok{    torch.autograd.Function and implementing the forward and backward passes}
+\CommentTok{    which operate on Tensors.}
+\CommentTok{    """}
+
+    \AttributeTok{@staticmethod}
+    \KeywordTok{def}\NormalTok{ forward(ctx, }\BuiltInTok{input}\NormalTok{):}
+        \CommentTok{"""}
+\CommentTok{        In the forward pass we receive a Tensor containing the input and return}
+\CommentTok{        a Tensor containing the output. ctx is a context object that can be used}
+\CommentTok{        to stash information for backward computation. You can cache arbitrary}
+\CommentTok{        objects for use in the backward pass using the ctx.save\_for\_backward method.}
+\CommentTok{        """}
+\NormalTok{        ctx.save\_for\_backward(}\BuiltInTok{input}\NormalTok{)}
+        \ControlFlowTok{return} \FloatTok{0.5} \OperatorTok{*}\NormalTok{ (}\DecValTok{5} \OperatorTok{*} \BuiltInTok{input} \OperatorTok{**} \DecValTok{3} \OperatorTok{{-}} \DecValTok{3} \OperatorTok{*} \BuiltInTok{input}\NormalTok{)}
+
+    \AttributeTok{@staticmethod}
+    \KeywordTok{def}\NormalTok{ backward(ctx, grad\_output):}
+        \CommentTok{"""}
+\CommentTok{        In the backward pass we receive a Tensor containing the gradient of the loss}
+\CommentTok{        with respect to the output, and we need to compute the gradient of the loss}
+\CommentTok{        with respect to the input.}
+\CommentTok{        """}
+        \BuiltInTok{input}\NormalTok{, }\OperatorTok{=}\NormalTok{ ctx.saved\_tensors}
+        \ControlFlowTok{return}\NormalTok{ grad\_output }\OperatorTok{*} \FloatTok{1.5} \OperatorTok{*}\NormalTok{ (}\DecValTok{5} \OperatorTok{*} \BuiltInTok{input} \OperatorTok{**} \DecValTok{2} \OperatorTok{{-}} \DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+We can \texttt{apply} this function within the loop and define a loss
+function like this:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# To apply our Function, we use Function.apply method. We alias this as \textquotesingle{}P3\textquotesingle{}.}
+\NormalTok{P3 }\OperatorTok{=}\NormalTok{ LegendrePolynomial3.}\BuiltInTok{apply}
+\CommentTok{\# Forward pass: compute predicted y using operations; we compute}
+\CommentTok{\# P3 using our custom autograd operation.}
+\NormalTok{y\_pred }\OperatorTok{=}\NormalTok{ a }\OperatorTok{+}\NormalTok{ b }\OperatorTok{*}\NormalTok{ P3(c }\OperatorTok{+}\NormalTok{ d }\OperatorTok{*}\NormalTok{ x)}
+\CommentTok{\# Compute and print loss}
+\NormalTok{loss }\OperatorTok{=}\NormalTok{ (y\_pred }\OperatorTok{{-}}\NormalTok{ y).}\BuiltInTok{pow}\NormalTok{(}\DecValTok{2}\NormalTok{).}\BuiltInTok{sum}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+To use optimized pytorch features such as \texttt{torch.nn.MSELoss()},
+\texttt{torch.optim.SGD()}, \texttt{optimizer.step()} etc for your own
+model, you need to define your own model as a module, which is a derived
+class of \texttt{torch.nn.Module}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{class}\NormalTok{ Polynomial3(torch.nn.Module):}
+    \KeywordTok{def} \FunctionTok{\_\_init\_\_}\NormalTok{(}\VariableTok{self}\NormalTok{):}
+        \CommentTok{"""}
+\CommentTok{        In the constructor we instantiate four parameters and assign them as}
+\CommentTok{        member parameters.}
+\CommentTok{        """}
+        \BuiltInTok{super}\NormalTok{().}\FunctionTok{\_\_init\_\_}\NormalTok{()}
+        \VariableTok{self}\NormalTok{.a }\OperatorTok{=}\NormalTok{ torch.nn.Parameter(torch.randn(()))}
+        \VariableTok{self}\NormalTok{.b }\OperatorTok{=}\NormalTok{ torch.nn.Parameter(torch.randn(()))}
+        \VariableTok{self}\NormalTok{.c }\OperatorTok{=}\NormalTok{ torch.nn.Parameter(torch.randn(()))}
+        \VariableTok{self}\NormalTok{.d }\OperatorTok{=}\NormalTok{ torch.nn.Parameter(torch.randn(()))}
+
+    \KeywordTok{def}\NormalTok{ forward(}\VariableTok{self}\NormalTok{, x):}
+        \CommentTok{"""}
+\CommentTok{        In the forward function we accept a Tensor of input data and we must return}
+\CommentTok{        a Tensor of output data. We can use Modules defined in the constructor as}
+\CommentTok{        well as arbitrary operators on Tensors.}
+\CommentTok{        """}
+        \ControlFlowTok{return} \VariableTok{self}\NormalTok{.a }\OperatorTok{+} \VariableTok{self}\NormalTok{.b }\OperatorTok{*}\NormalTok{ x }\OperatorTok{+} \VariableTok{self}\NormalTok{.c }\OperatorTok{*}\NormalTok{ x }\OperatorTok{**} \DecValTok{2} \OperatorTok{+} \VariableTok{self}\NormalTok{.d }\OperatorTok{*}\NormalTok{ x }\OperatorTok{**} \DecValTok{3}
+
+    \KeywordTok{def}\NormalTok{ string(}\VariableTok{self}\NormalTok{):}
+        \CommentTok{"""}
+\CommentTok{        Just like any class in Python, you can also define custom method on PyTorch modules}
+\CommentTok{        """}
+        \ControlFlowTok{return} \SpecialStringTok{f\textquotesingle{}y = }\SpecialCharTok{\{}\VariableTok{self}\SpecialCharTok{.}\NormalTok{a}\SpecialCharTok{.}\NormalTok{item()}\SpecialCharTok{\}}\SpecialStringTok{ + }\SpecialCharTok{\{}\VariableTok{self}\SpecialCharTok{.}\NormalTok{b}\SpecialCharTok{.}\NormalTok{item()}\SpecialCharTok{\}}\SpecialStringTok{ x + }\SpecialCharTok{\{}\VariableTok{self}\SpecialCharTok{.}\NormalTok{c}\SpecialCharTok{.}\NormalTok{item()}\SpecialCharTok{\}}\SpecialStringTok{ x\^{}2 + }\SpecialCharTok{\{}\VariableTok{self}\SpecialCharTok{.}\NormalTok{d}\SpecialCharTok{.}\NormalTok{item()}\SpecialCharTok{\}}\SpecialStringTok{ x\^{}3\textquotesingle{}}
+
+\CommentTok{\# Construct our model by instantiating the class defined above}
+\NormalTok{model }\OperatorTok{=}\NormalTok{ Polynomial3()}
+\end{Highlighting}
+\end{Shaded}
+
+Note that we do not need to define a \texttt{backward()} method for a
+\texttt{torch.nn.Module} as it is derived from the operations specified
+within the \texttt{forward()} method. If your model
+(\texttt{torch.nn.Module}) uses an exotic function which you define via
+a \texttt{torch.autograd.Function}, then you define the derivate of the
+function within the \texttt{backward()} method of the function, but not
+in the model.
+
+\hypertarget{neural-network-approximation}{%
+\subsection{Neural network
+approximation}\label{neural-network-approximation}}
+
+Consider the function \(f_d\) representing the output of a convolutional
+neural network of depth \(d \ge 1\) with \emph{activation function}
+\(\sigma\) defined recursively by \begin{align*}
+    f_1(x) &= \sigma(a_1 x + b_1)
+    \\
+    f_2(x) &= \sigma(a_2 f_1(x) + b_2)
+    \\
+    \vdots
+    \\
+    f_d(x) &= \sigma(a_d f_{d-1}(x) + b_d).
+\end{align*}
+
+Few common choices of \(\sigma(x)\) are \(x\), \(\tanh(x)\), Heaviside,
+and logistic function. The neural network model is therefore
+\begin{align*}
+    y = f_d(x)
+\end{align*} where \(a_1, \dots, a_d\) and \(b_1, \dots, b_d\) are the
+parameters of the model. The corresponding \(l^2\) minimization problem
+is \begin{align*}
+    \min_{a_1, \dots, a_d, b_1, \dots, b_d \in \mathbb{R}} \sum_{i=1}^{n} \left\lvert y_i - f_d(x_i)\right\rvert^2.
+\end{align*}
+
+There is no general closed-form solution to the minimization problem.
+Methods like gradient descent can be use to find a minimizer
+numerically. Consider the function \(f_d\) representing the output of a
+convolutional neural network of depth \(d \ge 1\) with \emph{activation
+function} \(\sigma\) defined recursively by \begin{align*}
+    f_1(x) &= \sigma(a_1 x + b_1)
+    \\
+    f_2(x) &= \sigma(a_2 f_1(x) + b_2)
+    \\
+    \vdots
+    \\
+    f_d(x) &= \sigma(a_d f_{d-1}(x) + b_d).
+\end{align*} Few common choices of \(\sigma(x)\) are \(x\),
+\(\tanh(x)\), Heaviside, and logistic function. The neural network model
+is therefore \begin{align*}
+    y = f_d(x)
+\end{align*}\\
+where \(a_1, \dots, a_d\) and \(b_1, \dots, b_d\) are the parameters of
+the model. The corresponding \(l^2\) minimization problem is
+\begin{align*}
+    \min_{a_1, \dots, a_d, b_1, \dots, b_d \in \mathbb{R}} \sum_{i=1}^{n} \left\lvert y_i - f_d(x_i)\right\rvert^2.
+\end{align*}
+
+There is no general closed-form solution to the minimization problem.
+Methods like gradient descent can be use to find a minimizer
+numerically.
+
+draw-this.svg.svg
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{tex-and-markdown-conversion-to-html-with-pandoc}{%
+\section{Tex and markdown conversion to html with
+pandoc}\label{tex-and-markdown-conversion-to-html-with-pandoc}}
+
+\begin{itemize}
+\tightlist
+\item
+  To use latex goodies such as snippet completion etc in vim, set
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{:setfiletype pandoc.tex}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Put all latex preamble in the header part of the \texttt{.md} file
+  \href{https://pandoc.org/MANUAL.html\#extension-yaml_metadata_block}{source}
+  like this
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\PreprocessorTok{{-}{-}{-}}
+\FunctionTok{title}\KeywordTok{:}\AttributeTok{ Readme}
+\FunctionTok{author}\KeywordTok{:}\AttributeTok{ Author}
+\FunctionTok{header{-}includes}\KeywordTok{: }\CharTok{|}
+\NormalTok{    \textbackslash{}usepackage\{amsmath, amssymb, amsthm, amsfonts, color, bm\}}
+
+\NormalTok{    \textbackslash{}newcommand\{\textbackslash{}R\}\{\textbackslash{}mathcal\{R\}\}}
+\NormalTok{    \textbackslash{}newcommand\{\textbackslash{}ww\}\{\textbackslash{}boldsymbol\{\textbackslash{}omega\}\}}
+\NormalTok{    \textbackslash{}newcommand\{\textbackslash{}xx\}\{\textbackslash{}mathbf\{x\}\}}
+\PreprocessorTok{{-}{-}{-}}
+\end{Highlighting}
+\end{Shaded}
+
+Converting a tex file into html \texttt{pandoc\ file.tex\ -o\ file.html}
+uses unicode by default to render math symbols. We need to use
+\texttt{mathjax} for a nicer rendering. Other options are
+
+\begin{verbatim}
+--mathml, --webtex, --mathjax, --katex
+\end{verbatim}
+
+and demos can be found in pandoc
+\href{https://pandoc.org/demos.html}{demos}.
+
+According to
+\href{https://pandoc.org/chunkedhtml-demo/3.6-math-rendering-in-html.html}{pandoc
+documentation} One need to specify the url of the \texttt{.js} file that
+would be used to convert math into mathjax. By default pandoc uses some
+link form some content delivery network (CDN), which does not work on
+firefox at the first attempt. So we can specify the url like this:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ExtensionTok{pandoc}\NormalTok{ math.text }\AttributeTok{{-}s} \AttributeTok{{-}{-}mathjax}\OperatorTok{=}\NormalTok{https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex{-}mml{-}chtml.js }\AttributeTok{{-}o}\NormalTok{   mathMathJax.html}
+\end{Highlighting}
+\end{Shaded}
+
+There are other CDN locations on
+\href{https://docs.mathjax.org/en/latest/web/start.html\#cdn-list}{mathjax
+documentation} from sites like
+
+\begin{itemize}
+\tightlist
+\item
+  jsdelivr.com {[}latest or specific version{]} (recommended)
+\item
+  unpkg.com {[}latest or specific version{]}
+\item
+  cdnjs.com
+\item
+  raw.githack.com
+\item
+  gitcdn.xyz
+\item
+  cdn.statically.io
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ExtensionTok{pandoc}\NormalTok{ README.md }\AttributeTok{{-}s} \AttributeTok{{-}{-}mathjax}\OperatorTok{=}\NormalTok{https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex{-}mml{-}chtml.js }\AttributeTok{{-}o}\NormalTok{   README.html}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{diagrams}{%
+\subsection{Diagrams}\label{diagrams}}
+
+My observation is that using a freehand drawing tool like inkscape takes
+less time and provides more flexibility for creating diagrams.
+Markdown-friendly tools like \texttt{mermaid} required additional set up
+and does not seem to support latex within diagram. Maybe once can use
+latex \texttt{tikz} diagrams within markdown, but the whole point was to
+move away from programmable diagrams. Still:
+
+Install pandoc filter for mermaid from
+\href{https://github.com/raghur/mermaid-filter?tab=readme-ov-file}{git}
+using
+
+\begin{verbatim}
+npm install --global mermaid-filter
+\end{verbatim}
+
+Use it with \texttt{-F} in pandoc
+
+\begin{verbatim}
+pandoc  -F mermaid-filter something.md -o something.html 
+\end{verbatim}
+
+A sample block of code
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\textasciigrave{}\textasciigrave{}\textasciigrave{}\{.mermaid format=png scale=5 caption=\textquotesingle{}Computational graph\textquotesingle{}\}}
+\NormalTok{\%\%\{init: \{\textquotesingle{}theme\textquotesingle{}:\textquotesingle{}neutral\textquotesingle{}\}\}\%\%}
+\NormalTok{  graph TD}
+\NormalTok{    a {-}{-}\textgreater{} b}
+\end{Highlighting}
+\end{Shaded}
+
+```
+
+produces a flowchart-like diagram.
+
+\hypertarget{referencing}{%
+\subsection{Referencing}\label{referencing}}
+
+\end{document}
