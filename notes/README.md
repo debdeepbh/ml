@@ -27,7 +27,6 @@ include-header: |
     \newcommand{\inn}[1]{\left\langle #1 \right\rangle}
 ---
 
-
 We will enhance the nice [pytorch example](https://pytorch.org/tutorials/beginner/pytorch_with_examples.html) with extra explanations.
 
 # Problem setup
@@ -554,7 +553,7 @@ My observation is that using a freehand drawing tool like inkscape takes less ti
 
 Install pandoc filter for mermaid from [git](https://github.com/raghur/mermaid-filter?tab=readme-ov-file) using
 
-```
+```bash
 npm install --global mermaid-filter
 ```
 
@@ -589,8 +588,10 @@ Converting marp-focused `.md` file into html using `pandoc` is very glitchy. Few
 
 The markdown files with header does not render in github webpages, even though both are mathjax.
 
+## Table tests
 
-## Referencing
+- So far, there seems to be 4 types of tables on markdown [see](https://pandoc.org/chunkedhtml-demo/8.9-tables.html). Here are some examples. Using a custom css, I can enhance the table displays
+
 
 ----------- ------- --------------- -------------------------
    First    row                12.0 Example of a row that
@@ -611,6 +612,29 @@ The markdown files with header does not render in github webpages, even though b
 
 : Here's a multiline table without a header.
 
+
+
+----------- ------- --------------- -------------------------
+H1            H2          H3                  H4
+----------- ------- --------------- -------------------------
+   First    row                12.0 Example of a row that
+                                    spans multiple lines.
+
+  Second    row                 5.0 Here's another one. Note
+                                    the blank line between
+                                    rows.
+
+  Third     row                 5.0 Here's another one. Note
+                                    the blank line between
+                                    rows.
+
+  Fourth    row                 5.0 Here's another one. Note
+                                    the blank line between
+                                    rows.
+----------- ------- --------------- -------------------------
+
+: More table with header
+
 +---------------------+-----------------------+
 | Location            | Temperature 1961-1990 |
 |                     | in degree Celsius     |
@@ -624,13 +648,5 @@ The markdown files with header does not render in github webpages, even though b
 
 : Here's a grid table
 
-+---------------------+-----------------------+
-| Location            | Temperature 1961-1990 |
-|                     | in degree Celsius     |
-|                     +-------+-------+-------+
-|                     | min   | mean  | max   |
-+=====================+=======+=======+=======+
-| Antarctica          | -89.2 | N/A   | 19.8  |
-+---------------------+-------+-------+-------+
-| Earth               | -89.2 | 14    | 56.7  |
-+---------------------+-------+-------+-------+
+
+## Referencing
