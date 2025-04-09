@@ -9,15 +9,16 @@ include-header: |
     \newcommand{\C}{\mathbb{C}}
     \newcommand{\N}{\mathbb{N}}
     \newcommand{\Z}{\mathbb{Z}}
-    \newcommand{\br}[1]{\color{red} (#1) \color{black}}
-    \newcommand{\bb}[1]{\color{blue} (#1) \color{black}}
 
     \newcommand{\ww}{\boldsymbol{\omega}}
+    \newcommand{\sigmaB}{\boldsymbol{\sigma}}
     \newcommand{\1}{\boldsymbol{1}}
+    \newcommand{\bb}{\mathbf{b}}
+    \newcommand{\uu}{\mathbf{u}}
+    \newcommand{\vv}{\mathbf{v}}
     \newcommand{\xx}{\mathbf{x}}
     \newcommand{\yy}{\mathbf{y}}
-    \newcommand{\vv}{\mathbf{v}}
-    \newcommand{\uu}{\mathbf{u}}
+    \newcommand{\zz}{\mathbf{z}}
 
     \newcommand{\what}{\bb{??}}
     \newcommand{\half}{\frac{1}{2}}
@@ -162,7 +163,12 @@ and if $L$ is a composition of $M$ functions
 $$
 L(\ww) = (g^{M} \circ g^{M-1} \circ \dots \circ g^1)(\ww),
 $$
-where $g^1: \R^p \to \R^{p_1}$, $g^2: \R^{p_1} \to \R^{p_2}, \dots,  g^{M-1}: \R^{p_{M-2}} \to \R^{p_{M-1}}$, $g^M: \R^{p_{M-1}} \to \R$,
+where $g^i : \R^{p_{i-1}} \to \R^{p_i}$ for all $i=1, \dots, M$.
+
+For dimensional consistency, we must have $p_0 =0$ and $p_M = 1$. Therefore, we have
+$g^1: \R^p \to \R^{p_1}$, $g^2: \R^{p_1} \to \R^{p_2}, \dots,  g^{M-1}: \R^{p_{M-2}} \to \R^{p_{M-1}}$, $g^M: \R^{p_{M-1}} \to \R$.
+
+Differentiating with respect to the parameter $w_k$, 
 we can write
 \begin{align*}
     \frac{\partial}{\partial \omega_k} L(\ww)  
@@ -196,14 +202,26 @@ we can write
 \end{align*}
 where $\xx^i$ is defined as $(g^i \circ g^{i-1} \circ \dots \circ g^1) (\ww)$ for each $i=1, 2, \dots, M-1$.
 
-Therefore, to compute $\nabla_{\ww} L(\ww)$, one needs to know 
+Therefore, to compute $\nabla_{\ww} L(\ww)$, one needs to know the tensor
 $$
 d_{rst} = \frac{\partial}{\partial x_r} g^s_t(\xx^{s-1})
 $$
 for all $s=1, \dots, M$, $t=1, \dots, p_s$, and $r=1, \dots, p_{s-1}$.
 Combining all $d_{rst}$ to compute $\nabla_{\ww} L(\ww)$ is know as *backward propagation*.
 
+
 Note that the tensor $d_{rst}$ describes the $r$-th partial derivative of $t$-th component of the function $g^s$, evaluated at the immediate value $\xx^{s-1}$.
+
+For notational convenience, one could use Einstein's convention for summation (repeated entries are summed) and simply write
+\begin{align*}
+\frac{\partial}{\partial w_k}L(\ww)
+    = 
+    \prod_{s=2}^{M} \prod_{t=1}^{p_s} \prod_{r=1}^{p_{s-1}} 
+    \frac{\partial}{\partial x_r} g^s_t(\xx^{s-1}) 
+    \frac{\partial}{\partial w_k} g^1_{i_{M_1}}(\ww)
+\end{align*}
+but we do not adapt this notation here.
+
 
 The graph-theoretic realization of this procedure is a directed graph from left to right with leaves on the left as $\omega_k$. Edges of the graph represent the partial derivates of the target nodes with respect to the source nodes evaluated at the value of the source node. The last node on the right is the loss function $L$
 In this setup, back-propagation procedure populates the leaf nodes $\omega_k$ with $\frac{\partial}{\partial \omega_k} L(\ww)$.
@@ -420,6 +438,154 @@ where $a_1, \dots, a_d$ and $b_1, \dots, b_d$ are the parameters of the model. T
 \end{align*}	
 
 There is no general closed-form solution to the minimization problem. Methods like gradient descent can be use to find a minimizer numerically.
+
+### Higher-dimensional formulation
+
+Let the $i$-th data point be $(\xx_i, \yy_i)$, where $\xx_i \in \R^l$ (i.e. data has $p$ *features* and $q$ labels). 
+
+An affine function $g_{W, \bb}: \R^p \to \R^s$ is defined by
+\begin{align*}
+    g_{W, \bb}(\xx) = W\xx + \bb,
+\end{align*}	
+where $W \in \R^{s\times p}$ is called the *weight* and $\bb \in \R^s$ is called the *bias*.
+
+An *activation function* $\sigma: \R \to \R$ is a differentiable, nonlinear function. Acting element-wise, with a slight abuse of notation, we define $\sigma: \R^n \to \R^n$ by
+\begin{align*}
+    \sigma(\xx) = (\sigma(x_i))_{i=1}^n.
+\end{align*}	
+
+A *single linear neural layer* $f:\R^p \to \R^s$ with weight $W \in \R^{s \times p}$, bias $\bb \in \R^s$, and activation function $\sigma: \R^s \to \R^s$ is defined as
+\begin{align*}
+f = \sigma \circ g.
+\end{align*}	
+
+A depth-$d$ neural network *model* is therefore given by
+\begin{align*}
+    N^d(\xx) = (f^d \circ \dots \circ f^1) (\xx)
+\end{align*}	
+where  for all $i=1, \dots, d$,
+\begin{align*}
+    f^i = \sigma^i \circ g^i,
+\end{align*}	
+where $g^i$ is a linear neural network and $\sigma^i$ is an activation function.
+Let for all $i=1, \dots, d$, we have $g^i: \R^{p_{i-1}} \to \R^{p_{i}}$ with weight $W^i \in \R^{p_{i} \times p_{i-1}}$ and bias $\bb^i \in \R^{p_i}$.
+
+For dimensional consistency, we must have
+$p_0 = p$  and $p_d=q$.
+
+A loss function $L$ over $n$ data points $\{ (\xx_i, \yy_i) \}_{i=1}^n$ is a function 
+\begin{align*}
+    L(W^d, \dots, W^1, \bb^d, \dots, \bb^1) =  \sum_{i=1}^{n} \norm{N^d(\xx_i) - \yy_i}^2.
+\end{align*}	
+
+### Gradient of the loss function
+
+To compute the gradient of the loss function with respect to each bias $b^i_j$ and weight $w^i_{jk}$, 
+recalling
+\begin{align*}
+    g^i_l(\zz) = \sum_{s=1}^{p_{m-1}} W^i_{ls} z_s + b^i_l
+\end{align*}	
+we need the derivatives 
+\begin{align*}
+    \frac{d}{db^i_{j}}g^m_l(\zz) = 
+    \frac{\partial}{\partial b^i_{j}}  b^m_l = 
+     \delta_{mi} \delta_{lj}
+\end{align*}	
+and
+\begin{align*}
+    \frac{d}{dw^i_{jk}}g^m_l(\zz) 
+    &= 
+    \frac{\partial}{\partial w^i_{jk}} \left(\sum_{s=1}^{p_{m-1}} W^m_{ls} z_s + b^m_l\right) 
+    \\
+    &= \sum_{s=1}^{p_{m-1}} \delta_{mi} \delta_{lj}\delta_{sk} z_s
+    \\
+    &= \delta_{mi} \delta_{lj} z_k,
+\end{align*}	
+where $\delta_{kj}$ denotes the Kronecker's delta
+\begin{align*}
+    \delta_{kj} =
+    \begin{cases}
+       1, &\text{ if } k = j
+       \\ 
+       0, &\text{ otherwise }.
+    \end{cases}
+\end{align*}	
+
+The gradient of the element-wise activation function
+$\sigma^m$ is 
+\begin{align*}
+    \frac{\partial}{\partial z_j} \sigma^m_k(\zz) = 
+    \frac{\partial}{\partial z_j} \sigma^m(z_k) = (\sigma^m)'(z_k) \delta_{kj}.
+\end{align*}	
+
+Therefore, the partial derivatives of each linear neural layer $f^m$ are
+\begin{align*}
+    \frac{d}{db^i_{j}}f^m_l(\zz) 
+    &= 
+    \frac{d}{db^i_{j}} \sigma^m_l(g^m(\zz))
+    \\
+    &= \sum_{k=1}^{p_{m-1}} \frac{\partial}{\partial z_k} \sigma^m_l(g^m(\zz)) \frac{\partial}{\partial b^i_j} g^m_k(\zz)
+    \\
+    & = 
+    \sum_{k=1}^{p_{m-1}}
+    (\sigma^m)'(g^m_l(\zz)) \delta_{lk} 
+    \delta_{mi} \delta_{kj}
+    \\
+    & = 
+    (\sigma^m)'(g^m_l(\zz))
+    \delta_{mi} \delta_{lj}
+\end{align*}	
+and
+\begin{align*}
+    \frac{d}{dw^i_{jk}}f^m_l(\zz) 
+    &= \sum_{s=1}^{p_{m-1}} \frac{\partial}{\partial z_s} \sigma^m_l(g^m(\zz)) \frac{\partial}{\partial w^i_{jk}} g^m_s(\zz)
+    \\
+    &=
+    \sum_s
+    (\sigma^m)'(g^m_l(\zz)) \delta_{ls} 
+    \delta_{mi} \delta_{sj} z_k
+    \\
+    &= 
+    (\sigma^m)'(g^m_l(\zz)) z_k
+    \delta_{mi} \delta_{lj} .
+\end{align*}	
+
+
+### Example of a neural network in pytorch
+
+We construct a  neural network $N^d$ of depth $d=2$ for data with $p = 4$ features and $q=1$ label(s).
+We consider
+\begin{align*}
+g^1: \R^4 \to \R^8
+\\
+g^2: \R^8 \to \R^1
+\end{align*}	
+with $\sigma^1(r) = \max\{0, r\}$ (called ReLU($r$)) and $\sigma^2(r) = r$.
+
+The weights and biases of each affine map are $W^1 \in \R^{8 \times 4}, W^2 \in \R^{1 \times 8}$ and $\bb^1 \in \R^8$ and $\bb^2 \in \R^1$.
+
+For each of $\xx_i$ of the data set $\{ (\xx_i, y_i) \}_{i=1}^3$, we compute $N^d(\xx_i)$. 
+
+
+```python
+import torch
+from torch import nn
+
+net = nn.Sequential( 
+                    nn.Linear(4,8),
+                    nn.ReLU(),
+                    nn.Linear(8,1)
+                    )
+X = torch.rand(size=(3,4))
+
+print('X', X)
+print('net(X)', net(X))
+
+## Use net.state_dict() to show the parameters
+print('Show parameters of the first neural network in the sequence:', net[0].state_dict())
+print('Show parameters of the third neural network in the sequence:', net[2].state_dict())
+print('print the bias data of 3rd net:', net[2].bias.data)
+```
 
 ---
 

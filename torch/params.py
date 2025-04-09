@@ -1,12 +1,20 @@
 import torch
 from torch import nn
 
-net = nn.Sequential( nn.Linear(4,8), nn.ReLU(), nn.Linear(8,1))
-X = torch.rand(size=(2,4))
+net = nn.Sequential( 
+                    nn.Linear(4,8),
+                    nn.ReLU(),
+                    nn.Linear(8,1)
+                    )
+X = torch.rand(size=(3,4))
 
-print(net(X))
+print('X', X)
+print('net(X)', net(X))
+
+
 
 ## Use net.state_dict() to show the parameters
+print('Show parameters of the first neural network in the sequence:', net[0].state_dict())
 print('Show parameters of the third neural network in the sequence:', net[2].state_dict())
 print('print the bias data of 3rd net:', net[2].bias.data)
 
