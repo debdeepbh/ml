@@ -14,6 +14,7 @@ include-header: |
     \newcommand{\sigmaB}{\boldsymbol{\sigma}}
     \newcommand{\1}{\boldsymbol{1}}
     \newcommand{\bb}{\mathbf{b}}
+    \newcommand{\ff}{\mathbf{f}}
     \newcommand{\uu}{\mathbf{u}}
     \newcommand{\vv}{\mathbf{v}}
     \newcommand{\xx}{\mathbf{x}}
@@ -560,11 +561,19 @@ g^1: \R^4 \to \R^8
 \\
 g^2: \R^8 \to \R^1
 \end{align*}	
-with $\sigma^1(r) = \max\{0, r\}$ (called ReLU($r$)) and $\sigma^2(r) = r$.
+with $\sigma^1(r) = \max\{0, r\}$ (called ReLU($r$)) and $\sigma^2(r) = r$. The affine maps are defined as
+\begin{align*}
+    g^i(\zz) = W^i \zz + b^i
+\end{align*}	
+for each $\zz \in$ Domain($g^i$) for $i=1,2$.
+Then, the depth-2 neural network $N^d$ is defined as
+\begin{align*}
+    N^d(\xx) = (g^2 \circ \sigma^1 \circ g^1) (\xx)
+\end{align*}	
 
 The weights and biases of each affine map are $W^1 \in \R^{8 \times 4}, W^2 \in \R^{1 \times 8}$ and $\bb^1 \in \R^8$ and $\bb^2 \in \R^1$.
 
-For each of $\xx_i$ of the data set $\{ (\xx_i, y_i) \}_{i=1}^3$, we compute $N^d(\xx_i)$. 
+For each of $\xx_i$ of the data set $\{ (\xx_i, y_i) \}_{i=1}^3$, we compute $N^d(\xx_i)$. In the following code, `X` = $(\xx_i)_{i=1}^3$ and `net(X)` = $(N^d(\xx_i))_{i=1}^3$.
 
 
 ```python
@@ -586,6 +595,58 @@ print('Show parameters of the first neural network in the sequence:', net[0].sta
 print('Show parameters of the third neural network in the sequence:', net[2].state_dict())
 print('print the bias data of 3rd net:', net[2].bias.data)
 ```
+
+
+# Writing Custom `autograd` functions
+
+
+[Tutorial](https://pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html) gives some good examples.
+
+When the loss function (or the model) involves composition with functions that are not simple, we need to specify the derivative manually. In fact, we do not need to specify the entire derivative tensor, just the tensor-vector product rule.
+
+Let $\ff : \R^n \to \R^m$ be differentiable. Define the Jacobian $J$ by
+\begin{align*}
+    D_\zz\ff(\zz) 
+    = 
+    \left( \left( \frac{\partial f_j}{\partial z_i} \right)_{j=1}^m\right)_{i=1}^n
+    = 
+    \begin{bmatrix}
+	\frac{\partial f_1}{\partial z_1} & \dots & \frac{\partial f_m}{\partial z_1}
+	\\
+	\frac{\partial f_1}{\partial z_2} & \dots & \frac{\partial f_m}{\partial z_2}
+	\\
+	\vdots
+	\\
+	\frac{\partial f_1}{\partial z_n} & \dots & \frac{\partial f_m}{\partial z_n}
+    \end{bmatrix}_{n \times m}
+    (\zz)
+	= J^T
+\end{align*}	
+where $J$ is the Jacobian of $\ff$ at $\zz$.
+
+In the `.backward()` method of a custom autograd function, given a vector $\vv \in \R^m$, we need to define the formula of $J^T\vv$.
+The $i$-th element of $J^T\vv$ (for $i=1, \dots, n$) is
+\begin{align*}
+    (J^T \vv)_i = \sum_{k=1}^{m} \frac{\partial f_k}{\partial z_i} v_k.
+\end{align*}	
+
+For  example, the forward difference operator (with Dirichlet or periodic boundary)
+$\Delta^h : \R^n \to \R^n$ is given by
+\begin{align*}
+    \Delta^h_i (\zz) = \frac{1}{h} \left(  z_{i+1} - z_{i}\right).
+\end{align*}	
+Then, the partial derivative is
+\begin{align*}
+    \frac{\partial \Delta^h_i}{\partial z_k} = \frac{1}{h} \left( \delta_{i+1,k} - \delta_{i,k} \right)
+\end{align*}	
+where $\delta_{kj}$ is Kronecker's delta.
+Therefore, for any $\vv \in \R^n$ we have
+\begin{align*}
+    (D_\zz \Delta^h(\zz) \vv)_i = \frac{1}{h} (v_{i-1} - v_i).
+\end{align*}	
+
+
+
 
 ---
 

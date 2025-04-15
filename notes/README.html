@@ -142,6 +142,9 @@ id="toc-example-of-a-neural-network-in-pytorch">Example of a neural
 network in pytorch</a></li>
 </ul></li>
 </ul></li>
+<li><a href="#writing-custom-autograd-functions"
+id="toc-writing-custom-autograd-functions">Writing Custom
+<code>autograd</code> functions</a></li>
 <li><a href="#tex-and-markdown-conversion-to-html-with-pandoc"
 id="toc-tex-and-markdown-conversion-to-html-with-pandoc">Tex and
 markdown conversion to html with pandoc</a>
@@ -801,7 +804,17 @@ g^2: \mathbb{R}^8 \to \mathbb{R}^1
 \end{align*}\]</span><br />
 with <span class="math inline">\(\sigma^1(r) = \max\{0, r\}\)</span>
 (called ReLU(<span class="math inline">\(r\)</span>)) and <span
-class="math inline">\(\sigma^2(r) = r\)</span>.</p>
+class="math inline">\(\sigma^2(r) = r\)</span>. The affine maps are
+defined as <span class="math display">\[\begin{align*}
+    g^i(\mathbf{z}) = W^i \mathbf{z}+ b^i
+\end{align*}\]</span><br />
+for each <span class="math inline">\(\mathbf{z}\in\)</span> Domain(<span
+class="math inline">\(g^i\)</span>) for <span
+class="math inline">\(i=1,2\)</span>. Then, the depth-2 neural network
+<span class="math inline">\(N^d\)</span> is defined as <span
+class="math display">\[\begin{align*}
+    N^d(\mathbf{x}) = (g^2 \circ \sigma^1 \circ g^1) (\mathbf{x})
+\end{align*}\]</span></p>
 <p>The weights and biases of each affine map are <span
 class="math inline">\(W^1 \in \mathbb{R}^{8 \times 4}, W^2 \in
 \mathbb{R}^{1 \times 8}\)</span> and <span
@@ -810,7 +823,11 @@ class="math inline">\(\mathbf{b}^2 \in \mathbb{R}^1\)</span>.</p>
 <p>For each of <span class="math inline">\(\mathbf{x}_i\)</span> of the
 data set <span class="math inline">\(\{ (\mathbf{x}_i, y_i)
 \}_{i=1}^3\)</span>, we compute <span
-class="math inline">\(N^d(\mathbf{x}_i)\)</span>.</p>
+class="math inline">\(N^d(\mathbf{x}_i)\)</span>. In the following code,
+<code>X</code> = <span
+class="math inline">\((\mathbf{x}_i)_{i=1}^3\)</span> and
+<code>net(X)</code> = <span
+class="math inline">\((N^d(\mathbf{x}_i))_{i=1}^3\)</span>.</p>
 <div class="sourceCode" id="cb11"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch <span class="im">import</span> nn</span>
@@ -829,6 +846,72 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a h
 <span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&#39;Show parameters of the first neural network in the sequence:&#39;</span>, net[<span class="dv">0</span>].state_dict())</span>
 <span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&#39;Show parameters of the third neural network in the sequence:&#39;</span>, net[<span class="dv">2</span>].state_dict())</span>
 <span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&#39;print the bias data of 3rd net:&#39;</span>, net[<span class="dv">2</span>].bias.data)</span></code></pre></div>
+<h1 id="writing-custom-autograd-functions">Writing Custom
+<code>autograd</code> functions</h1>
+<p><a
+href="https://pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html">Tutorial</a>
+gives some good examples.</p>
+<p>When the loss function (or the model) involves composition with
+functions that are not simple, we need to specify the derivative
+manually. In fact, we do not need to specify the entire derivative
+tensor, just the tensor-vector product rule.</p>
+<p>Let <span class="math inline">\(\mathbf{f}: \mathbb{R}^n \to
+\mathbb{R}^m\)</span> be differentiable. Define the Jacobian <span
+class="math inline">\(J\)</span> by <span
+class="math display">\[\begin{align*}
+    D_\mathbf{z}\mathbf{f}(\mathbf{z})
+    =
+    \left( \left( \frac{\partial f_j}{\partial z_i}
+\right)_{j=1}^m\right)_{i=1}^n
+    =
+    \begin{bmatrix}
+    \frac{\partial f_1}{\partial z_1} &amp; \dots &amp; \frac{\partial
+f_m}{\partial z_1}
+    \\
+    \frac{\partial f_1}{\partial z_2} &amp; \dots &amp; \frac{\partial
+f_m}{\partial z_2}
+    \\
+    \vdots
+    \\
+    \frac{\partial f_1}{\partial z_n} &amp; \dots &amp; \frac{\partial
+f_m}{\partial z_n}
+    \end{bmatrix}_{n \times m}
+    (\mathbf{z})
+    = J^T
+\end{align*}\]</span><br />
+where <span class="math inline">\(J\)</span> is the Jacobian of <span
+class="math inline">\(\mathbf{f}\)</span> at <span
+class="math inline">\(\mathbf{z}\)</span>.</p>
+<p>In the <code>.backward()</code> method of a custom autograd function,
+given a vector <span class="math inline">\(\mathbf{v}\in
+\mathbb{R}^m\)</span>, we need to define the formula of <span
+class="math inline">\(J^T\mathbf{v}\)</span>. The <span
+class="math inline">\(i\)</span>-th element of <span
+class="math inline">\(J^T\mathbf{v}\)</span> (for <span
+class="math inline">\(i=1, \dots, n\)</span>) is <span
+class="math display">\[\begin{align*}
+    (J^T \mathbf{v})_i = \sum_{k=1}^{m} \frac{\partial f_k}{\partial
+z_i} v_k.
+\end{align*}\]</span></p>
+<p>For example, the forward difference operator (with Dirichlet or
+periodic boundary) <span class="math inline">\(\Delta^h : \mathbb{R}^n
+\to \mathbb{R}^n\)</span> is given by <span
+class="math display">\[\begin{align*}
+    \Delta^h_i (\mathbf{z}) = \frac{1}{h} \left(  z_{i+1} -
+z_{i}\right).
+\end{align*}\]</span><br />
+Then, the partial derivative is <span
+class="math display">\[\begin{align*}
+    \frac{\partial \Delta^h_i}{\partial z_k} = \frac{1}{h} \left(
+\delta_{i+1,k} - \delta_{i,k} \right)
+\end{align*}\]</span><br />
+where <span class="math inline">\(\delta_{kj}\)</span> is Kronecker’s
+delta. Therefore, for any <span class="math inline">\(\mathbf{v}\in
+\mathbb{R}^n\)</span> we have <span
+class="math display">\[\begin{align*}
+    (D_\mathbf{z}\Delta^h(\mathbf{z}) \mathbf{v})_i = \frac{1}{h}
+(v_{i-1} - v_i).
+\end{align*}\]</span></p>
 <hr />
 <h1 id="tex-and-markdown-conversion-to-html-with-pandoc">Tex and
 markdown conversion to html with pandoc</h1>
