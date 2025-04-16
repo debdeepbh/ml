@@ -50,7 +50,7 @@ def ODE(x,y):
     grad_outputs=torch.ones_like(x),
     create_graph=True, 
     retain_graph=True,
-    allow_unused=True,    # suggested by stackoverflow, but slows down computation
+    # allow_unused=True,    # suggested by stackoverflow, but slows down computation
                                 )
 
     # # y' = - 2x*y # y(x=0) = 1
@@ -61,7 +61,7 @@ def ODE(x,y):
     grad_outputs=torch.ones_like(x),
     create_graph=True, 
     retain_graph=True,
-    allow_unused=True,    # suggested by stackoverflow, but slows down computation
+    # allow_unused=True,    # suggested by stackoverflow, but slows down computation
                                 )
     # # solving ODE u'' + u = 0, u(0) = 0, u(\pi/2) = 3
     eq = dydx2 + dydx
@@ -81,6 +81,7 @@ opt = optim.Adam(model.parameters(),lr=0.1,amsgrad=True) # Got faster convergenc
 N = 401
 # N = 30
 # x_data = torch.linspace(-2.0,2.0,N,requires_grad=True)
+# x_data = torch.linspace(0,math.pi/2,N,requires_grad=True)
 x_data = torch.linspace(0,math.pi/2,N,requires_grad=True)
 x_data = x_data.view(N,1) # reshaping the tensor
 
