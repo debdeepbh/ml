@@ -3,6 +3,7 @@ title: Notes on minimization problems using pytorch
 author: Debdeep Bhattacharya
 include-header: |
 
+    \newcommand{\1}{\mathcal{1}}
     \newcommand{\F}{\mathcal{F}}
     \newcommand{\E}{\mathcal{E}}
     \newcommand{\R}{\mathbb{R}}
@@ -13,8 +14,12 @@ include-header: |
     \newcommand{\ww}{\boldsymbol{\omega}}
     \newcommand{\sigmaB}{\boldsymbol{\sigma}}
     \newcommand{\1}{\boldsymbol{1}}
+    \newcommand{\aa}{\mathbf{a}}
     \newcommand{\bb}{\mathbf{b}}
+    \newcommand{\ee}{\mathbf{e}}
     \newcommand{\ff}{\mathbf{f}}
+    \newcommand{\FF}{\mathbf{F}}
+    \newcommand{\hh}{\mathbf{h}}
     \newcommand{\uu}{\mathbf{u}}
     \newcommand{\vv}{\mathbf{v}}
     \newcommand{\xx}{\mathbf{x}}
@@ -311,90 +316,6 @@ with torch.no_grad():
     d.grad = None
 ```
 
-### Defining derivatives beyond pytorch's capability
-
-If we are using an exotic function $g$ for which `pytorch` does not have the formula for derivate (and we do), we can define it ourselves
-
-```python
-class LegendrePolynomial3(torch.autograd.Function):
-    """
-    We can implement our own custom autograd Functions by subclassing
-    torch.autograd.Function and implementing the forward and backward passes
-    which operate on Tensors.
-    """
-
-    @staticmethod
-    def forward(ctx, input):
-        """
-        In the forward pass we receive a Tensor containing the input and return
-        a Tensor containing the output. ctx is a context object that can be used
-        to stash information for backward computation. You can cache arbitrary
-        objects for use in the backward pass using the ctx.save_for_backward method.
-        """
-        ctx.save_for_backward(input)
-        return 0.5 * (5 * input ** 3 - 3 * input)
-
-    @staticmethod
-    def backward(ctx, grad_output):
-        """
-        In the backward pass we receive a Tensor containing the gradient of the loss
-        with respect to the output, and we need to compute the gradient of the loss
-        with respect to the input.
-        """
-        input, = ctx.saved_tensors
-        return grad_output * 1.5 * (5 * input ** 2 - 1)
-```
-
-We can `apply` this function within the loop and define a loss function like this:
-
-```python
-# To apply our Function, we use Function.apply method. We alias this as 'P3'.
-P3 = LegendrePolynomial3.apply
-# Forward pass: compute predicted y using operations; we compute
-# P3 using our custom autograd operation.
-y_pred = a + b * P3(c + d * x)
-# Compute and print loss
-loss = (y_pred - y).pow(2).sum()
-```
-
-
-
-To use optimized pytorch features such as `torch.nn.MSELoss()`, `torch.optim.SGD()`, `optimizer.step()` etc for your own model, you need to define your own model as a module, which is a derived class of `torch.nn.Module`.
-
-```python
-class Polynomial3(torch.nn.Module):
-    def __init__(self):
-        """
-        In the constructor we instantiate four parameters and assign them as
-        member parameters.
-        """
-        super().__init__()
-        self.a = torch.nn.Parameter(torch.randn(()))
-        self.b = torch.nn.Parameter(torch.randn(()))
-        self.c = torch.nn.Parameter(torch.randn(()))
-        self.d = torch.nn.Parameter(torch.randn(()))
-
-    def forward(self, x):
-        """
-        In the forward function we accept a Tensor of input data and we must return
-        a Tensor of output data. We can use Modules defined in the constructor as
-        well as arbitrary operators on Tensors.
-        """
-        return self.a + self.b * x + self.c * x ** 2 + self.d * x ** 3
-
-    def string(self):
-        """
-        Just like any class in Python, you can also define custom method on PyTorch modules
-        """
-        return f'y = {self.a.item()} + {self.b.item()} x + {self.c.item()} x^2 + {self.d.item()} x^3'
-
-# Construct our model by instantiating the class defined above
-model = Polynomial3()
-```
-
-Note that we do not need to define a `backward()` method for a `torch.nn.Module` as it is derived from the operations specified within the `forward()` method.
-If your model (`torch.nn.Module`) uses an exotic function which you define via a `torch.autograd.Function`, then you define the derivate of the function within the `backward()` method of the function, but not in the model.
-
 
 ## Neural network approximation
 
@@ -596,41 +517,142 @@ print('Show parameters of the third neural network in the sequence:', net[2].sta
 print('print the bias data of 3rd net:', net[2].bias.data)
 ```
 
+### Custom model involving neural networks
+
+To use optimized pytorch features such as `torch.nn.MSELoss()`, `torch.optim.SGD()`, `optimizer.step()` etc for your own model, you need to define your own model as a module, which is a derived class of `torch.nn.Module`.
+
+```python
+class Polynomial3(torch.nn.Module):
+    def __init__(self):
+        """
+        In the constructor we instantiate four parameters and assign them as
+        member parameters.
+        """
+        super().__init__()
+        self.a = torch.nn.Parameter(torch.randn(()))
+        self.b = torch.nn.Parameter(torch.randn(()))
+        self.c = torch.nn.Parameter(torch.randn(()))
+        self.d = torch.nn.Parameter(torch.randn(()))
+
+    def forward(self, x):
+        """
+        In the forward function we accept a Tensor of input data and we must return
+        a Tensor of output data. We can use Modules defined in the constructor as
+        well as arbitrary operators on Tensors.
+        """
+        return self.a + self.b * x + self.c * x ** 2 + self.d * x ** 3
+
+    def string(self):
+        """
+        Just like any class in Python, you can also define custom method on PyTorch modules
+        """
+        return f'y = {self.a.item()} + {self.b.item()} x + {self.c.item()} x^2 + {self.d.item()} x^3'
+
+# Construct our model by instantiating the class defined above
+model = Polynomial3()
+```
+
+Note that we do not need to define a `backward()` method for a `torch.nn.Module` as it is derived from the operations specified within the `forward()` method.
+If your model (`torch.nn.Module`) uses an exotic function which you define via a `torch.autograd.Function`, then you define the derivate of the function within the `backward()` method of the function, but not in the model.
+
+# Derivate and Jacobian
+
+Let  
+\begin{align*}
+\ff: \R^n \to \R^m
+\end{align*}
+be a differentiable function.
+For $\zz \in \R^n$, the derivative $D\ff(\zz)$ is a linear map 
+\begin{align*}
+D\ff(\zz): \R^{n} \to \R^m,
+\end{align*}
+i.e., for all $\vv \in \R^n$, we have $D\ff(\zz) (\vv) \in \R^m$.
+Linearity implies that the derivative can be identified with the **Jacobian matrix** 
+\begin{align*}
+J = D\ff(\zz) \in \R^{m \times n},
+\end{align*}
+so that  the evaluation $D\ff(\zz) (\vv)$ can be realized by the matrix-vector multiplication  $D\ff(\zz)_{m\times n} \vv_{n \times 1} \in \R^m$ with column vectors $\vv \in \R^n$.
+
+The Jacobian $J$ is given by
+\begin{align*}
+    J =
+\left( \left( \frac{\partial f_i(\zz)}{\partial z_j} \right)_{j=1}^m\right)_{i=1}^n 
+    = \begin{bmatrix} \nabla f_1(\zz)^T \\ \vdots \\ \nabla f_m(\zz)^T \end{bmatrix}_{m \times n}
+=
+    \begin{bmatrix}
+	\frac{\partial f_1}{\partial z_1} & \dots & \frac{\partial f_1}{\partial z_n}
+	\\
+	\frac{\partial f_2}{\partial z_1} & \dots & \frac{\partial f_2}{\partial z_n}
+	\\
+	\vdots
+	\\
+	\frac{\partial f_m}{\partial z_1} & \dots & \frac{\partial f_m}{\partial z_n}
+    \end{bmatrix}_{m \times n}
+    (\zz)
+	= D\ff(\zz).
+\end{align*}	
+
+More generally, for a differentiable function $\ff: A \to B$, the derivative $D\ff(\aa)$ is a linear map between $A$ and $B$ for all $\aa \in A$.
+
+For example, if $\ff: \R^n \to \R^m$ we have 
+\begin{align*}
+D\ff: \R^n \to \R^{m \times n}
+\end{align*}
+and therefore for any $\zz \in \R^n$, the second derivative $D (D\ff)(\zz) =: D^2 \ff(\zz)$ is a linear map
+\begin{align*}
+    D^2 \ff(\zz): \R^{m \times n} \to \R^n
+\end{align*}	
+which can be represented by a bilinear Hessian tensor, the elements of which can be computed by evaluating it on the tensor basis $\ee_i \otimes \ee_j \in \R^{m \times n}$
+
+A special case when $\ff: \R^n \to \R^m$ is linear, there exists $A \in \R^{m\times n}$ such that $\ff(\zz) = A\zz$. In this case, $D\ff(\zz) = A$ for all $\zz \in \R^m$ and $D\ff(\zz) \vv = A\vv$ for all $\vv \in \R^n$.
+
+## Chain rule
+
+Let $\ff: \R^n \to \R^p$ and $\hh: \R^p \to \R^m$. Define $\FF : \R^n \to \R^m$ as $\FF(\xx) = \hh(\ff(\xx))$.
+Then, chain rule implies
+\begin{align*}
+    [D\FF(\xx)]_{m \times n} = 
+    [D\hh(\zz)|_{\zz = \ff(\xx)}  ]_{m \times p} [D\ff(\xx)]_{p \times n}
+\end{align*}	
+Defining $\vv$ as the **grad_output** (a common name in the pytorch literature)
+\begin{align*}
+    \vv = D\ff(\xx).
+\end{align*}	
+we can write
+\begin{align*}
+    D\FF(\xx) = D\hh(\ff(\xx)) (\vv).
+\end{align*}	
+
+In other words,
+\begin{align*}
+    J_{\hh \circ \ff} (\xx) = J_{\hh} (\ff(\xx)) J_{\ff}(\xx).
+\end{align*}	
+
+
+
+
+
 
 # Writing Custom `autograd` functions
 
 
-[Tutorial](https://pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html) gives some good examples.
-
 When the loss function (or the model) involves composition with functions that are not simple, we need to specify the derivative manually. In fact, we do not need to specify the entire derivative tensor, just the tensor-vector product rule.
 
-Let $\ff : \R^n \to \R^m$ be differentiable. Define the Jacobian $J$ by
-\begin{align*}
-    D_\zz\ff(\zz) 
-    = 
-    \left( \left( \frac{\partial f_j}{\partial z_i} \right)_{j=1}^m\right)_{i=1}^n
-    = 
-    \begin{bmatrix}
-	\frac{\partial f_1}{\partial z_1} & \dots & \frac{\partial f_m}{\partial z_1}
-	\\
-	\frac{\partial f_1}{\partial z_2} & \dots & \frac{\partial f_m}{\partial z_2}
-	\\
-	\vdots
-	\\
-	\frac{\partial f_1}{\partial z_n} & \dots & \frac{\partial f_m}{\partial z_n}
-    \end{bmatrix}_{n \times m}
-    (\zz)
-	= J^T
-\end{align*}	
-where $J$ is the Jacobian of $\ff$ at $\zz$.
+[Tutorial](https://pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html) gives some good examples.
 
-In the `.backward()` method of a custom autograd function, given a vector $\vv \in \R^m$, we need to define the formula of $J^T\vv$.
-The $i$-th element of $J^T\vv$ (for $i=1, \dots, n$) is
+In the `.backward()` method of a custom autograd function, given a vector $\vv \in \R^m$, we need to define the formula of $J\vv$. 
+This is known as the **Jacobian-vector product**.
+The vector $\vv$ is usually referred to as **grad_output(s)**.
+
+The $i$-th element of $J\vv$ (for $i=1, \dots, n$) is
 \begin{align*}
-    (J^T \vv)_i = \sum_{k=1}^{m} \frac{\partial f_k}{\partial z_i} v_k.
+    (J \vv)_i = \sum_{k=1}^{m} \frac{\partial f_i}{\partial z_k} v_k.
 \end{align*}	
 
-For  example, the forward difference operator (with Dirichlet or periodic boundary)
+
+### Example: forward difference operator
+
+The forward difference operator (with Dirichlet or periodic boundary)
 $\Delta^h : \R^n \to \R^n$ is given by
 \begin{align*}
     \Delta^h_i (\zz) = \frac{1}{h} \left(  z_{i+1} - z_{i}\right).
@@ -642,10 +664,173 @@ Then, the partial derivative is
 where $\delta_{kj}$ is Kronecker's delta.
 Therefore, for any $\vv \in \R^n$ we have
 \begin{align*}
-    (D_\zz \Delta^h(\zz) \vv)_i = \frac{1}{h} (v_{i-1} - v_i).
+    (D_\zz \Delta^h(\zz) \vv)_i = \frac{1}{h}\sum_{k=1}^{n} (\delta_{i+1, k} - \delta_{i,k})v_k = \frac{1}{h} (v_{i+1} - v_i).
 \end{align*}	
 
 
+### Example: Legedre polynomial
+
+If we are using an exotic function $g$ for which `pytorch` does not have the formula for derivate (and we do), we can define it ourselves
+
+```python
+class LegendrePolynomial3(torch.autograd.Function):
+    """
+    We can implement our own custom autograd Functions by subclassing
+    torch.autograd.Function and implementing the forward and backward passes
+    which operate on Tensors.
+    """
+
+    @staticmethod
+    def forward(ctx, input):
+        """
+        In the forward pass we receive a Tensor containing the input and return
+        a Tensor containing the output. ctx is a context object that can be used
+        to stash information for backward computation. You can cache arbitrary
+        objects for use in the backward pass using the ctx.save_for_backward method.
+        """
+        ctx.save_for_backward(input)
+        return 0.5 * (5 * input ** 3 - 3 * input)
+
+    @staticmethod
+    def backward(ctx, grad_output):
+        """
+        In the backward pass we receive a Tensor containing the gradient of the loss
+        with respect to the output, and we need to compute the gradient of the loss
+        with respect to the input.
+        """
+        input, = ctx.saved_tensors
+        return grad_output * 1.5 * (5 * input ** 2 - 1)
+```
+
+We can `apply` this function within the loop and define a loss function like this:
+
+```python
+# To apply our Function, we use Function.apply method. We alias this as 'P3'.
+P3 = LegendrePolynomial3.apply
+# Forward pass: compute predicted y using operations; we compute
+# P3 using our custom autograd operation.
+y_pred = a + b * P3(c + d * x)
+# Compute and print loss
+loss = (y_pred - y).pow(2).sum()
+```
+
+
+
+
+### Example: derivative operator
+
+
+[This discussion](https://stackoverflow.com/questions/58839721/how-to-define-a-loss-function-in-pytorch-with-dependency-to-partial-derivatives) demonstrates a nice example of solving an ODE with initial data.
+
+Computing numerical derivate of data with respect to another data can be done using `torch.autograd.grad()`.
+
+Given $\ff: \R^n \to \R^m$, we have $D\ff(\zz): \R^n \to \R^m$ for all $\zz \in \R^n$. 
+
+- If $m=1$, we can use `autograd.grad(output=f, input=z)` to compute $D\ff(\zz)$
+- If $m \ge 1$, we can use `autograd.grad(output=f, input=z, grad_output=w)` to compute $D\ff(\zz)^T \ww$. For dimensional consistency, we need to have $\ww \in \R^m$ so that the output of `autograd.grad()` is in $\R^n$.
+
+The [manual](https://pytorch.org/docs/stable/generated/torch.autograd.grad.html) says
+
+```python
+torch.autograd.grad(outputs, inputs, grad_outputs=None, retain_graph=None, create_graph=False, only_inputs=True, allow_unused=False)
+```
+
+
+Parameters
+
+- `outputs`: The output tensors with respect to which gradients will be calculated. It has to be scalar valued, unless `grad_outputs` is specified, in which case, the returned value will be a vector-Jacobian product.
+- `inputs`: The input tensors for which gradients are being computed. These must be part of the computational graph.
+- `grad_outputs`: This parameter is an optional external gradient to be applied on `outputs`.
+This is the vector $\vv$ in the vector-Jacobian product $\vv^TJ$. `None` values can be specified for scalar Tensors or ones that don’t require grad. If a `None` value would be acceptable for all grad_tensors, then this argument is optional. Default: `None`.
+- `retain_graph`: When set to `True`, the computation graph used to compute the gradients will be retained, allowing for further operations.
+
+- `create_graph`: If `True`, a new computational graph is created, enabling higher-order derivatives to be computed.
+- `allow_unused`: If `True`, it returns `None` for input tensors unused in the computation; otherwise, it throws an error.
+
+
+### Example: element-wise square
+
+Consider the *element-wise square* function $\ff: \R^n \to \R^n$ given by $f_i(\xx) = x_i^2$ for all $i=1, \dots, n$.  Then, 
+\begin{align*}
+\frac{\partial f_i}{\partial x_k} = 2x_k \delta_{ik}.
+\end{align*} 
+The Jacobian is $J = $ Diag$(2x_1, \dots, 2x_n)$, a symmetric matrix.
+
+To obtain the *element-wise double* operator $\hh: \R^n \to \R^n$ given by $h_i(\xx) = 2 x_i$ as a derivative of $\ff$, we can either compute $J^T\vv$ where $\vv = \1 \in \R^n$, a vector of ones ($\1_i =1$ for all $i=1, \dots, n$).
+
+
+```python
+import torch
+x = torch.linspace(-10, 10, 5, requires_grad=True)
+ones = torch.ones_like(x)
+z = x **2
+# Compute the derivatives
+grads = torch.autograd.grad(outputs=z, inputs=x, grad_outputs=ones)
+
+print('x', x)
+print('ones', ones)
+print('grads', grads)
+```
+
+which returns
+
+```
+x tensor([-10.,  -5.,   0.,   5.,  10.], requires_grad=True)
+ones tensor([1., 1., 1., 1., 1.])
+grads (tensor([-20., -10.,   0.,  10.,  20.]),)
+```
+
+The input data be a higher-order tensor. In that case, the `grad_output` has to be the same shape as `output` to return $D\ff(\zz)^T \vv$ where $\ff$=`output`, $\zz$=`input`, and $\vv$=`grad_output`.
+
+```python
+import torch
+x = torch.linspace(-10, 10, 5, requires_grad=True)
+x = x.reshape(-1,1).pow(torch.tensor([1, 2, 3]))
+A = torch.tensor([[1, 1, 1, 1, 1], [1, 0, 1, 1, 1.]])
+z = torch.matmul(A, x)
+# Compute the derivatives
+ones = torch.ones_like(z)
+grads = torch.autograd.grad(outputs=z, inputs=x, grad_outputs=ones)
+
+print('x', x)
+print('ones', ones)
+print('grads', grads)
+```
+
+returns
+
+```
+x tensor([[  -10.,   100., -1000.],
+        [   -5.,    25.,  -125.],
+        [    0.,     0.,     0.],
+        [    5.,    25.,   125.],
+        [   10.,   100.,  1000.]], grad_fn=<PowBackward1>)
+z tensor([[  0., 250.,   0.],
+        [  5., 225., 125.]], grad_fn=<MmBackward0>)
+ones tensor([[1., 1., 1.],
+        [1., 1., 1.]])
+grads (tensor([[2., 2., 2.],
+        [1., 1., 1.],
+        [2., 2., 2.],
+        [2., 2., 2.],
+        [2., 2., 2.]]),)
+```
+
+By enabling `create_graph=True`, one can compute the higher-order derivates like this:
+
+```python
+a = torch.tensor(1.0, requires_grad=True)
+t = torch.tensor(2.0, requires_grad=True)
+b = a + 2 * t 
+c = a * t + t ** 2
+d = b**2 + 3 * c
+grad_a, grad_t = torch.autograd.grad(outputs=d, inputs=(a, t), create_graph=True)
+# Computing higher-order derivatives
+second_order_grad_a = torch.autograd.grad(grad_a, a)[0]
+second_order_grad_t = torch.autograd.grad(grad_t, t)[0]
+```
+
+This way, we can compute the (partial) derivatives of a data (`outputs`) with respect to grid points (`inputs`). This is applicable to solving ODEs with prescribed boundary and/or initial value.
 
 
 ---

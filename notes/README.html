@@ -124,9 +124,6 @@ pytorch</a>
 <li><a href="#updating-the-parameters-variables-with-requires_gradtrue"
 id="toc-updating-the-parameters-variables-with-requires_gradtrue">Updating
 the parameters (variables with <code>requires_grad=True</code>)</a></li>
-<li><a href="#defining-derivatives-beyond-pytorchs-capability"
-id="toc-defining-derivatives-beyond-pytorchs-capability">Defining
-derivatives beyond pytorch’s capability</a></li>
 </ul></li>
 <li><a href="#neural-network-approximation"
 id="toc-neural-network-approximation">Neural network approximation</a>
@@ -140,11 +137,32 @@ function</a></li>
 <li><a href="#example-of-a-neural-network-in-pytorch"
 id="toc-example-of-a-neural-network-in-pytorch">Example of a neural
 network in pytorch</a></li>
+<li><a href="#custom-model-involving-neural-networks"
+id="toc-custom-model-involving-neural-networks">Custom model involving
+neural networks</a></li>
 </ul></li>
+</ul></li>
+<li><a href="#derivate-and-jacobian"
+id="toc-derivate-and-jacobian">Derivate and Jacobian</a>
+<ul>
+<li><a href="#chain-rule" id="toc-chain-rule">Chain rule</a></li>
 </ul></li>
 <li><a href="#writing-custom-autograd-functions"
 id="toc-writing-custom-autograd-functions">Writing Custom
-<code>autograd</code> functions</a></li>
+<code>autograd</code> functions</a>
+<ul>
+<li><a href="#example-forward-difference-operator"
+id="toc-example-forward-difference-operator">Example: forward difference
+operator</a></li>
+<li><a href="#example-legedre-polynomial"
+id="toc-example-legedre-polynomial">Example: Legedre polynomial</a></li>
+<li><a href="#example-derivative-operator"
+id="toc-example-derivative-operator">Example: derivative
+operator</a></li>
+<li><a href="#example-element-wise-square"
+id="toc-example-element-wise-square">Example: element-wise
+square</a></li>
+</ul></li>
 <li><a href="#tex-and-markdown-conversion-to-html-with-pandoc"
 id="toc-tex-and-markdown-conversion-to-html-with-pandoc">Tex and
 markdown conversion to html with pandoc</a>
@@ -228,11 +246,11 @@ class="math display">\[\begin{align*}
 \end{align*}\]</span></p>
 <p>In summary, <span class="math display">\[\begin{align*}
     \nabla_{\boldsymbol{\omega}} L(\boldsymbol{\omega}_n) =
-\begin{bmatrix} \mathbf{u}\cdot \boldsymbol{1} \\ \mathbf{u}\cdot
+\begin{bmatrix} \mathbf{u}\cdot \mathcal{1} \\ \mathbf{u}\cdot
 \mathbf{x}\\ \mathbf{u}\cdot \mathbf{x}^2 \\ \mathbf{u}\cdot
 \mathbf{x}^3 \end{bmatrix}
-\end{align*}\]</span> where <span class="math inline">\(\boldsymbol{1}
-\in \mathbb{R}^n\)</span> is a vector of ones, <span
+\end{align*}\]</span> where <span class="math inline">\(\mathcal{1} \in
+\mathbb{R}^n\)</span> is a vector of ones, <span
 class="math inline">\(\mathbf{x}^n \in \mathbb{R}^n\)</span> is
 elementwise <span class="math inline">\(n\)</span>-th power of <span
 class="math inline">\(\mathbf{x}= (x_i)_{i=1}^n\)</span>, and <span
@@ -509,91 +527,6 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a hr
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    b.grad <span class="op">=</span> <span class="va">None</span></span>
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    c.grad <span class="op">=</span> <span class="va">None</span></span>
 <span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    d.grad <span class="op">=</span> <span class="va">None</span></span></code></pre></div>
-<h3 id="defining-derivatives-beyond-pytorchs-capability">Defining
-derivatives beyond pytorch’s capability</h3>
-<p>If we are using an exotic function <span
-class="math inline">\(g\)</span> for which <code>pytorch</code> does not
-have the formula for derivate (and we do), we can define it
-ourselves</p>
-<div class="sourceCode" id="cb8"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> LegendrePolynomial3(torch.autograd.Function):</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">    We can implement our own custom autograd Functions by subclassing</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">    torch.autograd.Function and implementing the forward and backward passes</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">    which operate on Tensors.</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">@staticmethod</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(ctx, <span class="bu">input</span>):</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">        In the forward pass we receive a Tensor containing the input and return</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">        a Tensor containing the output. ctx is a context object that can be used</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">        to stash information for backward computation. You can cache arbitrary</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">        objects for use in the backward pass using the ctx.save_for_backward method.</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">        &quot;&quot;&quot;</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>        ctx.save_for_backward(<span class="bu">input</span>)</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="fl">0.5</span> <span class="op">*</span> (<span class="dv">5</span> <span class="op">*</span> <span class="bu">input</span> <span class="op">**</span> <span class="dv">3</span> <span class="op">-</span> <span class="dv">3</span> <span class="op">*</span> <span class="bu">input</span>)</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">@staticmethod</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> backward(ctx, grad_output):</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;</span></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co">        In the backward pass we receive a Tensor containing the gradient of the loss</span></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">        with respect to the output, and we need to compute the gradient of the loss</span></span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co">        with respect to the input.</span></span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="co">        &quot;&quot;&quot;</span></span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>        <span class="bu">input</span>, <span class="op">=</span> ctx.saved_tensors</span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> grad_output <span class="op">*</span> <span class="fl">1.5</span> <span class="op">*</span> (<span class="dv">5</span> <span class="op">*</span> <span class="bu">input</span> <span class="op">**</span> <span class="dv">2</span> <span class="op">-</span> <span class="dv">1</span>)</span></code></pre></div>
-<p>We can <code>apply</code> this function within the loop and define a
-loss function like this:</p>
-<div class="sourceCode" id="cb9"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To apply our Function, we use Function.apply method. We alias this as &#39;P3&#39;.</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>P3 <span class="op">=</span> LegendrePolynomial3.<span class="bu">apply</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Forward pass: compute predicted y using operations; we compute</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># P3 using our custom autograd operation.</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> a <span class="op">+</span> b <span class="op">*</span> P3(c <span class="op">+</span> d <span class="op">*</span> x)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute and print loss</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> (y_pred <span class="op">-</span> y).<span class="bu">pow</span>(<span class="dv">2</span>).<span class="bu">sum</span>()</span></code></pre></div>
-<p>To use optimized pytorch features such as
-<code>torch.nn.MSELoss()</code>, <code>torch.optim.SGD()</code>,
-<code>optimizer.step()</code> etc for your own model, you need to define
-your own model as a module, which is a derived class of
-<code>torch.nn.Module</code>.</p>
-<div class="sourceCode" id="cb10"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Polynomial3(torch.nn.Module):</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">        In the constructor we instantiate four parameters and assign them as</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">        member parameters.</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">        &quot;&quot;&quot;</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.a <span class="op">=</span> torch.nn.Parameter(torch.randn(()))</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.b <span class="op">=</span> torch.nn.Parameter(torch.randn(()))</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.c <span class="op">=</span> torch.nn.Parameter(torch.randn(()))</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.d <span class="op">=</span> torch.nn.Parameter(torch.randn(()))</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;</span></span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co">        In the forward function we accept a Tensor of input data and we must return</span></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co">        a Tensor of output data. We can use Modules defined in the constructor as</span></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co">        well as arbitrary operators on Tensors.</span></span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co">        &quot;&quot;&quot;</span></span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.a <span class="op">+</span> <span class="va">self</span>.b <span class="op">*</span> x <span class="op">+</span> <span class="va">self</span>.c <span class="op">*</span> x <span class="op">**</span> <span class="dv">2</span> <span class="op">+</span> <span class="va">self</span>.d <span class="op">*</span> x <span class="op">**</span> <span class="dv">3</span></span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> string(<span class="va">self</span>):</span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;</span></span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="co">        Just like any class in Python, you can also define custom method on PyTorch modules</span></span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="co">        &quot;&quot;&quot;</span></span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="ss">f&#39;y = </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>a<span class="sc">.</span>item()<span class="sc">}</span><span class="ss"> + </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>b<span class="sc">.</span>item()<span class="sc">}</span><span class="ss"> x + </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>c<span class="sc">.</span>item()<span class="sc">}</span><span class="ss"> x^2 + </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>d<span class="sc">.</span>item()<span class="sc">}</span><span class="ss"> x^3&#39;</span></span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Construct our model by instantiating the class defined above</span></span>
-<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Polynomial3()</span></code></pre></div>
-<p>Note that we do not need to define a <code>backward()</code> method
-for a <code>torch.nn.Module</code> as it is derived from the operations
-specified within the <code>forward()</code> method. If your model
-(<code>torch.nn.Module</code>) uses an exotic function which you define
-via a <code>torch.autograd.Function</code>, then you define the derivate
-of the function within the <code>backward()</code> method of the
-function, but not in the model.</p>
 <h2 id="neural-network-approximation">Neural network approximation</h2>
 <p>Consider the function <span class="math inline">\(f_d\)</span>
 representing the output of a convolutional neural network of depth <span
@@ -828,74 +761,196 @@ class="math inline">\(N^d(\mathbf{x}_i)\)</span>. In the following code,
 class="math inline">\((\mathbf{x}_i)_{i=1}^3\)</span> and
 <code>net(X)</code> = <span
 class="math inline">\((N^d(\mathbf{x}_i))_{i=1}^3\)</span>.</p>
-<div class="sourceCode" id="cb11"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch <span class="im">import</span> nn</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>net <span class="op">=</span> nn.Sequential( </span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                    nn.Linear(<span class="dv">4</span>,<span class="dv">8</span>),</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                    nn.ReLU(),</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>                    nn.Linear(<span class="dv">8</span>,<span class="dv">1</span>)</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                    )</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> torch.rand(size<span class="op">=</span>(<span class="dv">3</span>,<span class="dv">4</span>))</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&#39;X&#39;</span>, X)</span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&#39;net(X)&#39;</span>, net(X))</span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co">## Use net.state_dict() to show the parameters</span></span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&#39;Show parameters of the first neural network in the sequence:&#39;</span>, net[<span class="dv">0</span>].state_dict())</span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&#39;Show parameters of the third neural network in the sequence:&#39;</span>, net[<span class="dv">2</span>].state_dict())</span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&#39;print the bias data of 3rd net:&#39;</span>, net[<span class="dv">2</span>].bias.data)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch <span class="im">import</span> nn</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>net <span class="op">=</span> nn.Sequential( </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                    nn.Linear(<span class="dv">4</span>,<span class="dv">8</span>),</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                    nn.ReLU(),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                    nn.Linear(<span class="dv">8</span>,<span class="dv">1</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                    )</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> torch.rand(size<span class="op">=</span>(<span class="dv">3</span>,<span class="dv">4</span>))</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&#39;X&#39;</span>, X)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&#39;net(X)&#39;</span>, net(X))</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">## Use net.state_dict() to show the parameters</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&#39;Show parameters of the first neural network in the sequence:&#39;</span>, net[<span class="dv">0</span>].state_dict())</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&#39;Show parameters of the third neural network in the sequence:&#39;</span>, net[<span class="dv">2</span>].state_dict())</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&#39;print the bias data of 3rd net:&#39;</span>, net[<span class="dv">2</span>].bias.data)</span></code></pre></div>
+<h3 id="custom-model-involving-neural-networks">Custom model involving
+neural networks</h3>
+<p>To use optimized pytorch features such as
+<code>torch.nn.MSELoss()</code>, <code>torch.optim.SGD()</code>,
+<code>optimizer.step()</code> etc for your own model, you need to define
+your own model as a module, which is a derived class of
+<code>torch.nn.Module</code>.</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Polynomial3(torch.nn.Module):</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">        In the constructor we instantiate four parameters and assign them as</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">        member parameters.</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">        &quot;&quot;&quot;</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.a <span class="op">=</span> torch.nn.Parameter(torch.randn(()))</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.b <span class="op">=</span> torch.nn.Parameter(torch.randn(()))</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.c <span class="op">=</span> torch.nn.Parameter(torch.randn(()))</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.d <span class="op">=</span> torch.nn.Parameter(torch.randn(()))</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">        In the forward function we accept a Tensor of input data and we must return</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">        a Tensor of output data. We can use Modules defined in the constructor as</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">        well as arbitrary operators on Tensors.</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">        &quot;&quot;&quot;</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.a <span class="op">+</span> <span class="va">self</span>.b <span class="op">*</span> x <span class="op">+</span> <span class="va">self</span>.c <span class="op">*</span> x <span class="op">**</span> <span class="dv">2</span> <span class="op">+</span> <span class="va">self</span>.d <span class="op">*</span> x <span class="op">**</span> <span class="dv">3</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> string(<span class="va">self</span>):</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="co">        Just like any class in Python, you can also define custom method on PyTorch modules</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="co">        &quot;&quot;&quot;</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="ss">f&#39;y = </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>a<span class="sc">.</span>item()<span class="sc">}</span><span class="ss"> + </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>b<span class="sc">.</span>item()<span class="sc">}</span><span class="ss"> x + </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>c<span class="sc">.</span>item()<span class="sc">}</span><span class="ss"> x^2 + </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>d<span class="sc">.</span>item()<span class="sc">}</span><span class="ss"> x^3&#39;</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Construct our model by instantiating the class defined above</span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Polynomial3()</span></code></pre></div>
+<p>Note that we do not need to define a <code>backward()</code> method
+for a <code>torch.nn.Module</code> as it is derived from the operations
+specified within the <code>forward()</code> method. If your model
+(<code>torch.nn.Module</code>) uses an exotic function which you define
+via a <code>torch.autograd.Function</code>, then you define the derivate
+of the function within the <code>backward()</code> method of the
+function, but not in the model.</p>
+<h1 id="derivate-and-jacobian">Derivate and Jacobian</h1>
+<p>Let<br />
+<span class="math display">\[\begin{align*}
+\mathbf{f}: \mathbb{R}^n \to \mathbb{R}^m
+\end{align*}\]</span> be a differentiable function. For <span
+class="math inline">\(\mathbf{z}\in \mathbb{R}^n\)</span>, the
+derivative <span class="math inline">\(D\mathbf{f}(\mathbf{z})\)</span>
+is a linear map <span class="math display">\[\begin{align*}
+D\mathbf{f}(\mathbf{z}): \mathbb{R}^{n} \to \mathbb{R}^m,
+\end{align*}\]</span> i.e., for all <span
+class="math inline">\(\mathbf{v}\in \mathbb{R}^n\)</span>, we have <span
+class="math inline">\(D\mathbf{f}(\mathbf{z}) (\mathbf{v}) \in
+\mathbb{R}^m\)</span>. Linearity implies that the derivative can be
+identified with the <strong>Jacobian matrix</strong> <span
+class="math display">\[\begin{align*}
+J = D\mathbf{f}(\mathbf{z}) \in \mathbb{R}^{m \times n},
+\end{align*}\]</span> so that the evaluation <span
+class="math inline">\(D\mathbf{f}(\mathbf{z}) (\mathbf{v})\)</span> can
+be realized by the matrix-vector multiplication <span
+class="math inline">\(D\mathbf{f}(\mathbf{z})_{m\times n} \mathbf{v}_{n
+\times 1} \in \mathbb{R}^m\)</span> with column vectors <span
+class="math inline">\(\mathbf{v}\in \mathbb{R}^n\)</span>.</p>
+<p>The Jacobian <span class="math inline">\(J\)</span> is given by <span
+class="math display">\[\begin{align*}
+    J =
+\left( \left( \frac{\partial f_i(\mathbf{z})}{\partial z_j}
+\right)_{j=1}^m\right)_{i=1}^n
+    = \begin{bmatrix} \nabla f_1(\mathbf{z})^T \\ \vdots \\ \nabla
+f_m(\mathbf{z})^T \end{bmatrix}_{m \times n}
+=
+    \begin{bmatrix}
+    \frac{\partial f_1}{\partial z_1} &amp; \dots &amp; \frac{\partial
+f_1}{\partial z_n}
+    \\
+    \frac{\partial f_2}{\partial z_1} &amp; \dots &amp; \frac{\partial
+f_2}{\partial z_n}
+    \\
+    \vdots
+    \\
+    \frac{\partial f_m}{\partial z_1} &amp; \dots &amp; \frac{\partial
+f_m}{\partial z_n}
+    \end{bmatrix}_{m \times n}
+    (\mathbf{z})
+    = D\mathbf{f}(\mathbf{z}).
+\end{align*}\]</span></p>
+<p>More generally, for a differentiable function <span
+class="math inline">\(\mathbf{f}: A \to B\)</span>, the derivative <span
+class="math inline">\(D\mathbf{f}(\mathbf{a})\)</span> is a linear map
+between <span class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> for all <span
+class="math inline">\(\mathbf{a}\in A\)</span>.</p>
+<p>For example, if <span class="math inline">\(\mathbf{f}: \mathbb{R}^n
+\to \mathbb{R}^m\)</span> we have <span
+class="math display">\[\begin{align*}
+D\mathbf{f}: \mathbb{R}^n \to \mathbb{R}^{m \times n}
+\end{align*}\]</span> and therefore for any <span
+class="math inline">\(\mathbf{z}\in \mathbb{R}^n\)</span>, the second
+derivative <span class="math inline">\(D (D\mathbf{f})(\mathbf{z}) =:
+D^2 \mathbf{f}(\mathbf{z})\)</span> is a linear map <span
+class="math display">\[\begin{align*}
+    D^2 \mathbf{f}(\mathbf{z}): \mathbb{R}^{m \times n} \to \mathbb{R}^n
+\end{align*}\]</span><br />
+which can be represented by a bilinear Hessian tensor, the elements of
+which can be computed by evaluating it on the tensor basis <span
+class="math inline">\(\mathbf{e}_i \otimes \mathbf{e}_j \in
+\mathbb{R}^{m \times n}\)</span></p>
+<p>A special case when <span class="math inline">\(\mathbf{f}:
+\mathbb{R}^n \to \mathbb{R}^m\)</span> is linear, there exists <span
+class="math inline">\(A \in \mathbb{R}^{m\times n}\)</span> such that
+<span class="math inline">\(\mathbf{f}(\mathbf{z}) =
+A\mathbf{z}\)</span>. In this case, <span
+class="math inline">\(D\mathbf{f}(\mathbf{z}) = A\)</span> for all <span
+class="math inline">\(\mathbf{z}\in \mathbb{R}^m\)</span> and <span
+class="math inline">\(D\mathbf{f}(\mathbf{z}) \mathbf{v}=
+A\mathbf{v}\)</span> for all <span class="math inline">\(\mathbf{v}\in
+\mathbb{R}^n\)</span>.</p>
+<h2 id="chain-rule">Chain rule</h2>
+<p>Let <span class="math inline">\(\mathbf{f}: \mathbb{R}^n \to
+\mathbb{R}^p\)</span> and <span class="math inline">\(\mathbf{h}:
+\mathbb{R}^p \to \mathbb{R}^m\)</span>. Define <span
+class="math inline">\(\mathbf{F}: \mathbb{R}^n \to \mathbb{R}^m\)</span>
+as <span class="math inline">\(\mathbf{F}(\mathbf{x}) =
+\mathbf{h}(\mathbf{f}(\mathbf{x}))\)</span>. Then, chain rule implies
+<span class="math display">\[\begin{align*}
+    [D\mathbf{F}(\mathbf{x})]_{m \times n} =
+    [D\mathbf{h}(\mathbf{z})|_{\mathbf{z}= \mathbf{f}(\mathbf{x})}  ]_{m
+\times p} [D\mathbf{f}(\mathbf{x})]_{p \times n}
+\end{align*}\]</span><br />
+Defining <span class="math inline">\(\mathbf{v}\)</span> as the
+<strong>grad_output</strong> (a common name in the pytorch literature)
+<span class="math display">\[\begin{align*}
+    \mathbf{v}= D\mathbf{f}(\mathbf{x}).
+\end{align*}\]</span><br />
+we can write <span class="math display">\[\begin{align*}
+    D\mathbf{F}(\mathbf{x}) = D\mathbf{h}(\mathbf{f}(\mathbf{x}))
+(\mathbf{v}).
+\end{align*}\]</span></p>
+<p>In other words, <span class="math display">\[\begin{align*}
+    J_{\mathbf{h}\circ \mathbf{f}} (\mathbf{x}) = J_{\mathbf{h}}
+(\mathbf{f}(\mathbf{x})) J_{\mathbf{f}}(\mathbf{x}).
+\end{align*}\]</span></p>
 <h1 id="writing-custom-autograd-functions">Writing Custom
 <code>autograd</code> functions</h1>
-<p><a
-href="https://pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html">Tutorial</a>
-gives some good examples.</p>
 <p>When the loss function (or the model) involves composition with
 functions that are not simple, we need to specify the derivative
 manually. In fact, we do not need to specify the entire derivative
 tensor, just the tensor-vector product rule.</p>
-<p>Let <span class="math inline">\(\mathbf{f}: \mathbb{R}^n \to
-\mathbb{R}^m\)</span> be differentiable. Define the Jacobian <span
-class="math inline">\(J\)</span> by <span
-class="math display">\[\begin{align*}
-    D_\mathbf{z}\mathbf{f}(\mathbf{z})
-    =
-    \left( \left( \frac{\partial f_j}{\partial z_i}
-\right)_{j=1}^m\right)_{i=1}^n
-    =
-    \begin{bmatrix}
-    \frac{\partial f_1}{\partial z_1} &amp; \dots &amp; \frac{\partial
-f_m}{\partial z_1}
-    \\
-    \frac{\partial f_1}{\partial z_2} &amp; \dots &amp; \frac{\partial
-f_m}{\partial z_2}
-    \\
-    \vdots
-    \\
-    \frac{\partial f_1}{\partial z_n} &amp; \dots &amp; \frac{\partial
-f_m}{\partial z_n}
-    \end{bmatrix}_{n \times m}
-    (\mathbf{z})
-    = J^T
-\end{align*}\]</span><br />
-where <span class="math inline">\(J\)</span> is the Jacobian of <span
-class="math inline">\(\mathbf{f}\)</span> at <span
-class="math inline">\(\mathbf{z}\)</span>.</p>
+<p><a
+href="https://pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html">Tutorial</a>
+gives some good examples.</p>
 <p>In the <code>.backward()</code> method of a custom autograd function,
 given a vector <span class="math inline">\(\mathbf{v}\in
 \mathbb{R}^m\)</span>, we need to define the formula of <span
-class="math inline">\(J^T\mathbf{v}\)</span>. The <span
-class="math inline">\(i\)</span>-th element of <span
-class="math inline">\(J^T\mathbf{v}\)</span> (for <span
+class="math inline">\(J\mathbf{v}\)</span>. This is known as the
+<strong>Jacobian-vector product</strong>. The vector <span
+class="math inline">\(\mathbf{v}\)</span> is usually referred to as
+<strong>grad_output(s)</strong>.</p>
+<p>The <span class="math inline">\(i\)</span>-th element of <span
+class="math inline">\(J\mathbf{v}\)</span> (for <span
 class="math inline">\(i=1, \dots, n\)</span>) is <span
 class="math display">\[\begin{align*}
-    (J^T \mathbf{v})_i = \sum_{k=1}^{m} \frac{\partial f_k}{\partial
-z_i} v_k.
+    (J \mathbf{v})_i = \sum_{k=1}^{m} \frac{\partial f_i}{\partial z_k}
+v_k.
 \end{align*}\]</span></p>
-<p>For example, the forward difference operator (with Dirichlet or
-periodic boundary) <span class="math inline">\(\Delta^h : \mathbb{R}^n
-\to \mathbb{R}^n\)</span> is given by <span
+<h3 id="example-forward-difference-operator">Example: forward difference
+operator</h3>
+<p>The forward difference operator (with Dirichlet or periodic boundary)
+<span class="math inline">\(\Delta^h : \mathbb{R}^n \to
+\mathbb{R}^n\)</span> is given by <span
 class="math display">\[\begin{align*}
     \Delta^h_i (\mathbf{z}) = \frac{1}{h} \left(  z_{i+1} -
 z_{i}\right).
@@ -909,9 +964,193 @@ where <span class="math inline">\(\delta_{kj}\)</span> is Kronecker’s
 delta. Therefore, for any <span class="math inline">\(\mathbf{v}\in
 \mathbb{R}^n\)</span> we have <span
 class="math display">\[\begin{align*}
-    (D_\mathbf{z}\Delta^h(\mathbf{z}) \mathbf{v})_i = \frac{1}{h}
-(v_{i-1} - v_i).
+    (D_\mathbf{z}\Delta^h(\mathbf{z}) \mathbf{v})_i =
+\frac{1}{h}\sum_{k=1}^{n} (\delta_{i+1, k} - \delta_{i,k})v_k =
+\frac{1}{h} (v_{i+1} - v_i).
 \end{align*}\]</span></p>
+<h3 id="example-legedre-polynomial">Example: Legedre polynomial</h3>
+<p>If we are using an exotic function <span
+class="math inline">\(g\)</span> for which <code>pytorch</code> does not
+have the formula for derivate (and we do), we can define it
+ourselves</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> LegendrePolynomial3(torch.autograd.Function):</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">    We can implement our own custom autograd Functions by subclassing</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">    torch.autograd.Function and implementing the forward and backward passes</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">    which operate on Tensors.</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">@staticmethod</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(ctx, <span class="bu">input</span>):</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">        In the forward pass we receive a Tensor containing the input and return</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">        a Tensor containing the output. ctx is a context object that can be used</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co">        to stash information for backward computation. You can cache arbitrary</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co">        objects for use in the backward pass using the ctx.save_for_backward method.</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co">        &quot;&quot;&quot;</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>        ctx.save_for_backward(<span class="bu">input</span>)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="fl">0.5</span> <span class="op">*</span> (<span class="dv">5</span> <span class="op">*</span> <span class="bu">input</span> <span class="op">**</span> <span class="dv">3</span> <span class="op">-</span> <span class="dv">3</span> <span class="op">*</span> <span class="bu">input</span>)</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">@staticmethod</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> backward(ctx, grad_output):</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="co">        In the backward pass we receive a Tensor containing the gradient of the loss</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="co">        with respect to the output, and we need to compute the gradient of the loss</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="co">        with respect to the input.</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="co">        &quot;&quot;&quot;</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>        <span class="bu">input</span>, <span class="op">=</span> ctx.saved_tensors</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> grad_output <span class="op">*</span> <span class="fl">1.5</span> <span class="op">*</span> (<span class="dv">5</span> <span class="op">*</span> <span class="bu">input</span> <span class="op">**</span> <span class="dv">2</span> <span class="op">-</span> <span class="dv">1</span>)</span></code></pre></div>
+<p>We can <code>apply</code> this function within the loop and define a
+loss function like this:</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To apply our Function, we use Function.apply method. We alias this as &#39;P3&#39;.</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>P3 <span class="op">=</span> LegendrePolynomial3.<span class="bu">apply</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Forward pass: compute predicted y using operations; we compute</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># P3 using our custom autograd operation.</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> a <span class="op">+</span> b <span class="op">*</span> P3(c <span class="op">+</span> d <span class="op">*</span> x)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute and print loss</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> (y_pred <span class="op">-</span> y).<span class="bu">pow</span>(<span class="dv">2</span>).<span class="bu">sum</span>()</span></code></pre></div>
+<h3 id="example-derivative-operator">Example: derivative operator</h3>
+<p><a
+href="https://stackoverflow.com/questions/58839721/how-to-define-a-loss-function-in-pytorch-with-dependency-to-partial-derivatives">This
+discussion</a> demonstrates a nice example of solving an ODE with
+initial data.</p>
+<p>Computing numerical derivate of data with respect to another data can
+be done using <code>torch.autograd.grad()</code>.</p>
+<p>Given <span class="math inline">\(\mathbf{f}: \mathbb{R}^n \to
+\mathbb{R}^m\)</span>, we have <span
+class="math inline">\(D\mathbf{f}(\mathbf{z}): \mathbb{R}^n \to
+\mathbb{R}^m\)</span> for all <span class="math inline">\(\mathbf{z}\in
+\mathbb{R}^n\)</span>.</p>
+<ul>
+<li>If <span class="math inline">\(m=1\)</span>, we can use
+<code>autograd.grad(output=f, input=z)</code> to compute <span
+class="math inline">\(D\mathbf{f}(\mathbf{z})\)</span></li>
+<li>If <span class="math inline">\(m \ge 1\)</span>, we can use
+<code>autograd.grad(output=f, input=z, grad_output=w)</code> to compute
+<span class="math inline">\(D\mathbf{f}(\mathbf{z})^T
+\boldsymbol{\omega}\)</span>. For dimensional consistency, we need to
+have <span class="math inline">\(\boldsymbol{\omega}\in
+\mathbb{R}^m\)</span> so that the output of <code>autograd.grad()</code>
+is in <span class="math inline">\(\mathbb{R}^n\)</span>.</li>
+</ul>
+<p>The <a
+href="https://pytorch.org/docs/stable/generated/torch.autograd.grad.html">manual</a>
+says</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>torch.autograd.grad(outputs, inputs, grad_outputs<span class="op">=</span><span class="va">None</span>, retain_graph<span class="op">=</span><span class="va">None</span>, create_graph<span class="op">=</span><span class="va">False</span>, only_inputs<span class="op">=</span><span class="va">True</span>, allow_unused<span class="op">=</span><span class="va">False</span>)</span></code></pre></div>
+<p>Parameters</p>
+<ul>
+<li><p><code>outputs</code>: The output tensors with respect to which
+gradients will be calculated. It has to be scalar valued, unless
+<code>grad_outputs</code> is specified, in which case, the returned
+value will be a vector-Jacobian product.</p></li>
+<li><p><code>inputs</code>: The input tensors for which gradients are
+being computed. These must be part of the computational graph.</p></li>
+<li><p><code>grad_outputs</code>: This parameter is an optional external
+gradient to be applied on <code>outputs</code>. This is the vector <span
+class="math inline">\(\mathbf{v}\)</span> in the vector-Jacobian product
+<span class="math inline">\(\mathbf{v}^TJ\)</span>. <code>None</code>
+values can be specified for scalar Tensors or ones that don’t require
+grad. If a <code>None</code> value would be acceptable for all
+grad_tensors, then this argument is optional. Default:
+<code>None</code>.</p></li>
+<li><p><code>retain_graph</code>: When set to <code>True</code>, the
+computation graph used to compute the gradients will be retained,
+allowing for further operations.</p></li>
+<li><p><code>create_graph</code>: If <code>True</code>, a new
+computational graph is created, enabling higher-order derivatives to be
+computed.</p></li>
+<li><p><code>allow_unused</code>: If <code>True</code>, it returns
+<code>None</code> for input tensors unused in the computation;
+otherwise, it throws an error.</p></li>
+</ul>
+<h3 id="example-element-wise-square">Example: element-wise square</h3>
+<p>Consider the <em>element-wise square</em> function <span
+class="math inline">\(\mathbf{f}: \mathbb{R}^n \to \mathbb{R}^n\)</span>
+given by <span class="math inline">\(f_i(\mathbf{x}) = x_i^2\)</span>
+for all <span class="math inline">\(i=1, \dots, n\)</span>. Then, <span
+class="math display">\[\begin{align*}
+\frac{\partial f_i}{\partial x_k} = 2x_k \delta_{ik}.
+\end{align*}\]</span> The Jacobian is $J = $ Diag<span
+class="math inline">\((2x_1, \dots, 2x_n)\)</span>, a symmetric
+matrix.</p>
+<p>To obtain the <em>element-wise double</em> operator <span
+class="math inline">\(\mathbf{h}: \mathbb{R}^n \to \mathbb{R}^n\)</span>
+given by <span class="math inline">\(h_i(\mathbf{x}) = 2 x_i\)</span> as
+a derivative of <span class="math inline">\(\mathbf{f}\)</span>, we can
+either compute <span class="math inline">\(J^T\mathbf{v}\)</span> where
+<span class="math inline">\(\mathbf{v}= \mathcal{1} \in
+\mathbb{R}^n\)</span>, a vector of ones (<span
+class="math inline">\(\mathcal{1}_i =1\)</span> for all <span
+class="math inline">\(i=1, \dots, n\)</span>).</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">5</span>, requires_grad<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>ones <span class="op">=</span> torch.ones_like(x)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> x <span class="op">**</span><span class="dv">2</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the derivatives</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>grads <span class="op">=</span> torch.autograd.grad(outputs<span class="op">=</span>z, inputs<span class="op">=</span>x, grad_outputs<span class="op">=</span>ones)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&#39;x&#39;</span>, x)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&#39;ones&#39;</span>, ones)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&#39;grads&#39;</span>, grads)</span></code></pre></div>
+<p>which returns</p>
+<pre><code>x tensor([-10.,  -5.,   0.,   5.,  10.], requires_grad=True)
+ones tensor([1., 1., 1., 1., 1.])
+grads (tensor([-20., -10.,   0.,  10.,  20.]),)</code></pre>
+<p>The input data be a higher-order tensor. In that case, the
+<code>grad_output</code> has to be the same shape as <code>output</code>
+to return <span class="math inline">\(D\mathbf{f}(\mathbf{z})^T
+\mathbf{v}\)</span> where <span
+class="math inline">\(\mathbf{f}\)</span>=<code>output</code>, <span
+class="math inline">\(\mathbf{z}\)</span>=<code>input</code>, and <span
+class="math inline">\(\mathbf{v}\)</span>=<code>grad_output</code>.</p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">5</span>, requires_grad<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> x.reshape(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>).<span class="bu">pow</span>(torch.tensor([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]))</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> torch.tensor([[<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>], [<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="fl">1.</span>]])</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> torch.matmul(A, x)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the derivatives</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>ones <span class="op">=</span> torch.ones_like(z)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>grads <span class="op">=</span> torch.autograd.grad(outputs<span class="op">=</span>z, inputs<span class="op">=</span>x, grad_outputs<span class="op">=</span>ones)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&#39;x&#39;</span>, x)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&#39;ones&#39;</span>, ones)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&#39;grads&#39;</span>, grads)</span></code></pre></div>
+<p>returns</p>
+<pre><code>x tensor([[  -10.,   100., -1000.],
+        [   -5.,    25.,  -125.],
+        [    0.,     0.,     0.],
+        [    5.,    25.,   125.],
+        [   10.,   100.,  1000.]], grad_fn=&lt;PowBackward1&gt;)
+z tensor([[  0., 250.,   0.],
+        [  5., 225., 125.]], grad_fn=&lt;MmBackward0&gt;)
+ones tensor([[1., 1., 1.],
+        [1., 1., 1.]])
+grads (tensor([[2., 2., 2.],
+        [1., 1., 1.],
+        [2., 2., 2.],
+        [2., 2., 2.],
+        [2., 2., 2.]]),)</code></pre>
+<p>By enabling <code>create_graph=True</code>, one can compute the
+higher-order derivates like this:</p>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> torch.tensor(<span class="fl">1.0</span>, requires_grad<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> torch.tensor(<span class="fl">2.0</span>, requires_grad<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> a <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> t </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> a <span class="op">*</span> t <span class="op">+</span> t <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> b<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span> <span class="op">*</span> c</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>grad_a, grad_t <span class="op">=</span> torch.autograd.grad(outputs<span class="op">=</span>d, inputs<span class="op">=</span>(a, t), create_graph<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Computing higher-order derivatives</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>second_order_grad_a <span class="op">=</span> torch.autograd.grad(grad_a, a)[<span class="dv">0</span>]</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>second_order_grad_t <span class="op">=</span> torch.autograd.grad(grad_t, t)[<span class="dv">0</span>]</span></code></pre></div>
+<p>This way, we can compute the (partial) derivatives of a data
+(<code>outputs</code>) with respect to grid points
+(<code>inputs</code>). This is applicable to solving ODEs with
+prescribed boundary and/or initial value.</p>
 <hr />
 <h1 id="tex-and-markdown-conversion-to-html-with-pandoc">Tex and
 markdown conversion to html with pandoc</h1>
@@ -928,17 +1167,17 @@ file <a
 href="https://pandoc.org/MANUAL.html#extension-yaml_metadata_block">source</a>
 like this</li>
 </ul>
-<div class="sourceCode" id="cb13"><pre
-class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> Readme</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">author</span><span class="kw">:</span><span class="at"> Author</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">header-includes</span><span class="kw">: </span><span class="ch">|</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    \usepackage{amsmath, amssymb, amsthm, amsfonts, color, bm}</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    \newcommand{\R}{\mathcal{R}}</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    \newcommand{\ww}{\boldsymbol{\omega}}</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    \newcommand{\xx}{\mathbf{x}}</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> Readme</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">author</span><span class="kw">:</span><span class="at"> Author</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">header-includes</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    \usepackage{amsmath, amssymb, amsthm, amsfonts, color, bm}</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    \newcommand{\R}{\mathcal{R}}</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    \newcommand{\ww}{\boldsymbol{\omega}}</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    \newcommand{\xx}{\mathbf{x}}</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div>
 <p>Converting a tex file into html
 <code>pandoc file.tex -o file.html</code> uses unicode by default to
 render math symbols. We need to use <code>mathjax</code> for a nicer
@@ -953,8 +1192,8 @@ file that would be used to convert math into mathjax. By default pandoc
 uses some link form some content delivery network (CDN), which does not
 work on firefox at the first attempt. So we can specify the url like
 this:</p>
-<div class="sourceCode" id="cb15"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pandoc</span> math.text <span class="at">-s</span> <span class="at">--mathjax</span><span class="op">=</span>https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js <span class="at">-o</span>   mathMathJax.html</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pandoc</span> math.text <span class="at">-s</span> <span class="at">--mathjax</span><span class="op">=</span>https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js <span class="at">-o</span>   mathMathJax.html</span></code></pre></div>
 <p>There are other CDN locations on <a
 href="https://docs.mathjax.org/en/latest/web/start.html#cdn-list">mathjax
 documentation</a> from sites like</p>
@@ -966,8 +1205,8 @@ documentation</a> from sites like</p>
 <li>gitcdn.xyz</li>
 <li>cdn.statically.io</li>
 </ul>
-<div class="sourceCode" id="cb16"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pandoc</span> README.md <span class="at">-s</span> <span class="at">--mathjax</span><span class="op">=</span>https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js <span class="at">-o</span>   README.html</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pandoc</span> README.md <span class="at">-s</span> <span class="at">--mathjax</span><span class="op">=</span>https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js <span class="at">-o</span>   README.html</span></code></pre></div>
 <h2 id="latex-writing-guide-for-mathjax">LaTeX writing guide for
 MathJax</h2>
 <p>We want our <code>.md</code> file to convert to pdf or tex without
@@ -977,8 +1216,8 @@ conversion.</p>
 <li>Typically, in the header of any website using latex code, we need to
 add this script to load MathJax</li>
 </ul>
-<div class="sourceCode" id="cb17"><pre
-class="sourceCode xml"><code class="sourceCode xml"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">script</span><span class="ot"> type=</span><span class="st">&quot;text/javascript&quot;</span><span class="ot"> id=</span><span class="st">&quot;MathJax-script&quot;</span><span class="ot"> async</span> <span class="er">src</span><span class="ot">=</span><span class="st">&quot;https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js&quot;</span>&gt; &lt;/<span class="kw">script</span>&gt;</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode xml"><code class="sourceCode xml"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">script</span><span class="ot"> type=</span><span class="st">&quot;text/javascript&quot;</span><span class="ot"> id=</span><span class="st">&quot;MathJax-script&quot;</span><span class="ot"> async</span> <span class="er">src</span><span class="ot">=</span><span class="st">&quot;https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js&quot;</span>&gt; &lt;/<span class="kw">script</span>&gt;</span></code></pre></div>
 <p>Here <code>tex-chtml-full</code> is a collection of components
 (combination of various packages and output font formats).</p>
 <ul>
@@ -999,26 +1238,26 @@ script <strong>before</strong> the <code>.js</code> file is called
 within the <code>&lt;script&gt;</code> tag of the header of the
 <code>.md</code> file</li>
 </ul>
-<div class="sourceCode" id="cb18"><pre
-class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="at">&lt;script&gt;</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="at">MathJax = {</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">tex</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">inlineMath</span><span class="kw">:</span><span class="at"> </span><span class="kw">[[</span><span class="st">&#39;$&#39;</span><span class="kw">,</span><span class="at"> </span><span class="st">&#39;$&#39;</span><span class="kw">],</span><span class="at"> </span><span class="kw">[</span><span class="st">&#39;\\(&#39;</span><span class="kw">,</span><span class="at"> </span><span class="st">&#39;\\)&#39;</span><span class="kw">]],</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">tags</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;ams&#39;</span><span class="kw">,</span><span class="at">              // equation numbering </span><span class="st">&#39;ams&#39;</span><span class="at"> or </span><span class="st">&#39;all&#39;</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">}</span><span class="at">,</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">svg</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">fontCache</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;global&#39;</span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">}</span></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="at">};</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="at">&lt;/script&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="at">&lt;script&gt;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="at">MathJax = {</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">tex</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">inlineMath</span><span class="kw">:</span><span class="at"> </span><span class="kw">[[</span><span class="st">&#39;$&#39;</span><span class="kw">,</span><span class="at"> </span><span class="st">&#39;$&#39;</span><span class="kw">],</span><span class="at"> </span><span class="kw">[</span><span class="st">&#39;\\(&#39;</span><span class="kw">,</span><span class="at"> </span><span class="st">&#39;\\)&#39;</span><span class="kw">]],</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">tags</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;ams&#39;</span><span class="kw">,</span><span class="at">              // equation numbering </span><span class="st">&#39;ams&#39;</span><span class="at"> or </span><span class="st">&#39;all&#39;</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">}</span><span class="at">,</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">svg</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">fontCache</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;global&#39;</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">}</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="at">};</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="at">&lt;/script&gt;</span></span></code></pre></div>
 <ul>
 <li>Equation numbering is turned off by default, it can be enabled using
 the config</li>
 </ul>
-<div class="sourceCode" id="cb19"><pre
-class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tex</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">tags</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;ams&#39;</span><span class="kw">,</span><span class="at">              // equation numbering </span><span class="st">&#39;ams&#39;</span><span class="at"> or </span><span class="st">&#39;all&#39;</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tex</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">tags</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;ams&#39;</span><span class="kw">,</span><span class="at">              // equation numbering </span><span class="st">&#39;ams&#39;</span><span class="at"> or </span><span class="st">&#39;all&#39;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span></code></pre></div>
 <ul>
 <li>Tex environments <strong>not</strong> enclosed by double
 <code>$$</code>s will be parsed by default as latex code. The default
@@ -1065,8 +1304,8 @@ point was to move away from programmable diagrams. Still:</p>
 <p>Install pandoc filter for mermaid from <a
 href="https://github.com/raghur/mermaid-filter?tab=readme-ov-file">git</a>
 using</p>
-<div class="sourceCode" id="cb22"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install <span class="at">--global</span> mermaid-filter</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install <span class="at">--global</span> mermaid-filter</span></code></pre></div>
 <p>Use it with <code>-F</code> in pandoc</p>
 <pre><code>pandoc  -F mermaid-filter something.md -o something.html </code></pre>
 <p>A sample block of code</p>
