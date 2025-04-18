@@ -142,6 +142,8 @@ print(f'Result: y = {a} + {b} x + {c} x^2 + {d} x^3')
 
 # Automatic differentiation
 
+See [this](https://jcallaham.github.io/blog/2024/01/04/custom-ad-part-1.html) for a mathematical discussion on VJP and JVP.
+
 The minimization problems are set up using the loss function, which is a **composition** of several functions $g^1: \R^4 \to \R^n$, $g^2: \R^n \to \R^n$, and $g^3: \R^n \to \R$
 
 \begin{align*}
